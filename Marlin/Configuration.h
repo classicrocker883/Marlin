@@ -1,4 +1,4 @@
-/** Aquila C2 Default-No Probe
+/** Aquila X2 HC32 UBL
  * Marlin 3D Printer Firmware
  * Copyright (c) 2022 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
