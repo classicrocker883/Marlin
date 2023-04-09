@@ -199,7 +199,7 @@ bool H32Servo::attach(const int32_t inPin, const int32_t inMinAngle, const int32
   TIMERA_IrqCmd(TIMERA_UNIT1, TimeraIrqOverflow, Enable);
   /* Interrupt of timera unit 1 */
   stcIrqRegiConf.enIntSrc = TIMERA_UNIT1_OVERFLOW_INT;
-  stcIrqRegiConf.enIRQn = Int006_IRQn;
+  stcIrqRegiConf.enIRQn = Int008_IRQn;
   stcIrqRegiConf.pfnCallback = &TimeraUnit1_IrqCallback;
   enIrqRegistration(&stcIrqRegiConf);
   NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);

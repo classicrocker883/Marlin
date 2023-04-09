@@ -175,7 +175,7 @@
 
     #define SERVO0_PIN                        27  // free for BLTouch/3D-Touch
     #define LCD_PINS_RS                       28
-    #define LCD_PINS_ENABLE                   29
+    #define LCD_PINS_EN                   29
     #define LCD_PINS_D4                       10
     #define LCD_PINS_D5                       11
     #define LCD_PINS_D6                       16
@@ -192,7 +192,7 @@
       #define SERVO0_PIN                      30
       #define BEEPER_PIN                      27
       #define LCD_PINS_RS                     29
-      #define LCD_PINS_ENABLE                 16
+      #define LCD_PINS_EN                 16
       #define LCD_PINS_D4                     11
       #define BTN_EN1                         28
       #define BTN_EN2                         10
@@ -204,7 +204,7 @@
       #define SERVO0_PIN                      29  // free for BLTouch/3D-Touch
       #define BEEPER_PIN                      17
       #define LCD_PINS_RS                     27
-      #define LCD_PINS_ENABLE                 28
+      #define LCD_PINS_EN                 28
       #define LCD_PINS_D4                     30
       #define BTN_EN1                         11
       #define BTN_EN2                         10
@@ -236,7 +236,7 @@
  *   #define SERVO0_PIN        27   // free for BLTouch/3D-Touch
  *   #define BEEPER_PIN        28
  *   #define LCD_PINS_RS       30
- *   #define LCD_PINS_ENABLE   29
+ *   #define LCD_PINS_EN   29
  *   #define LCD_PINS_D4       17
  *
  * The BLTouch pin becomes LCD:3
@@ -267,9 +267,9 @@
  *   ANET-LCD.2   +5V               | +5V               | +5V             | EXP1.10  +5V             | EXP1.10  +5V
  *   ANET-LCD.3   27      A4        | N/C *             | LCD_PINS_RS     | EXP1.4   LCD_PINS_RS     | EXP2.4   SDSS or N/C *
  *   ANET-LCD.4   10                | LCD_PINS_D4       | BTN_EN2         | EXP2.3   BTN_EN2         | EXP2.3   BTN_EN2
- *   ANET-LCD.5   28      A3        | LCD_PINS_RS       | LCD_PINS_ENABLE | EXP1.3   LCD_PINS_ENABLE | EXP1.1   BEEPER_PIN
+ *   ANET-LCD.5   28      A3        | LCD_PINS_RS       | LCD_PINS_EN | EXP1.3   LCD_PINS_EN | EXP1.1   BEEPER_PIN
  *   ANET-LCD.6   11                | LCD_PINS_D5       | BTN_EN1         | EXP2.5   BTN_EN1         | EXP2.5   BTN_EN1
- *   ANET-LCD.7   29      A2        | LCD_PINS_ENABLE   | N/C *           | EXP2.4   SDSS or N/C *   | EXP1.3   LCD_PINS_ENABLE
+ *   ANET-LCD.7   29      A2        | LCD_PINS_EN   | N/C *           | EXP2.4   SDSS or N/C *   | EXP1.3   LCD_PINS_EN
  *   ANET-LCD.8   16      SCL       | LCD_PINS_D6       | BTN_ENC         | EXP1.2   BTN_ENC         | EXP1.2   BTN_ENC
  *   ANET-LCD.9   30      A1        | ADC_KEYPAD_PIN ** | LCD_PINS_D4     | EXP1.5   LCD_PINS_D4     | EXP1.4   LCD_PINS_RS
  *   ANET-LCD.10  17      SDA       | LCD_PINS_D7       | BEEPER_PIN      | EXP1.1   BEEPER_PIN      | EXP1.5   LCD_PINS_D4
@@ -284,7 +284,7 @@
  *   physical pin  function
  *   EXP1.1        BEEPER
  *   EXP1.2        BTN_ENC
- *   EXP1.3        LCD_PINS_ENABLE
+ *   EXP1.3        LCD_PINS_EN
  *   EXP1.4        LCD_PINS_RS
  *   EXP1.5        LCD_PINS_D4
  *   EXP1.6        LCD_PINS_D5 (not used)

@@ -140,12 +140,13 @@
 #undef LCD_SERIAL_PORT
 #define LCD_SERIAL_PORT 1
 
+#if DISABLED(CR10_STOCKDISPLAY)
 #define BTN_ENC PB14 // SPI_MISO
 #define BTN_EN1 PB15 // SPI3_MOSI
 #define BTN_EN2 PB12 // SPI3_NSS
 
 #define BEEPER_PIN PB13 // SPI3_CLK
-
+#endif
 //
 // USARTS
 //
@@ -162,3 +163,65 @@
 // Misc.
 //
 #define LED PA3
+
+#if ANY(RET6_12864_LCD, HAS_DWIN_E3V2, IS_DWIN_MARLINUI)
+
+  /**
+   *    RET6 12864 LCD
+   *        ------
+   *  PC6  | 1  2 | PB2
+   *  PB10 | 3  4 | PB11
+   *  PB14   5  6 | PB13
+   *  PB12 | 7  8 | PB15
+   *   GND | 9 10 | 5V
+   *        ------
+   */
+  #define EXP3_01_PIN                       PC6
+  #define EXP3_02_PIN                       PB2
+  #define EXP3_03_PIN                       PB10
+  #define EXP3_04_PIN                       PB11
+  #define EXP3_05_PIN                       PB14
+  #define EXP3_06_PIN                       PB13
+  #define EXP3_07_PIN                       PB12
+  #define EXP3_08_PIN                       PB15
+
+#elif EITHER(VET6_12864_LCD, DWIN_VET6_CREALITY_LCD)
+
+  /**
+   *    VET6 12864 LCD
+   *        ------
+   *  ?    | 1  2 | PC5
+   *  PB10 | 3  4 | ?
+   *  PA6    5  6 | PA5
+   *  PA4  | 7  8 | PA7
+   *   GND | 9 10 | 5V
+   *        ------
+   */
+  #define EXP3_01_PIN                       -1
+  #define EXP3_02_PIN                       PC5
+  #define EXP3_03_PIN                       PB10
+  #define EXP3_04_PIN                       -1
+  #define EXP3_05_PIN                       PA6
+  #define EXP3_06_PIN                       PA5
+  #define EXP3_07_PIN                       PA4
+  #define EXP3_08_PIN                       PA7
+
+#elif EITHER(CR10_STOCKDISPLAY, FYSETC_MINI_12864_2_1)
+  #error "Define RET6_12864_LCD or VET6_12864_LCD to select pins for the LCD with the Creality V4 controller."
+#endif
+
+#if ENABLED(CR10_STOCKDISPLAY)
+
+  #define LCD_PINS_RS                EXP3_07_PIN
+  #define LCD_PINS_EN                EXP3_08_PIN
+  #define LCD_PINS_D4                EXP3_06_PIN
+
+  #define BTN_ENC                    EXP3_02_PIN
+  #define BTN_EN1                    EXP3_03_PIN
+  #define BTN_EN2                    EXP3_05_PIN
+
+  #ifndef HAS_PIN_27_BOARD
+    #define BEEPER_PIN               EXP3_01_PIN
+  #endif
+
+#endif
