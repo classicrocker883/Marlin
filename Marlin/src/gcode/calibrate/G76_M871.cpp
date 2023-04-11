@@ -34,6 +34,7 @@
 #include "../../module/probe.h"
 #include "../../feature/bedlevel/bedlevel.h"
 #include "../../module/temperature.h"
+#include "../../module/probe.h"
 #include "../../feature/probe_temp_comp.h"
 #include "../../lcd/marlinui.h"
 

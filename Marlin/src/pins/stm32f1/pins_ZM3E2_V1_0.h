@@ -194,7 +194,7 @@
 
   #define LCDSCREEN_NAME "ZONESTAR LCD12864"
   #define LCD_PINS_RS                EXP1_03_PIN
-  #define LCD_PINS_EN            EXP1_06_PIN
+  #define LCD_PINS_EN                EXP1_06_PIN
   #define LCD_PINS_D4                EXP1_04_PIN
   //#define KILL_PIN                 EXP1_01_PIN
   #define BEEPER_PIN                 EXP1_02_PIN

@@ -104,6 +104,7 @@ applet/
 .clang_complete
 .gcc-flags.json
 /lib/
+/node_modules/
 
 # Secure Credentials
 Configuration_Secure.h
@@ -124,6 +125,7 @@ vc-fileutils.settings
 !.vscode/extensions.json
 !.vscode/tasks.json
 .vscode/c_cpp_properties.json
+
 # Simulation files
 imgui.ini
 eeprom.dat

@@ -67,6 +67,10 @@ MarlinUI ui;
 
 constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
 
+#ifdef BED_SCREW_INSET
+  float MarlinUI::screw_pos = BED_SCREW_INSET; 
+#endif
+
 #if HAS_STATUS_MESSAGE
   #if ENABLED(STATUS_MESSAGE_SCROLLING) && EITHER(HAS_WIRED_LCD, DWIN_LCD_PROUI)
     uint8_t MarlinUI::status_scroll_offset; // = 0
@@ -124,6 +128,7 @@ constexpr uint8_t epps = ENCODER_PULSES_PER_STEP;
 
 #if ENABLED(SOUND_MENU_ITEM)
   bool MarlinUI::sound_on = ENABLED(SOUND_ON_DEFAULT);
+  bool MarlinUI::no_tick = ENABLED(TICK_ON_DEFAULT); //changed added
 #endif
 
 #if ENABLED(PCA9632_BUZZER)
@@ -1067,6 +1072,7 @@ void MarlinUI::init() {
                     SERIAL_ECHO_START();
                     SERIAL_ECHOPGM("Enc Step Rate: ", encoderStepRate);
                     SERIAL_ECHOPGM("  Multiplier: ", encoderMultiplier);
+                    SERIAL_ECHOPGM("  ENCODER_5X_STEPS_PER_SEC: ", ENCODER_5X_STEPS_PER_SEC);
                     SERIAL_ECHOPGM("  ENCODER_10X_STEPS_PER_SEC: ", ENCODER_10X_STEPS_PER_SEC);
                     SERIAL_ECHOPGM("  ENCODER_100X_STEPS_PER_SEC: ", ENCODER_100X_STEPS_PER_SEC);
                     SERIAL_EOL();
@@ -1205,10 +1211,12 @@ void MarlinUI::init() {
           #ifdef NEOPIXEL_BKGD_INDEX_FIRST
             neo.set_background_off();
             neo.show();
-          #elif PIN_EXIST(LCD_BACKLIGHT)
+          //#elif PIN_EXIST(LCD_BACKLIGHT)
             WRITE(LCD_BACKLIGHT_PIN, LOW); // Backlight off
-          #endif
+	  #else
+          // Backlight off (add function to turn off backlight for LCD-12864)
           backlight_off_ms = 0;
+          #endif
         }
       #elif HAS_DISPLAY_SLEEP
         if (screen_timeout_millis && ELAPSED(ms, screen_timeout_millis))
@@ -1502,8 +1510,8 @@ void MarlinUI::init() {
 
     else if (!no_welcome) msg = GET_TEXT_F(WELCOME_MSG);
 
-    else if (ENABLED(DWIN_LCD_PROUI))
-        msg = F("");
+    else if (ENABLED(DWIN_LCD_PROUI)) msg = F("");
+
     else
       return;
 

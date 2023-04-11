@@ -2611,8 +2611,6 @@ void SetStepsZ() { HMI_value.axis = Z_AXIS, SetPFloatOnClick( MIN_STEP, MAX_STEP
   void SetRetractSpeed()  { SetPFloatOnClick( 1, 90, UNITFDIGITS); }
   void SetZRaise()        { SetPFloatOnClick( 0, 2, 2); }
   void SetAddRecover()    { SetPFloatOnClick(-5, 5, UNITFDIGITS); }
-#else
-  void SetRetractSpeed()  { SetPFloatOnClick( 1, 90, UNITFDIGITS); }
 #endif
 
 // Special Menuitem Drawing functions =================================================
@@ -3087,9 +3085,6 @@ void Draw_Control_Menu() {
       #else
         MENU_ITEM(ICON_CaseLight, MSG_CASE_LIGHT, onDrawChkbMenu, SetCaseLight, &caselight.on);
       #endif
-    #endif
-    #if HAS_BED_PROBE || defined(MESH_BED_LEVELING)
-      MENU_ITEM(ICON_Language, MSG_ADVANCED_SETTINGS, onDrawSubMenu, Draw_Advanced_Menu);
     #endif
     #if ENABLED(LED_CONTROL_MENU)
       MENU_ITEM(ICON_LedControl, MSG_LED_CONTROL, onDrawSubMenu, Draw_LedControl_Menu);
@@ -3806,6 +3801,9 @@ void Draw_Advanced_Menu() { // Control --> Advaned Settings Menu
     #if ENABLED(SOUND_MENU_ITEM)
       EDIT_ITEM(ICON_Sound, MSG_TICK, onDrawChkbMenu, SetEnableTick, &ui.no_tick); //changed
       EDIT_ITEM(ICON_Sound, MSG_SOUND, onDrawChkbMenu, SetEnableSound, &ui.sound_on); //changed
+    #endif
+    #if HAS_GCODE_PREVIEW
+      EDIT_ITEM(ICON_File, MSG_HAS_PREVIEW, onDrawChkbMenu, SetPreview, &HMI_data.EnablePreview);
     #endif
     #if ENABLED(BAUD_RATE_GCODE)
       EDIT_ITEM_F(ICON_SetBaudRate, "250K baud", onDrawChkbMenu, SetBaudRate, &HMI_data.Baud250K);

@@ -68,14 +68,15 @@ BedLevelToolsClass bedLevelTools;
 #if ENABLED(USE_UBL_VIEWER)
   bool BedLevelToolsClass::viewer_asymmetric_range = false;
   bool BedLevelToolsClass::viewer_print_value = false;
+  bool BedLevelToolsClass::view_mesh = true;
 #endif
 bool BedLevelToolsClass::goto_mesh_value = false;
 uint8_t BedLevelToolsClass::mesh_x = 0;
 uint8_t BedLevelToolsClass::mesh_y = 0;
-uint8_t BedLevelToolsClass::tilt_grid = 1;
+uint8_t BedLevelToolsClass::tilt_grid = 2;
 
 bool drawing_mesh = false;
-char cmd[MAX_CMD_SIZE+16], str_1[16], str_2[16], str_3[16];
+char cmd[MAX_CMD_SIZE+16], str_1[15], str_2[15], str_3[15];
 
 #if ENABLED(AUTO_BED_LEVELING_UBL)
 
@@ -280,20 +281,20 @@ bool BedLevelToolsClass::meshvalidate() {
   }
 
   void BedLevelToolsClass::Set_Mesh_Viewer_Status() { // TODO: draw gradient with values as a legend instead
-    float v_max = abs(get_max_value()), v_min = abs(get_min_value()), range = _MAX(v_min, v_max);
+    float v_max = abs(get_max_value()), v_min = abs(get_min_value()), range = _MAX(v_min, v_max), rangeb = _MIN(v_min, v_max);
     if (v_min > 3e+10F) v_min = 0.0000001;
     if (v_max > 3e+10F) v_max = 0.0000001;
     if (range > 3e+10F) range = 0.0000001;
     char msg[46];
     if (viewer_asymmetric_range) {
-      dtostrf(-v_min, 1, 3, str_1);
-      dtostrf( v_max, 1, 3, str_2);
+      dtostrf(-v_min, 1, 2, str_1);
+      dtostrf( v_max, 1, 2, str_2);
     }
     else {
-      dtostrf(-range, 1, 3, str_1);
-      dtostrf( range, 1, 3, str_2);
+      dtostrf(-range, 1, 2, str_1);
+      dtostrf( rangeb, 1, 2, str_2);
     }
-    sprintf_P(msg, PSTR("Red %s..0..%s Green"), str_1, str_2);
+    sprintf_P(msg, PSTR("Red %s..0..%s+ Green"), str_1, str_2);
     ui.set_status(msg);
     drawing_mesh = false;
   }

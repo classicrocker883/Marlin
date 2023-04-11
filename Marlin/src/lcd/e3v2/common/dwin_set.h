@@ -25,7 +25,7 @@
 #define Language_English    1
 #define Language_Chinese    2
 
-//#define USE_STOCK_DWIN_SET  // Use the Creality stock DWIN_SET instead of Marlin's unified DWIN_SET by The-EG & thinkyhead
+#define USE_STOCK_DWIN_SET  // Use the Creality stock DWIN_SET instead of Marlin's unified DWIN_SET by The-EG & thinkyhead
 #ifdef USE_STOCK_DWIN_SET
   #define ICON 9 // 9.ICO
 #else
@@ -132,6 +132,14 @@
 #define ICON_Confirm_E          89
 #define ICON_Info_0             90
 #define ICON_Info_1             91
+
+//changed Additional Icons
+#define ICON_Box               200
+#define ICON_Checkbox          201
+#define ICON_Fade              202
+#define ICON_Mesh              203
+#define ICON_Tilt              204
+#define ICON_Brightness        205
 
 #define ICON_Folder       ICON_More
 #define ICON_AdvSet       ICON_Language

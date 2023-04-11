@@ -57,6 +57,7 @@ bool DWIN_Handshake() {
   size_t i = 0;
   DWIN_Byte(i, 0x00);
   DWIN_Send(i);
+  delay(10);
 
   while (LCD_SERIAL.available() > 0 && recnum < (signed)sizeof(databuf)) {
     databuf[recnum] = LCD_SERIAL.read();
@@ -220,6 +221,19 @@ void DWIN_Frame_AreaMove(uint8_t mode, uint8_t dir, uint16_t dis,
   DWIN_Word(i, xEnd);
   DWIN_Word(i, yEnd);
   DWIN_Send(i);
+}
+
+//Color: color
+//x/y: Upper-left coordinate of the first pixel
+void DWIN_Draw_DegreeSymbol(uint16_t Color, uint16_t x, uint16_t y)	{
+  	DWIN_Draw_Point(Color, 1, 1, x + 1, y);
+  	DWIN_Draw_Point(Color, 1, 1, x + 2, y);
+  	DWIN_Draw_Point(Color, 1, 1, x, y + 1);
+		DWIN_Draw_Point(Color, 1, 1, x + 3, y + 1);
+  	DWIN_Draw_Point(Color, 1, 1, x, y + 2);
+		DWIN_Draw_Point(Color, 1, 1, x + 3, y + 2);
+    DWIN_Draw_Point(Color, 1, 1, x + 1, y + 3);
+  	DWIN_Draw_Point(Color, 1, 1, x + 2, y + 3);
 }
 
 /*---------------------------------------- Text related functions ----------------------------------------*/
@@ -439,37 +453,5 @@ void DWIN_ICON_AnimationControl(uint16_t state) {
   DWIN_Word(i, state);
   DWIN_Send(i);
 }
-
-/*---------------------------------------- Memory functions ----------------------------------------*/
-// The LCD has an additional 32KB SRAM and 16KB Flash
-// Data can be written to the SRAM and saved to one of the jpeg page files
-
-// Write Data Memory
-//  command 0x31
-//  Type: Write memory selection; 0x5A=SRAM; 0xA5=Flash
-//  Address: Write data memory address; 0x000-0x7FFF for SRAM; 0x000-0x3FFF for Flash
-//  Data: data
-//
-//  Flash writing returns 0xA5 0x4F 0x4B
-
-// Read Data Memory
-//  command 0x32
-//  Type: Read memory selection; 0x5A=SRAM; 0xA5=Flash
-//  Address: Read data memory address; 0x000-0x7FFF for SRAM; 0x000-0x3FFF for Flash
-//  Length: leangth of data to read; 0x01-0xF0
-//
-//  Response:
-//    Type, Address, Length, Data
-
-// Write Picture Memory
-//  Write the contents of the 32KB SRAM data memory into the designated image memory space
-//  Issued: 0x5A, 0xA5, PIC_ID
-//  Response: 0xA5 0x4F 0x4B
-//
-//  command 0x33
-//  0x5A, 0xA5
-//  PicId: Picture Memory location, 0x00-0x0F
-//
-//  Flash writing returns 0xA5 0x4F 0x4B
 
 #endif // HAS_DWIN_E3V2 || IS_DWIN_MARLINUI

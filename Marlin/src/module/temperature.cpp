@@ -324,7 +324,7 @@ PGMSTR(str_t_heating_failed, STR_T_HEATING_FAILED);
     int32_t MPC::e_position; // = 0
   #endif
 
-/*
+  /*
   // Sanity-check max readable temperatures
   #define CHECK_MAXTEMP_(N,M,S) static_assert( \
     S >= 998 || M <= _MAX(TT_NAME(S)[0].celsius, TT_NAME(S)[COUNT(TT_NAME(S)) - 1].celsius) - HOTEND_OVERSHOOT, \
@@ -4085,7 +4085,7 @@ void Temperature::isr() {
         #if HAS_MULTI_HOTEND
           F("E%c " S_FMT), '1' + e
         #else
-          F("E1 " S_FMT)
+          F("Nozzle " S_FMT) // MSG_NOZZLE
         #endif
         , heating ? GET_TEXT(MSG_HEATING) : GET_TEXT(MSG_COOLING)
       );

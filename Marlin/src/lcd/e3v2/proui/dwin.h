@@ -71,6 +71,7 @@ enum processID : uint8_t {
   Homing,
   PidProcess,
   MPCProcess,
+  PlotProcess,
   NothingToDo
 };
 
@@ -78,12 +79,12 @@ enum processID : uint8_t {
 
   enum tempcontrol_t : uint8_t {
     #if DWIN_PID_TUNE
-      PID_DONE,
-      PIDTEMP_START,
+      PIDTEMP_START = 0,
       PIDTEMPBED_START,
       PID_BAD_HEATER_ID,
       PID_TEMP_TOO_HIGH,
       PID_TUNING_TIMEOUT,
+      PID_DONE
     #endif
     #if ENABLED(MPC_AUTOTUNE)
       MPC_DONE,
@@ -118,6 +119,7 @@ typedef struct {
   uint16_t Barfill_Color;
   uint16_t Indicator_Color;
   uint16_t Coordinate_Color;
+  uint16_t Bottom_Color;
 
   // Temperatures
   #if DWIN_PID_TUNE
@@ -136,17 +138,20 @@ typedef struct {
     int16_t BedLevT = LEVELING_BED_TEMP;
   #endif
   #if ENABLED(BAUD_RATE_GCODE)
-    bool Baud115K = false;
+    bool Baud250K = false;
   #endif
 
+  bool CalcAvg = true;
   bool FullManualTramming = false;
   bool MediaAutoMount = ENABLED(HAS_SD_EXTENDER);
   #if BOTH(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
     uint8_t z_after_homing = DEF_Z_AFTER_HOMING;
   #endif
+  float ManualZOffset;
   #if BOTH(LED_CONTROL_MENU, HAS_COLOR_LEDS)
     LEDColor Led_Color = Def_Leds_Color;
   #endif
+  bool EnablePreview = true;
 } HMI_data_t;
 
 extern HMI_data_t HMI_data;
@@ -171,6 +176,7 @@ typedef struct {
   bool select_flag:1;   // Popup button selected
   bool home_flag:1;     // homing in course
   bool heat_flag:1;     // 0: heating done  1: during heating
+  bool config_flag:1;   // SD G-code file is a Configuration file
 } HMI_flag_t;
 
 extern HMI_value_t HMI_value;
@@ -235,7 +241,7 @@ void ParkHead();
 #if ENABLED(HOST_SHUTDOWN_MENU_ITEM) && defined(SHUTDOWN_ACTION)
   void HostShutDown();
 #endif
-#if !HAS_BED_PROBE
+#if DISABLED(HAS_BED_PROBE)
   void HomeZandDisable();
 #endif
 
@@ -245,7 +251,7 @@ void Goto_Main_Menu();
 void Goto_Info_Menu();
 void Goto_PowerLossRecovery();
 void Goto_ConfirmToPrint();
-void DWIN_Draw_Dashboard(const bool with_update); // Status Area
+void DWIN_Draw_Dashboard(); // Status Area
 void Draw_Main_Area();      // Redraw main area
 void DWIN_DrawStatusLine(const char *text = ""); // Draw simple status text
 void DWIN_RedrawDash();     // Redraw Dash and Status line
@@ -280,7 +286,9 @@ void DWIN_Print_Aborted();
 void DWIN_M73();
 void DWIN_Print_Header(const char *text);
 void DWIN_SetColorDefaults();
+void DWIN_SetAltColor();
 void DWIN_ApplyColor();
+void DWIN_ApplyColor(const int8_t element, const bool ldef=false);
 void DWIN_CopySettingsTo(char * const buff);
 void DWIN_CopySettingsFrom(const char * const buff);
 void DWIN_SetDataDefaults();
@@ -315,6 +323,7 @@ void DWIN_RebootScreen();
 // Menu drawing functions
 void Draw_Print_File_Menu();
 void Draw_Control_Menu();
+void Draw_Advanced_Menu();
 void Draw_AdvancedSettings_Menu();
 void Draw_Prepare_Menu();
 void Draw_Move_Menu();
@@ -347,6 +356,7 @@ void Draw_Motion_Menu();
   void Draw_ManualMesh_Menu();
 #endif
 void Draw_Temperature_Menu();
+void Draw_PID_Menu();
 void Draw_MaxSpeed_Menu();
 void Draw_MaxAccel_Menu();
 #if HAS_CLASSIC_JERK
@@ -368,6 +378,9 @@ void Draw_Steps_Menu();
     void Draw_EditMesh_Menu();
   #endif
 #endif
+#if HAS_TRINAMIC_CONFIG
+  void Draw_TrinamicConfig_menu();
+#endif
 
 // PID
 #if DWIN_PID_TUNE
@@ -388,4 +401,5 @@ void Draw_Steps_Menu();
 #endif
 #if ENABLED(MPC_AUTOTUNE)
   void DWIN_MPCTuning(tempcontrol_t result);
+  void Draw_HotendMPC_Menu();
 #endif

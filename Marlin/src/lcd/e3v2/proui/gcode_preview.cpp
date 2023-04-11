@@ -58,7 +58,7 @@ typedef struct {
   void setname(const char * const fn);
   void clear();
 } fileprop_t;
-fileprop_t fileprop;
+extern fileprop_t fileprop;
 
 void fileprop_t::setname(const char * const fn) {
   const uint8_t len = _MIN(sizeof(name) - 1, strlen(fn));

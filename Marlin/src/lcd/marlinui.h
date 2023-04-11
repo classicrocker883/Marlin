@@ -196,6 +196,8 @@ public:
     TERN_(HAS_MARLINUI_MENU, currentScreen = status_screen);
   }
 
+  static float screw_pos; //changed added
+
   static void init();
 
   #if HAS_DISPLAY || HAS_DWIN_E3V2
@@ -223,6 +225,7 @@ public:
 
   #if ENABLED(SOUND_MENU_ITEM)
     static bool sound_on; // Initialized by settings.load()
+    static bool no_tick; //changed added
   #else
     static constexpr bool sound_on = true;
   #endif
@@ -271,7 +274,7 @@ public:
   #endif
 
   #if LCD_BACKLIGHT_TIMEOUT_MINS
-    static constexpr uint8_t backlight_timeout_min = 0;
+    static constexpr uint8_t backlight_timeout_min = 1;
     static constexpr uint8_t backlight_timeout_max = 99;
     static uint8_t backlight_timeout_minutes;
     static millis_t backlight_off_ms;

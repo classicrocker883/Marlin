@@ -42,7 +42,7 @@
 #define ICON_BedTramming          ICON_SetHome
 #define ICON_Binary               ICON_Contact
 #define ICON_BltouchReset         ICON_StockConfiguration
-#define ICON_Brightness           ICON_Motion
+//#define ICON_Brightness           ICON_Motion
 #define ICON_Cancel               ICON_StockConfiguration
 #define ICON_CustomPreheat        ICON_SetEndTemp
 #define ICON_Error                ICON_TempTooHigh
@@ -162,10 +162,10 @@
 #define BTN_Purge             92
 
 // Extended and default UI Colors
-#define Color_Black           0
-#define Color_Green           RGB(0,63,0)
+#define Color_Black           0x0000 //changed 0
+#define Color_Green           0x07E0 //RGB(0,63,0)
 #define Color_Aqua            RGB(0,63,31)
-#define Color_Blue            RGB(0,0,31)
+#define Color_Blue            0x015F //RGB(0,0,31)
 #define Color_Light_White     0xBDD7
 #define Color_Light_Green     0x3460
 #define Color_Cyan            0x07FF
@@ -174,8 +174,8 @@
 #define Color_Magenta         0xF81F
 #define Color_Light_Magenta   0x9813
 #define Color_Light_Red       0x8800
-#define Color_Orange          0xFA20
-#define Color_Light_Orange    0xFBC0
+#define Color_Orange          0xFB00 //0xFA20
+#define Color_Light_Orange    0xFC80 //0xFBC0
 #define Color_Light_Yellow    0x8BE0
 #define Color_Brown           0xCC27
 #define Color_Light_Brown     0x6204
