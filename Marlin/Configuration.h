@@ -3349,8 +3349,10 @@
 //#define DWIN_MARLINUI_PORTRAIT      // MarlinUI (portrait orientation)
 //#define DWIN_MARLINUI_LANDSCAPE     // MarlinUI (landscape orientation)
 
+
 #if ENABLED(DWIN_LCD_PROUI)
   //#define HAS_GCODE_PREVIEW 1
+  #define SHOW_REAL_POS
 #endif
 
 //

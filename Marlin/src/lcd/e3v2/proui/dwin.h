@@ -75,10 +75,10 @@ enum processID : uint8_t {
   NothingToDo
 };
 
-#if EITHER(DWIN_PID_TUNE, MPC_AUTOTUNE)
+#if HAS_PID_HEATING || ENABLED(MPCTEMP)
 
   enum tempcontrol_t : uint8_t {
-    #if DWIN_PID_TUNE
+    #if HAS_PID_HEATING
       PIDTEMP_START = 0,
       PIDTEMPBED_START,
       PID_BAD_HEATER_ID,
@@ -86,7 +86,7 @@ enum processID : uint8_t {
       PID_TUNING_TIMEOUT,
       PID_DONE
     #endif
-    #if ENABLED(MPC_AUTOTUNE)
+    #if ENABLED(MPCTEMP)
       MPC_DONE,
       MPCTEMP_START,
       MPC_TEMP_ERROR,
@@ -160,29 +160,25 @@ static constexpr size_t eeprom_data_size = sizeof(HMI_data_t);
 typedef struct {
   int8_t Color[3];                    // Color components
   #if DWIN_PID_TUNE
-    tempcontrol_t pidresult = PID_DONE;
+    tempcontrol_t tempcontrol = PID_DONE;
   #endif
   uint8_t Select          = 0;        // Auxiliary selector variable
   AxisEnum axis           = X_AXIS;   // Axis Select
 } HMI_value_t;
 
 typedef struct {
-  uint8_t language;
   bool printing_flag:1; // sd or host printing
   bool abort_flag:1;    // sd or host was aborted
   bool pause_flag:1;    // printing is paused
-  bool percent_flag:1;  // percent was override by M73
-  bool remain_flag:1;   // remain was override by M73
   bool select_flag:1;   // Popup button selected
   bool home_flag:1;     // homing in course
-  bool heat_flag:1;     // 0: heating done  1: during heating
   bool config_flag:1;   // SD G-code file is a Configuration file
 } HMI_flag_t;
 
 extern HMI_value_t HMI_value;
 extern HMI_flag_t HMI_flag;
 extern uint8_t checkkey;
-extern millis_t dwin_heat_time;
+//extern millis_t dwin_heat_time;
 
 // Popups
 #if HAS_HOTEND || HAS_HEATED_BED
@@ -218,7 +214,6 @@ void DoCoolDown();
   void BedPID();
 #endif
 #if ENABLED(BAUD_RATE_GCODE)
-  void HMI_SetBaudRate();
   void SetBaud115K();
   void SetBaud250K();
 #endif
@@ -298,7 +293,6 @@ void DWIN_RebootScreen();
   void DWIN_Popup_Pause(FSTR_P const fmsg, uint8_t button=0);
   void Draw_Popup_FilamentPurge();
   void Goto_FilamentPurge();
-  void HMI_FilamentPurge();
 #endif
 
 // Utility and extensions
@@ -310,14 +304,8 @@ void DWIN_RebootScreen();
 #if HAS_MESH
   void DWIN_MeshViewer();
 #endif
-#if HAS_GCODE_PREVIEW
-  void HMI_ConfirmToPrint();
-#endif
 #if HAS_ESDIAG
   void Draw_EndStopDiag();
-#endif
-#if ENABLED(PRINTCOUNTER)
-  void Draw_PrintStats();
 #endif
 
 // Menu drawing functions
@@ -385,7 +373,7 @@ void Draw_Steps_Menu();
 // PID
 #if DWIN_PID_TUNE
   #include "../../../module/temperature.h"
-  void DWIN_StartM303(const bool seenC, const int c, const bool seenS, const heater_id_t hid, const celsius_t temp);
+  void DWIN_M303(const bool seenC, const int c, const bool seenS, const heater_id_t hid, const celsius_t temp);
   void DWIN_PidTuning(tempcontrol_t result);
   #if ENABLED(PIDTEMP)
     void Draw_HotendPID_Menu();
@@ -396,10 +384,7 @@ void Draw_Steps_Menu();
 #endif
 
 // MPC
-#if EITHER(MPC_EDIT_MENU, MPC_AUTOTUNE_MENU)
-  void Draw_HotendMPC_Menu();
-#endif
-#if ENABLED(MPC_AUTOTUNE)
+#if EITHER(MPCTEMP, MPC_AUTOTUNE_MENU)
   void DWIN_MPCTuning(tempcontrol_t result);
   void Draw_HotendMPC_Menu();
 #endif

@@ -31,10 +31,12 @@
 class MeshViewerClass {
 public:
   float max, min;
-  void Draw(bool withsave = false);
-  void DrawMesh(bed_mesh_t zval, const uint8_t sizex, const uint8_t sizey);
+  void DrawMeshGrid(const uint8_t csizex, const uint8_t csizey);
+  void DrawMeshPoint(const uint8_t x, const uint8_t y, const float z);
+  void Draw(bool withsave = false, bool redraw = true);
+  void DrawMesh(bed_mesh_t zval, const uint8_t csizex, const uint8_t csizey);
 };
 
 extern MeshViewerClass MeshViewer;
 
-void Goto_MeshViewer();
+void Goto_MeshViewer(bool redraw);

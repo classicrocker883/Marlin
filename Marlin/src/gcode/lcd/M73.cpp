@@ -49,12 +49,6 @@
  */
 void GcodeSuite::M73() {
 
-  #if ENABLED(DWIN_LCD_PROUI)
-
-    DWIN_M73();
-
-  #else
-
     #if ENABLED(SET_PROGRESS_PERCENT)
       if (parser.seenval('P'))
         ui.set_progress((PROGRESS_SCALE) > 1
@@ -70,8 +64,6 @@ void GcodeSuite::M73() {
     #if ENABLED(SET_INTERACTION_TIME)
       if (parser.seenval('C')) ui.set_interaction_time(60 * parser.value_ulong());
     #endif
-
-  #endif
 
   #if ENABLED(M73_REPORT)
     if (TERN1(M73_REPORT_SD_ONLY, IS_SD_PRINTING())) {

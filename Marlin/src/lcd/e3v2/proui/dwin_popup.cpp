@@ -31,16 +31,16 @@
 
 #if ENABLED(DWIN_LCD_PROUI)
 
+#include "../../../MarlinCore.h" // for wait_for_user
 #include "dwin.h"
 #include "dwinui.h"
 #include "dwin_popup.h"
 
 #include "../../../MarlinCore.h" // for wait_for_user
 
-popupDrawFunc_t popupDraw = nullptr;
-popupClickFunc_t popupClick = nullptr;
-popupChangeFunc_t popupChange = nullptr;
-
+void (*ClickPopup)()=nullptr;
+void (*PopupChange)(bool state)=nullptr;
+void (*Draw_Popup)()=nullptr;
 uint16_t HighlightYPos = 280;
 
 void Draw_Select_Highlight(const bool sel, const uint16_t ypos) {
@@ -74,25 +74,25 @@ void DWIN_Popup_ConfirmCancel(const uint8_t icon, FSTR_P const fmsg2) {
   DWIN_UpdateLCD();
 }
 
-void Goto_Popup(const popupDrawFunc_t fnDraw, const popupClickFunc_t fnClick/*=nullptr*/, const popupChangeFunc_t fnChange/*=nullptr*/) {
-  popupDraw = fnDraw;
-  popupClick = fnClick;
-  popupChange = fnChange;
+void Goto_Popup(void (*onPopupDraw)(), void (*onClickPopup)() /*= nullptr*/, void (*onPopupChange)(bool state) /*= nullptr*/) {
+  Draw_Popup = onPopupDraw;
+  ClickPopup = onClickPopup;
+  PopupChange = onPopupChange;
   HMI_SaveProcessID(Popup);
   HMI_flag.select_flag = false;
-  popupDraw();
+  Draw_Popup();
 }
 
 void HMI_Popup() {
   if (!wait_for_user) {
-    if (popupClick) popupClick();
+    if (ClickPopup) ClickPopup();
     return;
   }
   else {
     EncoderState encoder_diffState = get_encoder_state();
     if (encoder_diffState == ENCODER_DIFF_CW || encoder_diffState == ENCODER_DIFF_CCW) {
       const bool change = encoder_diffState != ENCODER_DIFF_CW;
-      if (popupChange) popupChange(change); else Draw_Select_Highlight(change, HighlightYPos);
+      if (PopupChange) PopupChange(change); else Draw_Select_Highlight(change, HighlightYPos);
       DWIN_UpdateLCD();
     }
   }
