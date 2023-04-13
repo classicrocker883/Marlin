@@ -76,7 +76,6 @@ enum processID : uint8_t {
 };
 
 #if HAS_PID_HEATING || ENABLED(MPCTEMP)
-
   enum tempcontrol_t : uint8_t {
     #if HAS_PID_HEATING
       PIDTEMP_START = 0,
@@ -93,7 +92,6 @@ enum processID : uint8_t {
       MPC_INTERRUPTED
     #endif
   };
-
 #endif
 
 #define DWIN_CHINESE 123
@@ -143,6 +141,7 @@ typedef struct {
 
   bool CalcAvg = true;
   bool FullManualTramming = false;
+  bool MediaSort;
   bool MediaAutoMount = ENABLED(HAS_SD_EXTENDER);
   #if BOTH(INDIVIDUAL_AXIS_HOMING_SUBMENU, MESH_BED_LEVELING)
     uint8_t z_after_homing = DEF_Z_AFTER_HOMING;
@@ -252,7 +251,6 @@ void DWIN_DrawStatusLine(const char *text = ""); // Draw simple status text
 void DWIN_RedrawDash();     // Redraw Dash and Status line
 void DWIN_RedrawScreen();   // Redraw all screen elements
 void HMI_MainMenu();        // Main process screen
-void HMI_SelectFile();      // File page
 void HMI_Printing();        // Print page
 void HMI_ReturnScreen();    // Return to previous screen before popups
 void HMI_WaitForUser();

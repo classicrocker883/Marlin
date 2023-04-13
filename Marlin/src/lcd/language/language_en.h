@@ -93,7 +93,7 @@ namespace Language_en {
   LSTR MSG_LEVBED_C                       = _UxGT("Center");
   LSTR MSG_LEVBED_BL                      = _UxGT("Back Left");
   LSTR MSG_LEVBED_BR                      = _UxGT("Back Right");
-  LSTR MSG_MANUAL_MESH                    = _UxGT("Manual Mesh");
+  LSTR MSG_MANUAL_MESH                    = _UxGT("Build Manual Mesh");
   LSTR MSG_AUTO_MESH                      = _UxGT("Auto Build Mesh");
   LSTR MSG_AUTO_Z_ALIGN                   = _UxGT("Auto Z-Align");
   LSTR MSG_ITERATION                      = _UxGT("G34 Iteration: %i");
@@ -126,8 +126,8 @@ namespace Language_en {
       LSTR MSG_PREHEAT_2_SETTINGS         = _UxGT("Preheat ") PREHEAT_2_LABEL _UxGT(" Settings");
     #endif
     #ifdef PREHEAT_3_LABEL
-      LSTR MSG_PREHEAT_3                  = _UxGT("Preheat ") PREHEAT_3_LABEL;
-      LSTR MSG_PREHEAT_3_SETTINGS         = _UxGT("Preheat ") PREHEAT_3_LABEL _UxGT(" Settings");
+      LSTR MSG_PREHEAT_3                  = _UxGT("Warmup ");
+      LSTR MSG_PREHEAT_3_SETTINGS         = _UxGT("Warmup ") _UxGT("Settings");
     #endif
     LSTR MSG_PREHEAT_M                    = _UxGT("Preheat $");
     LSTR MSG_PREHEAT_M_H                  = _UxGT("Preheat $ ~");
@@ -668,6 +668,7 @@ namespace Language_en {
   LSTR MSG_UBL_LEVELING                   = _UxGT("Unified Bed Leveling");
   LSTR MSG_MESH_LEVELING                  = _UxGT("Mesh Settings");
   LSTR MSG_MESH_DONE                      = _UxGT("Mesh probing done");
+  LSTR MSG_MESH_POINTS                    = _UxGT("Mesh Points");
   LSTR MSG_INFO_STATS_MENU                = _UxGT("Printer Stats");
   LSTR MSG_RESET_STATS                    = _UxGT("Reset Print Stats?");
   LSTR MSG_INFO_BOARD_MENU                = _UxGT("Board Info");

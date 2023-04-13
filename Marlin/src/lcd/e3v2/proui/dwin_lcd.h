@@ -71,6 +71,11 @@ void DWIN_Frame_AreaCopy(bool IBD, bool BIR, bool BFI, uint8_t cacheID, uint16_t
 //  data: address of the buffer with data
 void DWIN_WriteToMem(uint8_t mem, uint16_t addr, uint16_t length, uint8_t *data);
 
+// Draw an Icon from SRAM without background transparency for DACAI Screen support
+//  x/y: Upper-left point
+//  addr: SRAM address
+void DWIN_ICON_Show(uint16_t x, uint16_t y, uint16_t addr);
+
 // Write the contents of the 32KB SRAM data memory into the designated image memory space.
 //  picID: Picture memory space location, 0x00-0x0F, each space is 32Kbytes
 void DWIN_SRAMToPic(uint8_t picID);

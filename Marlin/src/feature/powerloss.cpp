@@ -69,6 +69,10 @@ uint32_t PrintJobRecovery::cmd_sdpos, // = 0
 #define DEBUG_OUT ENABLED(DEBUG_POWER_LOSS_RECOVERY)
 #include "../core/debug_out.h"
 
+#if ENABLED(DWIN_LCD_PROUI)
+  #include "../lcd/e3v2/proui/dwin_popup.h"
+#endif
+
 PrintJobRecovery recovery;
 
 #ifndef POWER_LOSS_PURGE_LEN

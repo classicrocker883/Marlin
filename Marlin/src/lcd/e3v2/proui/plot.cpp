@@ -31,12 +31,10 @@
 
 #if BOTH(DWIN_LCD_PROUI, SHOW_TUNING_GRAPH)
 
-#include "plot.h"
+#include "dwin.h"
 #include "../../../core/types.h"
 #include "../../marlinui.h"
-#include "dwin_lcd.h"
-#include "dwinui.h"
-#include "dwin.h"
+#include "plot.h"
 
 #define Plot_Bg_Color RGB( 1, 12,  8)
 
