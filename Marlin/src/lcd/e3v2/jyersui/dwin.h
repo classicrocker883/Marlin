@@ -70,7 +70,8 @@ enum PopupID : uint8_t {
   Popup_InvalidMesh,
   Popup_UI,
   Popup_Complete,
-  Popup_Custom
+  Popup_Custom,
+  Popup_ConfStart
 };
 
 enum menuID : uint8_t {
@@ -157,7 +158,7 @@ enum colorID : uint8_t {
 #define Custom_Colors       10
 #define COLOR_AQUA          RGB(0x00,0x3F,0x1F)
 #define COLOR_LIGHT_WHITE   0xBDD7
-#define COLOR_GREEN         RGB(0x00,0x3F,0x00)
+#define COLOR_GREEN         0x07E0
 #define COLOR_LIGHT_GREEN   0x3460
 #define COLOR_CYAN          0x07FF
 #define COLOR_LIGHT_CYAN    0x04F3
@@ -166,16 +167,21 @@ enum colorID : uint8_t {
 #define COLOR_MAGENTA       0xF81F
 #define COLOR_LIGHT_MAGENTA 0x9813
 #define COLOR_LIGHT_RED     0x8800
-#define COLOR_ORANGE        0xFA20
-#define COLOR_LIGHT_ORANGE  0xFBC0
-#define COLOR_LIGHT_YELLOW  0x8BE0
-#define COLOR_BROWN         0xCC27
-#define COLOR_LIGHT_BROWN   0x6204
+#define COLOR_ORANGE        0xFB00
+#define COLOR_LIGHT_ORANGE  0xFC80
+#define COLOR_LIGHT_YELLOW  0xFFE0
+#define COLOR_BROWN         0x8A22
+#define COLOR_LIGHT_BROWN   0xC530
 #define COLOR_BLACK         0x0000
 #define COLOR_GREY          0x18E3
 #define COLOR_CHECKBOX      0x4E5C  // Check-box check color
 #define COLOR_CONFIRM       0x34B9
 #define COLOR_CANCEL        0x3186
+
+#if ENABLED(DWIN_CREALITY_LCD_GCODE_PREVIEW)
+  #define Thumnail_Icon       0x00
+  #define Thumnail_Preview    0x01
+#endif
 
 class JyersDWIN {
 public:
@@ -197,6 +203,9 @@ public:
     uint8_t status_area_text : 4;
     uint8_t coordinates_text : 4;
     uint8_t coordinates_split_line : 4;
+    #if ENABLED(DWIN_CREALITY_LCD_GCODE_PREVIEW)
+      bool show_gcode_thumbnails : 1;
+    #endif
   } eeprom_settings;
 
   static constexpr const char * const color_names[11] = { "Default", "White", "Green", "Cyan", "Blue", "Magenta", "Red", "Orange", "Yellow", "Brown", "Black" };
@@ -209,7 +218,7 @@ public:
   static void drawCheckbox(const uint8_t row, const bool value);
   static void drawTitle(const char * const title);
   static void drawTitle(FSTR_P const title);
-  static void drawMenuItem(const uint8_t row, uint8_t icon=0, const char * const label1=nullptr, const char * const label2=nullptr, const bool more=false, const bool centered=false);
+  static void drawMenuItem(const uint8_t row, uint8_t icon=0, const char * const label1=nullptr, const char * const label2=nullptr, const bool more=false, const bool centered=false, bool onlyCachedFileIcon=false);
   static void drawMenuItem(const uint8_t row, uint8_t icon=0, FSTR_P const flabel1=nullptr, FSTR_P const flabel2=nullptr, const bool more=false, const bool centered=false);
   static void drawMenu(const uint8_t menu, const uint8_t select=0, const uint8_t scroll=0);
   static void redrawMenu(const bool lastproc=true, const bool lastsel=false, const bool lastmenu=false);
@@ -232,6 +241,10 @@ public:
   static void drawPopup(FSTR_P const line1, FSTR_P const line2, FSTR_P const line3, uint8_t mode, uint8_t icon=0);
   static void popupSelect();
   static void updateStatusBar(const bool refresh=false);
+
+  #if ENABLED(DWIN_CREALITY_LCD_GCODE_PREVIEW)
+    static bool find_and_decode_gcode_preview(char *name, uint8_t preview_type, uint16_t *address, bool onlyCachedFileIcon=false);
+  #endif
 
   static FSTR_P getMenuTitle(const uint8_t menu);
   static uint8_t getMenuSize(const uint8_t menu);

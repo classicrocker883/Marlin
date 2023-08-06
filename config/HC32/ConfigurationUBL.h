@@ -3379,8 +3379,8 @@
 // Ender-3 v2 OEM display. A DWIN display with Rotary Encoder.
 //
 // DWIN / DACAI LCD 4.3" 480x272
-#define DWIN_CREALITY_LCD_JYERSUI
-//#define DWIN_LCD_PROUI          // Pro UI by MRiscoC
+
+#define DWIN_LCD_PROUI          // Pro UI by MRiscoC
 #define USE_STOCK_DWIN_SET      // Enabled ? 9.ICO : 7.ICO | in DWIN_SET
 //#define HAS_DACAI 1
 

@@ -440,6 +440,45 @@ void dwinIconAnimationControl(uint16_t state) {
   dwinSend(i);
 }
 
+void DWIN_Save_JPEG_in_SRAM(uint8_t *data, uint16_t size, uint16_t dest_addr) {
+  const uint8_t max_data_size = 128;
+  uint16_t pending_data = size;
+
+  uint8_t iter = 0;
+  
+  while (pending_data > 0) {
+    uint16_t data_to_send = max_data_size;
+    if (pending_data - max_data_size <= 0)
+        data_to_send = pending_data;
+    
+    uint16_t from_i = iter * max_data_size;
+    uint16_t to_i = from_i + data_to_send - 1;
+
+    size_t i = 0;
+    dwinByte(i, 0x31);
+    dwinByte(i, 0x5A);
+    dwinWord(i, dest_addr+(iter * max_data_size));
+    ++i;
+    for (uint8_t n = 0; n < i; n++) { LCD_SERIAL.write(dwinSendBuf[n]); delayMicroseconds(1); }
+    for (uint16_t n = from_i; n <= to_i; n++) { LCD_SERIAL.write(*(data + n)); delayMicroseconds(1);}
+    for (uint8_t n = 0; n < 4; n++) { LCD_SERIAL.write(dwinBufTail[n]); delayMicroseconds(1); }
+    pending_data -= data_to_send;
+    iter++;
+  } 
+}
+
+void DWIN_SRAM_Memory_Icon_Display(uint16_t x, uint16_t y, uint16_t source_addr) {
+  size_t i = 0;
+  dwinByte(i, 0x24);
+  NOMORE(x, DWIN_WIDTH - 1);
+  NOMORE(y, DWIN_HEIGHT - 1); // -- ozy -- srl
+  dwinWord(i, x);
+  dwinWord(i, y);
+  dwinByte(i, 0x80);
+  dwinWord(i, source_addr);
+  dwinSend(i);
+}
+
 /*---------------------------------------- Memory functions ----------------------------------------*/
 // The LCD has an additional 32KB SRAM and 16KB Flash
 // Data can be written to the SRAM and saved to one of the jpeg page files
