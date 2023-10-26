@@ -647,7 +647,7 @@
 // Above this temperature the heater will be switched off.
 // This can protect components from overheating, but NOT from shorts and failures.
 // (Use MINTEMP for thermistor short/failure protection.)
-#define HEATER_0_MAXTEMP 275
+#define HEATER_0_MAXTEMP 315
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
@@ -850,8 +850,8 @@
   #define PID_FUNCTIONAL_RANGE 10 // If the temperature difference between the target temperature and the actual temperature
                                   // is more than PID_FUNCTIONAL_RANGE then the PID will be shut off and the heater will be set to min/max.
 
-  //#define PID_EDIT_MENU           // Add PID editing to the "Advanced Settings" menu. (~700 bytes of flash)
-  //#define PID_AUTOTUNE_MENU       // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of flash)
+  #define PID_EDIT_MENU           // Add PID editing to the "Advanced Settings" menu. (~700 bytes of flash)
+  #define PID_AUTOTUNE_MENU       // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of flash)
 #endif
 
 // @section safety
@@ -3411,9 +3411,8 @@
 //
 // DWIN / DACAI LCD 4.3" 480x272
 
-#define DWIN_CREALITY_LCD          // Pro UI by MRiscoC
+#define DWIN_LCD_PROUI          // Pro UI by MRiscoC
 //#define HAS_DACAI 1
-#define USE_STOCK_DWIN_SET
 
 #if ENABLED(DWIN_LCD_PROUI)
 // Professional firmware features:
@@ -3422,16 +3421,16 @@
     #define HAS_GCODE_PREVIEW 1
     #define HAS_TOOLBAR 1
   #else
-    #define HAS_GCODE_PREVIEW 1
+    #define HAS_GCODE_PREVIEW_NOPRO 1
   #endif
   //#define DISABLE_TUNING_GRAPH 0// Temp plot graph - PID/MPC Tuning (1624 bytes of flash)
   //#define HAS_ESDIAG 1        // View End-stop switch continuity (560 bytes of flash)
   //#define HAS_CGCODE 1        // Extra Gcode options (3320 bytes of flash)
   //#define HAS_LOCKSCREEN 1    // Simple lockscreen as to not accidentally change something (568 bytes of flash)
-  //#define HAS_SD_EXTENDER 1     // Enable to support SD card extender cables (48 bytes of flash)
-  //#define USE_GRID_MESHVIEWER 1 // Enable two mesh graph types : one (1728 bytes of flash)
+  #define HAS_SD_EXTENDER 1     // Enable to support SD card extender cables (48 bytes of flash)
+  #define USE_GRID_MESHVIEWER 1 // Enable two mesh graph types : one (1728 bytes of flash)
   //#define HAS_CUSTOM_COLORS 1 // Able to change display colors (2040 bytes of flash)
-  //#define ALT_COLOR_MENU 0      // Color palette options >> 0 = Voxelab Default | 1 = Alternate Aquila | 2 = Ender3V2 Default
+  #define ALT_COLOR_MENU 0      // Color palette options >> 0 = Voxelab Default | 1 = Alternate Aquila | 2 = Ender3V2 Default
   #if ENABLED(AUTO_BED_LEVELING_UBL)
     //#define ACTIVATE_MESH_ITEM// Active Mesh Leveling menu option (152 bytes of flash)
   #endif
@@ -3442,17 +3441,17 @@
     #define HS_MENU_ITEM        // BLTOUCH_HS_MODE menu option (56 bytes of flash)
   #endif
   #if DISABLED(DISABLE_TUNING_GRAPH)
-    //#define PLOT_TUNE_ITEM      // Temperature Plot Graph item in Tune/Prepare Menu (688 bytes of flash)
+    #define PLOT_TUNE_ITEM      // Temperature Plot Graph item in Tune/Prepare Menu (688 bytes of flash)
   #endif
   //#define PLR_TUNE_ITEM       // Power-loss Recovery option in Tune Menu (POWER_LOSS_RECOVERY 3400 bytes of flash)
   //#define JD_TUNE_ITEM        // Juntion Deviation item in Tune Menu (only if JD is enabled)
   #define ADVK_TUNE_ITEM        // Linear Advance item in Tune Menu (only if JD is enabled)
   #define SHOW_REAL_POS
   //#define CCLOUD_PRINT_SUPPORT// Menu item: enable/disable Creality Cloud Print Support (192 bytes of flash)
-  //#define TRAMWIZ_MENU_ITEM     // Menu item: enable Tramming Wizard (2304 bytes of flash)
+  #define TRAMWIZ_MENU_ITEM     // Menu item: enable Tramming Wizard (2304 bytes of flash)
   #define MEDIASORT_MENU_ITEM   // Menu item: enable/disable file list sorting (104 bytes of flash)
   //#define ENC_MENU_ITEM       // Menu item: faster/slower encoder rate (272 bytes of flash)
-  //#define SHOW_SPEED_IND        // Menu item: blink speed in mm/s along with speed percentage (296 bytes of flash)
+  #define SHOW_SPEED_IND        // Menu item: blink speed in mm/s along with speed percentage (296 bytes of flash)
   //#define NO_BLINK_IND        // Disables dashboard icon blink indicator highlighted background
 
 #endif

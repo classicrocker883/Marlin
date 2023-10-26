@@ -2643,7 +2643,7 @@
  * - During Hold all Emergency Parser commands are available, as usual.
  * - Enable NANODLP_Z_SYNC and NANODLP_ALL_AXIS for move command end-state reports.
  */
-//#define REALTIME_REPORTING_COMMANDS     // (544 bytes of flash)
+#define REALTIME_REPORTING_COMMANDS       // (544 bytes of flash)
 #if ENABLED(REALTIME_REPORTING_COMMANDS)
   //#define FULL_REPORT_TO_HOST_FEATURE   // Auto-report the machine status like Grbl CNC (208 bytes of flash)
 #endif
@@ -2700,7 +2700,7 @@
  *
  * Note that M207 / M208 / M209 settings are saved to EEPROM.
  */
-//#define FWRETRACT  // MRiscoC Enabled support for firmware based retract (1592 bytes of flash)
+#define FWRETRACT  // MRiscoC Enabled support for firmware based retract (1592 bytes of flash)
 #if ENABLED(FWRETRACT)
   //#define FWRETRACT_AUTORETRACT             // Override slicer retractions  // MRiscoC use slicer retract
   #if ENABLED(FWRETRACT_AUTORETRACT)
@@ -3810,7 +3810,7 @@
 /**
  * Auto-report position with M154 S<seconds>
  */
-//#define AUTO_REPORT_POSITION // (224 bytes of flash)
+#define AUTO_REPORT_POSITION // (224 bytes of flash)
 #if ENABLED(AUTO_REPORT_POSITION)
   #define AUTO_REPORT_REAL_POSITION // Auto-report the real position
 #endif
@@ -3818,7 +3818,7 @@
 /**
  * Include capabilities in M115 output
  */
-//#define EXTENDED_CAPABILITIES_REPORT // (1000 bytes of flash)
+#define EXTENDED_CAPABILITIES_REPORT // (1000 bytes of flash)
 #if ENABLED(EXTENDED_CAPABILITIES_REPORT)
   #define M115_GEOMETRY_REPORT  // (448 bytes of flash) MRiscoC Enabled
 #endif
@@ -3866,7 +3866,7 @@
 // @section reporting
 
 // Extra options for the M114 "Current Position" report
-//#define M114_DETAIL         // Use 'M114' for details to check planner calculations (600 bytes of flash)
+#define M114_DETAIL           // Use 'M114' for details to check planner calculations (600 bytes of flash)
 //#define M114_REALTIME       // Real current position based on forward kinematics (80 bytes of flash)
 //#define M114_LEGACY         // M114 used to synchronize on every call. Enable if needed.
 
@@ -4075,7 +4075,7 @@
  *
  * Implement M486 to allow Marlin to skip objects
  */
-//#define CANCEL_OBJECTS  // MRiscoC Enabled M486 to skip objects (416 bytes of flash)
+#define CANCEL_OBJECTS  // MRiscoC Enabled M486 to skip objects (416 bytes of flash)
 #if ENABLED(CANCEL_OBJECTS)
   #define CANCEL_OBJECTS_REPORTING // Emit the current object as a status message
 #endif
