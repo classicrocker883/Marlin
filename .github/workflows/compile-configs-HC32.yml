@@ -46,7 +46,7 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        sed -i "s/[^ ]*#include "drivers/usart/Usart.h"/#include "drivers/usart/usart.h"/g" /home/runner/.platformio/packages/framework-arduino-hc32f46x/cores/arduino/Arduino.h
+        sed -i 's/[^ ]*#include "drivers\/usart\/Usart.h"/#include "drivers\/usart\/usart.h"/g' /home/runner/.platformio/packages/framework-arduino-hc32f46x/cores/arduino/Arduino.h
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
@@ -124,7 +124,7 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        sed -i "s/[^ ]*#include "drivers/usart/Usart.h"/#include "drivers/usart/usart.h"/g" /home/runner/.platformio/packages/framework-arduino-hc32f46x/cores/arduino/Arduino.h
+        sed -i 's/[^ ]*#include "drivers\/usart\/Usart.h"/#include "drivers\/usart\/usart.h"/g' /home/runner/.platformio/packages/framework-arduino-hc32f46x/cores/arduino/Arduino.h
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if ($IS); then ISTMP=-IS; else ISTMP=; fi;        
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
@@ -210,7 +210,7 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        sed -i "s/[^ ]*#include "drivers/usart/Usart.h"/#include "drivers/usart/usart.h"/g" /home/runner/.platformio/packages/framework-arduino-hc32f46x/cores/arduino/Arduino.h
+        sed -i 's/[^ ]*#include "drivers\/usart\/Usart.h"/#include "drivers\/usart\/usart.h"/g' /home/runner/.platformio/packages/framework-arduino-hc32f46x/cores/arduino/Arduino.h
         if ($TP); then TPTMP=-MPC; else TPTMP=; fi;
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
         echo "filename=${AVTMP}_UBL-ProUI${TPTMP}.bin" >> $GITHUB_OUTPUT
@@ -354,7 +354,7 @@ jobs:
     - name: Run PlatformIO
       id: build_configs
       run: |
-        sed -i "s/[^ ]*#include "drivers/usart/Usart.h"/#include "drivers/usart/usart.h"/g" /home/runner/.platformio/packages/framework-arduino-hc32f46x/cores/arduino/Arduino.h
+        sed -i 's/[^ ]*#include "drivers\/usart\/Usart.h"/#include "drivers\/usart\/usart.h"/g' /home/runner/.platformio/packages/framework-arduino-hc32f46x/cores/arduino/Arduino.h
         if [ "$AQUILA_VER" = HC32 ]; then AVTMP="HC32"; fi;
         echo "filename=${AVTMP}_BLT-ProUI.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
