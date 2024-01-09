@@ -1196,7 +1196,7 @@ class Temperature {
     /**
      * Perform auto-tuning for hotend or bed in response to M303
      */
-    #if HAS_PID_HEATING
+    #if HAS_PID_HEATING || PROUI_PID_TUNE
 
       #if HAS_PID_DEBUG
         static bool pid_debug_flag;
@@ -1217,7 +1217,7 @@ class Temperature {
         }
       #endif
 
-    #endif // HAS_PID_HEATING
+    #endif // HAS_PID_HEATING || PROUI_PID_TUNE
 
     #if ENABLED(MPC_AUTOTUNE)
 

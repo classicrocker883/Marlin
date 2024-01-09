@@ -632,7 +632,7 @@ volatile bool Temperature::raw_temps_ready = false;
  * Class and Instance Methods
  */
 
-#if HAS_PID_HEATING
+#if HAS_PID_HEATING || PROUI_PID_TUNE
 
   inline void say_default_() { SERIAL_ECHOPGM("#define DEFAULT_"); }
 
@@ -910,7 +910,7 @@ volatile bool Temperature::raw_temps_ready = false;
       return;
   }
 
-#endif // HAS_PID_HEATING
+#endif // HAS_PID_HEATING || PROUI_PID_TUNE
 
 #if ENABLED(MPC_AUTOTUNE)
 

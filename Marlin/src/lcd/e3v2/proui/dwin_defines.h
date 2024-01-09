@@ -58,7 +58,7 @@
   #define HAS_ZOFFSET_ITEM 1
 #endif
 
-#if !PROUI_PID_TUNE
+#if ANY(PIDTEMP, PIDTEMPBED)
   #define PROUI_PID_TUNE 1
 #endif
 
