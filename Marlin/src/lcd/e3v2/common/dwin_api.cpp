@@ -257,6 +257,7 @@ void dwinDrawString(bool bShow, uint8_t size, uint16_t color, uint16_t bColor, u
   dwinSend(i);
 }
 
+#if DISABLED(DWIN_LCD_PROUI)
 // Draw a positive integer
 //  bShow: true=display background color; false=don't display background color
 //  zeroFill: true=zero fill; false=no zero fill
@@ -340,6 +341,7 @@ void dwinDrawFloatValue(uint8_t bShow, bool zeroFill, uint8_t zeroMode, uint8_t 
   */
   dwinSend(i);
 }
+#endif
 
 // Draw a floating point number
 //  value: positive unscaled float value
