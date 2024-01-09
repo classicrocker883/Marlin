@@ -58,7 +58,7 @@
   #define HAS_ZOFFSET_ITEM 1
 #endif
 
-#if HAS_PID_HEATING && !PROUI_PID_TUNE
+#if !PROUI_PID_TUNE
   #define PROUI_PID_TUNE 1
 #endif
 
