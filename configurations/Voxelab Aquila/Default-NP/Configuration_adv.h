@@ -1397,7 +1397,7 @@
  * This allows higher feedrates than the MCU could otherwise support.
  */
 #define MULTISTEPPING_LIMIT   16  //: [1, 2, 4, 8, 16, 32, 64, 128]
-//#define OLD_ADAPTIVE_MULTISTEPPING 1
+#define OLD_ADAPTIVE_MULTISTEPPING 1
 
 /**
  * Adaptive Step Smoothing increases the resolution of multi-axis moves, particularly at step frequencies
@@ -3943,7 +3943,7 @@
   // Include capabilities in M115 output
   #define EXTENDED_CAPABILITIES_REPORT // (1000 bytes of flash)
   #if ENABLED(EXTENDED_CAPABILITIES_REPORT)
-    #define M115_GEOMETRY_REPORT  // (448 bytes of flash) MRiscoC Enabled
+    //#define M115_GEOMETRY_REPORT  // (448 bytes of flash) MRiscoC Enabled
   #endif
 #endif
 
