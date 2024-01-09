@@ -58,8 +58,8 @@
   #define HAS_ZOFFSET_ITEM 1
 #endif
 
-#ifndef PROUI_PID_TUNE
-  #define PROUI_PID_TUNE
+#if !HAS_PID_TUNE
+  #define HAS_PID_TUNE 1
 #endif
 
 #define defColorBackground  RGB( 1, 12,  8)
@@ -111,10 +111,10 @@
 #if ENABLED(LIN_ADVANCE)
   #define PROUI_ITEM_ADVK     // Tune > Linear Advance
 #endif
-#if ANY(PROUI_PID_TUNE, MPC_AUTOTUNE) && DISABLED(DISABLE_TUNING_GRAPH)
-  #define PROUI_TUNING_GRAPH 1
+#if ANY(HAS_PID_TUNE, MPC_AUTOTUNE) && DISABLED(DISABLE_TUNING_GRAPH)
+  #define HAS_TUNING_GRAPH 1
 #endif
-#if PROUI_TUNING_GRAPH
+#if HAS_TUNING_GRAPH
   #define PROUI_ITEM_PLOT     // Plot temp graph viewer
 #endif
 #define HAS_GCODE_PREVIEW 1   // Preview G-code model thumbnail
