@@ -34,7 +34,7 @@ namespace LanguageNarrow_de {
   constexpr uint8_t CHARSIZE              = 2;
   LSTR LANGUAGE                           = _UxGT("Deutsch");
 
-  LSTR WELCOME_MSG                        = MACHINE_NAME _UxGT(" bereit");
+  LSTR WELCOME_MSG                        = CUSTOM_MACHINE_NAME _UxGT(" bereit");
   LSTR MSG_YES                            = _UxGT("JA");
   LSTR MSG_NO                             = _UxGT("NEIN");
   LSTR MSG_HIGH                           = _UxGT("HOCH");
@@ -145,6 +145,7 @@ namespace LanguageNarrow_de {
   LSTR MSG_MESH_VIEWER                    = _UxGT("Netzbetrachter");
   LSTR MSG_EDIT_MESH                      = _UxGT("Netz bearbeiten");
   LSTR MSG_MESH_VIEW                      = _UxGT("Netz ansehen");
+  LSTR MSG_CHANGE_MESH                    = _UxGT("Normale Netzbetrachter");
   LSTR MSG_EDITING_STOPPED                = _UxGT("Netzbearb. angeh.");
   LSTR MSG_NO_VALID_MESH                  = _UxGT("Kein gültiges Netz");
   LSTR MSG_ACTIVATE_MESH                  = _UxGT("Nivellierung aktiv.");
@@ -176,7 +177,6 @@ namespace LanguageNarrow_de {
   LSTR MSG_HOTEND_OFFSET_A                = _UxGT("2. Düse @");
   LSTR MSG_UBL_DOING_G29                  = _UxGT("G29 ausführen");
   LSTR MSG_UBL_TOOLS                      = _UxGT("UBL-Werkzeuge");
-  LSTR MSG_UBL_LEVEL_BED                  = _UxGT("Unified Bed Leveling");
   LSTR MSG_LCD_TILTING_MESH               = _UxGT("Berührungspunkt");
   LSTR MSG_UBL_TILT_MESH                  = _UxGT("Tilt Mesh");
   LSTR MSG_UBL_TILTING_GRID               = _UxGT("Tilting Grid Size");
@@ -288,16 +288,9 @@ namespace LanguageNarrow_de {
   LSTR MSG_MOVE_E                         = _UxGT("Bewege Extruder");
   LSTR MSG_MOVE_EN                        = _UxGT("Bewege Extruder *");
   LSTR MSG_HOTEND_TOO_COLD                = _UxGT("Hotend zu kalt");
-  LSTR MSG_MOVE_N_MM                      = _UxGT(" $ mm");
-  LSTR MSG_MOVE_01MM                      = _UxGT("  0,1  mm");
-  LSTR MSG_MOVE_1MM                       = _UxGT("  1,0  mm");
-  LSTR MSG_MOVE_10MM                      = _UxGT(" 10,0  mm");
-  LSTR MSG_MOVE_50MM                      = _UxGT(" 50,0  mm");
-  LSTR MSG_MOVE_100MM                     = _UxGT("100,0  mm");
-  LSTR MSG_MOVE_0001IN                    = _UxGT("0.001 in");
-  LSTR MSG_MOVE_001IN                     = _UxGT("0.010 in");
-  LSTR MSG_MOVE_01IN                      = _UxGT("0.100 in");
-  LSTR MSG_MOVE_1IN                       = _UxGT("1.000 in");
+  LSTR MSG_MOVE_N_MM                      = _UxGT("Bewege $mm");
+  LSTR MSG_MOVE_N_IN                      = _UxGT("Bewege $in");
+  LSTR MSG_MOVE_N_DEG                     = _UxGT("Bewege $") LCD_STR_DEGREE;
   LSTR MSG_SPEED                          = _UxGT("Geschw.");
   LSTR MSG_MESH_Z_OFFSET                  = _UxGT("Bett Z");
   LSTR MSG_NOZZLE                         = _UxGT("Düse");

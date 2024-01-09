@@ -39,6 +39,10 @@
   #include "../lcd/extui/ui_api.h"
 #endif
 
+#if PROUI_EX
+  #include "../lcd/e3v2/proui/proui.h"
+#endif
+
 //#define FILAMENT_RUNOUT_SENSOR_DEBUG
 #ifndef FILAMENT_RUNOUT_THRESHOLD
   #define FILAMENT_RUNOUT_THRESHOLD 5
@@ -64,7 +68,11 @@ inline bool should_monitor_runout() { return did_pause_print || printingIsActive
 
 template<class RESPONSE_T, class SENSOR_T>
 class TFilamentMonitor;
-class FilamentSensor;
+#if PROUI_EX
+  class FilamentSensorDevice;
+#else
+  class FilamentSensor;
+#endif
 class RunoutResponseDelayed;
 class RunoutResponseDebounced;
 
@@ -72,7 +80,7 @@ class RunoutResponseDebounced;
 
 typedef TFilamentMonitor<
           TERN(HAS_FILAMENT_RUNOUT_DISTANCE, RunoutResponseDelayed, RunoutResponseDebounced),
-          FilamentSensor
+          TERN(PROUI_EX, FilamentSensorDevice, FilamentSensor)
         > FilamentMonitor;
 
 extern FilamentMonitor runout;
@@ -159,7 +167,7 @@ class TFilamentMonitor : public FilamentMonitorBase {
         if (ran_out) {
           #if ENABLED(FILAMENT_RUNOUT_SENSOR_DEBUG)
             SERIAL_ECHOPGM("Runout Sensors: ");
-            for (uint8_t i = 0; i < 8; ++i) SERIAL_ECHO('0' + char(runout_flags[i]));
+            for (uint8_t i = 0; i < 8; ++i) SERIAL_CHAR('0' + char(runout_flags[i]));
             SERIAL_ECHOLNPGM(" -> ", extruder, " RUN OUT");
           #endif
 
@@ -191,7 +199,11 @@ class FilamentSensorBase {
   public:
     static void setup() {
       #define _INIT_RUNOUT_PIN(P,S,U,D) do{ if (ENABLED(U)) SET_INPUT_PULLUP(P); else if (ENABLED(D)) SET_INPUT_PULLDOWN(P); else SET_INPUT(P); }while(0);
-      #define  INIT_RUNOUT_PIN(N) _INIT_RUNOUT_PIN(FIL_RUNOUT##N##_PIN, FIL_RUNOUT##N##_STATE, FIL_RUNOUT##N##_PULLUP, FIL_RUNOUT##N##_PULLDOWN);
+      #if PROUI_EX
+        #define INIT_RUNOUT_PIN(N) ProEx.SetRunoutState(FIL_RUNOUT##N##_PIN);
+      #else
+        #define  INIT_RUNOUT_PIN(N) _INIT_RUNOUT_PIN(FIL_RUNOUT##N##_PIN, FIL_RUNOUT##N##_STATE, FIL_RUNOUT##N##_PULLUP, FIL_RUNOUT##N##_PULLDOWN);
+      #endif
       REPEAT_1(NUM_RUNOUT_SENSORS, INIT_RUNOUT_PIN)
       #undef INIT_RUNOUT_PIN
 
@@ -212,12 +224,16 @@ class FilamentSensorBase {
 
     // Return a bitmask of runout flag states (1 bits always indicates runout)
     static uint8_t poll_runout_states() {
-      #define _INVERT_BIT(N) | (FIL_RUNOUT##N##_STATE ? 0 : _BV(N - 1))
+      #if ENABLED(PROUI_EX)
+        #define _INVERT_BIT(N) | (PRO_data.Runout_active_state ? 0 : _BV(N - 1))
+      #else
+        #define _INVERT_BIT(N) | (FIL_RUNOUT##N##_STATE ? 0 : _BV(N - 1))
+      #endif
       return poll_runout_pins() ^ uint8_t(0 REPEAT_1(NUM_RUNOUT_SENSORS, _INVERT_BIT));
       #undef _INVERT_BIT
     }
 
-    #if ENABLED(FILAMENT_SWITCH_AND_MOTION)
+    #if ENABLED(FILAMENT_SWITCH_AND_MOTION) && DISABLED(PROUI_EX)
       // Return a bitmask of motion pin states
       static uint8_t poll_motion_pins() {
         #define _OR_MOTION(N) | (READ(FIL_MOTION##N##_PIN) ? _BV((N) - 1) : 0)
@@ -234,7 +250,29 @@ class FilamentSensorBase {
     #endif
 };
 
-#if HAS_FILAMENT_MOTION
+#if PROUI_EX
+
+  class FilamentSensorDevice : public FilamentSensorBase {
+  private:
+    static uint8_t motion_detected;
+    static void poll_motion_sensor();
+  public:
+    static void block_completed(const block_t * const b);
+    static void run();
+    static bool poll_runout_state(const uint8_t extruder) {
+      const uint8_t runout_states = poll_runout_states();
+      #if MULTI_FILAMENT_SENSOR
+        if ( !TERN0(DUAL_X_CARRIAGE, idex_is_duplicating())
+          && !TERN0(MULTI_NOZZLE_DUPLICATION, extruder_duplication_enabled)
+        ) return TEST(runout_states, extruder); // A specific extruder ran out
+      #else
+        UNUSED(extruder);
+      #endif
+      return !!runout_states;                   // Any extruder ran out
+    }
+  };
+
+#elif HAS_FILAMENT_MOTION
 
   /**
    * This sensor uses a magnetic encoder disc and a Hall effect
@@ -280,7 +318,7 @@ class FilamentSensorBase {
 
 #endif // HAS_FILAMENT_MOTION
 
-#if HAS_FILAMENT_SWITCH
+#if HAS_FILAMENT_SWITCH && DISABLED(PROUI_EX)
 
   /**
    * This is a simple endstop switch in the path of the filament.
@@ -318,8 +356,9 @@ class FilamentSensorBase {
       }
   };
 
- #endif // HAS_FILAMENT_SWITCH
+#endif // HAS_FILAMENT_SWITCH
 
+#if DISABLED(PROUI_EX)
   /**
    * This is a simple endstop switch in the path of the filament.
    * It can detect filament runout, but not stripouts or jams.
@@ -340,7 +379,7 @@ class FilamentSensorBase {
         TERN_(HAS_FILAMENT_SWITCH, switch_sensor.run());
       }
   };
-
+#endif
 
 /********************************* RESPONSE TYPE *********************************/
 
@@ -360,6 +399,9 @@ class FilamentSensorBase {
   // during a runout condition.
   class RunoutResponseDelayed {
     private:
+      #if PROUI_EX
+        static float runout_mm_countdown[NUM_RUNOUT_SENSORS];
+      #endif
       static countdown_t mm_countdown;
 
     public:
@@ -391,7 +433,7 @@ class FilamentSensorBase {
 
       static runout_flags_t has_run_out() {
         runout_flags_t runout_flags{0};
-        for (uint8_t i = 0; i < NUM_RUNOUT_SENSORS; ++i) if (mm_countdown.runout[i] < 0) runout_flags.set(i);
+        for (uint8_t i = 0; i < NUM_RUNOUT_SENSORS; ++i) if (TERN(PROUI_EX, runout_mm_countdown[i], mm_countdown.runout[i]) < 0) runout_flags.set(i);
         #if ENABLED(FILAMENT_SWITCH_AND_MOTION)
           for (uint8_t i = 0; i < NUM_MOTION_SENSORS; ++i) if (mm_countdown.motion[i] < 0) runout_flags.set(i);
         #endif
@@ -399,12 +441,12 @@ class FilamentSensorBase {
       }
 
       static void filament_present(const uint8_t extruder) {
-        if (mm_countdown.runout[extruder] < runout_distance_mm || did_pause_print) {
+        if (TERN(PROUI_EX, runout_mm_countdown[extruder], mm_countdown.runout[extruder]) < runout_distance_mm || did_pause_print) {
           // Reset runout only if it is smaller than runout_distance or printing is paused.
           // On Bowden systems retract may be larger than runout_distance_mm, so if retract
           // was added leave it in place, or the following unretract will cause runout event.
-          mm_countdown.runout[extruder] = runout_distance_mm;
-          mm_countdown.runout_reset.clear(extruder);
+          (TERN(PROUI_EX, runout_mm_countdown[extruder], mm_countdown.runout[extruder])) = runout_distance_mm;
+            mm_countdown.runout_reset.clear(extruder);
         }
         else {
           // If runout is larger than runout distance, we cannot reset right now, as Bowden and retract
@@ -439,7 +481,7 @@ class FilamentSensorBase {
         const float mm = (b->direction_bits.e ? esteps : -esteps) * planner.mm_per_step[E_AXIS_N(e)];
 
         if (e < NUM_RUNOUT_SENSORS) {
-          mm_countdown.runout[e] -= mm;
+          TERN(PROUI_EX, runout_mm_countdown[e], mm_countdown.runout[e]) -= mm;
           if (mm_countdown.runout_reset[e]) filament_present(e);          // Reset pending. Try to reset.
         }
 

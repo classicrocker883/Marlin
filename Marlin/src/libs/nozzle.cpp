@@ -254,6 +254,8 @@ Nozzle nozzle;
         _MIN(Z_MAX_POS,                         // Maximum height is fixed
           #ifdef NOZZLE_PARK_Z_RAISE_MIN
             NOZZLE_PARK_Z_RAISE_MIN +           // Minimum raise...
+          #else
+            Z_POST_CLEARANCE +                  // Minimum raise...
           #endif
           current_position.z                    // ...over current position
         )
@@ -264,17 +266,26 @@ Nozzle nozzle;
   void Nozzle::park(const uint8_t z_action, const xyz_pos_t &park/*=NOZZLE_PARK_POINT*/) {
     #if HAS_Z_AXIS
       constexpr feedRate_t fr_z = NOZZLE_PARK_Z_FEEDRATE;
+      constexpr feedRate_t fr_xy = NOZZLE_PARK_XY_FEEDRATE;
 
       switch (z_action) {
-        case 1: // Go to Z-park height
+        case 1:   // Go to Z-park height
           do_blocking_move_to_z(park.z, fr_z);
           break;
 
-        case 2: // Raise by Z-park height
+        case 2:   // Raise by Z-park height
           do_blocking_move_to_z(_MIN(current_position.z + park.z, Z_MAX_POS), fr_z);
           break;
 
-        default: // Raise by NOZZLE_PARK_Z_RAISE_MIN, use park.z as a minimum height
+        case 3: { // Raise by NOZZLE_PARK_Z_RAISE_MIN, bypass XY-park position
+          do_blocking_move_to_z(park_mode_0_height(0), fr_z);
+          goto SKIP_XY_MOVE;
+        } break;
+
+        case 4:   // Skip Z raise, go to XY position
+          break;
+
+        default:  // Raise by NOZZLE_PARK_Z_RAISE_MIN, use park.z as a minimum height
           do_blocking_move_to_z(park_mode_0_height(park.z), fr_z);
           break;
       }
@@ -283,7 +294,7 @@ Nozzle nozzle;
     #ifndef NOZZLE_PARK_MOVE
       #define NOZZLE_PARK_MOVE 0
     #endif
-    constexpr feedRate_t fr_xy = NOZZLE_PARK_XY_FEEDRATE;
+
     switch (NOZZLE_PARK_MOVE) {
       case 0: do_blocking_move_to_xy(park, fr_xy); break;
       case 1: do_blocking_move_to_x(park.x, fr_xy); break;
@@ -294,6 +305,7 @@ Nozzle nozzle;
               do_blocking_move_to_x(park.x, fr_xy); break;
     }
 
+    SKIP_XY_MOVE:
     report_current_position();
   }
 

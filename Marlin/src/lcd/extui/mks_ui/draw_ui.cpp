@@ -502,7 +502,7 @@ char *getDispText(int index) {
     case MESHLEVELING_UI:     strcpy(public_buf_l, leveling_menu.title); break;
     case BIND_UI:             strcpy(public_buf_l, cloud_menu.title); break;
     case TOOL_UI:             strcpy(public_buf_l, tool_menu.title); break;
-    case WIFI_LIST_UI:        TERN_(MKS_WIFI_MODULE, strcpy(public_buf_l, list_menu.title)); break;
+    case WIFI_LIST_UI:        OPTCODE(MKS_WIFI_MODULE, strcpy(public_buf_l, list_menu.title)) break;
     case MACHINE_PARA_UI:     strcpy(public_buf_l, MachinePara_menu.title); break;
     case BABYSTEP_UI:         strcpy(public_buf_l, operation_menu.babystep); break;
     case EEPROM_SETTINGS_UI:  strcpy(public_buf_l, eeprom_menu.title); break;
@@ -812,7 +812,7 @@ void GUI_RefreshPage() {
       break;
     case DIALOG_UI:
       filament_dialog_handle();
-      TERN_(MKS_WIFI_MODULE, wifi_scan_handle());
+      OPTCODE(MKS_WIFI_MODULE, wifi_scan_handle())
       break;
     case MESHLEVELING_UI: break;
     case HARDWARE_TEST_UI: break;
@@ -951,7 +951,7 @@ void clear_cur_ui() {
     case MAXFEEDRATE_UI:              lv_clear_max_feedrate_settings(); break;
     case STEPS_UI:                    lv_clear_step_settings(); break;
     case ACCELERATION_UI:             lv_clear_acceleration_settings(); break;
-    case JERK_UI:                     TERN_(HAS_CLASSIC_JERK, lv_clear_jerk_settings()); break;
+    case JERK_UI:                     OPTCODE(CLASSIC_JERK, lv_clear_jerk_settings()) break;
     case MOTORDIR_UI:                 break;
     case HOMESPEED_UI:                break;
     case NOZZLE_CONFIG_UI:            break;
@@ -1061,7 +1061,7 @@ void draw_return_ui() {
       case MAXFEEDRATE_UI:              lv_draw_max_feedrate_settings(); break;
       case STEPS_UI:                    lv_draw_step_settings(); break;
       case ACCELERATION_UI:             lv_draw_acceleration_settings(); break;
-      #if HAS_CLASSIC_JERK
+      #if ENABLED(CLASSIC_JERK)
         case JERK_UI:                   lv_draw_jerk_settings(); break;
       #endif
       case MOTORDIR_UI:                 break;

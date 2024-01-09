@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- *
  * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
- * Copyright (c) 2016 Bob Cousins bobcousins42@googlemail.com
- * Copyright (c) 2017 Victor Perez
+ *
+ * Based on Sprinter and grbl.
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -118,3 +118,15 @@ FORCE_INLINE static void HAL_timer_set_compare(const uint8_t timer_num, const ha
 
 #define HAL_timer_isr_prologue(T) NOOP
 #define HAL_timer_isr_epilogue(T) NOOP
+
+// Support for Creality CV Laser module
+// Code from CrealityOfficial laser support repository:
+// https://github.com/CrealityOfficial/Ender-3S1/tree/ender-3s1-lasermodel
+// 107011 激光模式
+#define LASER_TIMER_FREQUENCY          1000 // PWM freq:1000Hz
+#define LASER_TIMER_PWM_MAX             255 // PWM value range: 0~255
+
+void laser_timer_soft_pwm_init();
+void laser_timer_soft_pwm_start(uint8_t pwm);
+void laser_timer_soft_pwm_stop(void);
+void laser_timer_soft_pwm_close();

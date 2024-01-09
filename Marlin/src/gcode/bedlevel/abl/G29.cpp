@@ -49,14 +49,8 @@
 #include "../../../lcd/marlinui.h"
 #if ENABLED(EXTENSIBLE_UI)
   #include "../../../lcd/extui/ui_api.h"
-#elif ENABLED(DWIN_CREALITY_LCD)
-  #include "../../../lcd/e3v2/creality/dwin.h"
 #elif ENABLED(DWIN_LCD_PROUI)
   #include "../../../lcd/e3v2/proui/dwin.h"
-#endif
-
-#if HAS_MULTI_HOTEND
-  #include "../../../module/tool_change.h"
 #endif
 
 #define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
@@ -81,7 +75,7 @@ static void pre_g29_return(const bool retry, const bool did) {
     TERN_(FULL_REPORT_TO_HOST_FEATURE, set_and_report_grblstate(M_IDLE, false));
   }
   if (did) {
-    TERN_(HAS_DWIN_E3V2_BASIC, dwinLevelingDone());
+    TERN_(HAS_DWIN_E3V2_BASIC, DWIN_LevelingDone());
     TERN_(EXTENSIBLE_UI, ExtUI::onLevelingDone());
   }
 }
@@ -109,7 +103,7 @@ public:
   #elif ENABLED(AUTO_BED_LEVELING_3POINT)
     static constexpr grid_count_t abl_points = 3;
   #elif ABL_USES_GRID
-    static constexpr grid_count_t abl_points = GRID_MAX_POINTS;
+    TERN(PROUI_EX, const, static constexpr) grid_count_t abl_points = GRID_MAX_POINTS;
   #endif
 
   #if ABL_USES_GRID
@@ -125,7 +119,11 @@ public:
       bool                topography_map;
       xy_uint8_t          grid_points;
     #else // Bilinear
-      static constexpr xy_uint8_t grid_points = { GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y };
+      #if PROUI_EX
+        xy_uint8_t grid_points = { GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y };
+      #else
+        static constexpr xy_uint8_t grid_points = { GRID_MAX_POINTS_X, GRID_MAX_POINTS_Y };
+      #endif
     #endif
 
     #if ENABLED(AUTO_BED_LEVELING_BILINEAR)
@@ -143,8 +141,10 @@ public:
 };
 
 #if ABL_USES_GRID && ANY(AUTO_BED_LEVELING_3POINT, AUTO_BED_LEVELING_BILINEAR)
-  constexpr xy_uint8_t G29_State::grid_points;
-  constexpr grid_count_t G29_State::abl_points;
+  #if DISABLED(PROUI_EX)
+    constexpr xy_uint8_t G29_State::grid_points;
+    constexpr grid_count_t G29_State::abl_points;
+  #endif
 #endif
 
 /**
@@ -225,6 +225,7 @@ public:
  *     There's no extra effect if you have a fixed Z probe.
  */
 G29_TYPE GcodeSuite::G29() {
+
   DEBUG_SECTION(log_G29, "G29", DEBUGGING(LEVELING));
 
   // Leveling state is persistent when done manually with multiple G29 commands
@@ -254,9 +255,13 @@ G29_TYPE GcodeSuite::G29() {
     G29_RETURN(false, false);
   }
 
-  // Send 'N' to force homing before G29 (internal only)
-  if (parser.seen_test('N'))
-    process_subcommands_now(TERN(CAN_SET_LEVELING_AFTER_G28, F("G28L0"), FPSTR(G28_STR)));
+  #if ENABLED(DWIN_LCD_PROUI)
+    process_subcommands_now(F("G28Z"));
+  #else
+    // Send 'N' to force homing before G29 (internal only)
+    if (parser.seen_test('N'))
+      process_subcommands_now(TERN(CAN_SET_LEVELING_AFTER_G28, F("G28L0"), FPSTR(G28_STR)));
+  #endif
 
   // Don't allow auto-leveling without homing first
   if (homing_needed_error()) G29_RETURN(false, false);
@@ -429,7 +434,7 @@ G29_TYPE GcodeSuite::G29() {
       if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("> 3-point Leveling");
       points[0].z = points[1].z = points[2].z = 0;  // Probe at 3 arbitrary points
     #elif ENABLED(AUTO_BED_LEVELING_BILINEAR)
-      TERN_(DWIN_LCD_PROUI, dwinLevelingStart());
+      TERN_(DWIN_LCD_PROUI, DWIN_LevelingStart());
     #endif
 
     TERN_(EXTENSIBLE_UI, ExtUI::onLevelingStart());
@@ -440,7 +445,7 @@ G29_TYPE GcodeSuite::G29() {
       #if ENABLED(PREHEAT_BEFORE_LEVELING)
         if (!abl.dryrun) probe.preheat_for_probing(LEVELING_NOZZLE_TEMP,
           #if ALL(DWIN_LCD_PROUI, HAS_HEATED_BED)
-            hmiData.bedLevT
+            HMI_data.BedLevT
           #else
             LEVELING_BED_TEMP
           #endif
@@ -503,7 +508,7 @@ G29_TYPE GcodeSuite::G29() {
       }
       // Pre-populate local Z values from the stored mesh
       TERN_(IS_KINEMATIC, COPY(abl.z_values, bedlevel.z_values));
-    #endif
+    #endif // AUTO_BED_LEVELING_BILINEAR
 
   } // !g29_in_progress
 
@@ -666,6 +671,8 @@ G29_TYPE GcodeSuite::G29() {
 
         int8_t inStart, inStop, inInc;
 
+        TERN_(PROUI_EX, if (ProEx.QuitLeveling()) break; )
+
         if (zig) {                      // Zig away from origin
           inStart = 0;                  // Left or front
           inStop = PR_INNER_SIZE;       // Right or back
@@ -748,7 +755,6 @@ G29_TYPE GcodeSuite::G29() {
             }
             //if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM_P(axis == Y_AXIS ? PSTR("Y=") : PSTR("X=", pos);
 
-            safe_delay(4);
             abl.measured_z = current_position.z - bdl.read();
             if (DEBUGGING(LEVELING)) SERIAL_ECHOLNPGM("x_cur ", planner.get_axis_position_mm(X_AXIS), " z ", abl.measured_z);
 
@@ -778,11 +784,13 @@ G29_TYPE GcodeSuite::G29() {
             const float z = abl.measured_z + abl.Z_offset;
             abl.z_values[abl.meshCount.x][abl.meshCount.y] = z;
             TERN_(EXTENSIBLE_UI, ExtUI::onMeshUpdate(abl.meshCount, z));
+            TERN_(PROUI_EX, ProEx.MeshUpdate(abl.meshCount.x, abl.meshCount.y, z));
 
           #endif
 
           abl.reenable = false; // Don't re-enable after modifying the mesh
           idle_no_sleep();
+          TERN_(PROUI_EX, if (ProEx.QuitLeveling()) break; )
 
         } // inner
       } // outer
@@ -990,10 +998,10 @@ G29_TYPE GcodeSuite::G29() {
 
   TERN_(HAS_BED_PROBE, probe.move_z_after_probing());
 
-  #ifdef Z_PROBE_END_SCRIPT
-    if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Z Probe End Script: ", Z_PROBE_END_SCRIPT);
+  #ifdef EVENT_GCODE_AFTER_G29
+    if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Z Probe End Script: ", EVENT_GCODE_AFTER_G29);
     planner.synchronize();
-    process_subcommands_now(F(Z_PROBE_END_SCRIPT));
+    process_subcommands_now(F(EVENT_GCODE_AFTER_G29));
   #endif
 
   probe.use_probing_tool(false);

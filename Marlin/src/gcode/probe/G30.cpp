@@ -34,10 +34,6 @@
   #include "../../feature/probe_temp_comp.h"
 #endif
 
-#if HAS_MULTI_HOTEND
-  #include "../../module/tool_change.h"
-#endif
-
 /**
  * G30: Do a single Z probe at the given XY (default: current)
  *
@@ -70,9 +66,7 @@ void GcodeSuite::G30() {
 
     remember_feedrate_scaling_off();
 
-    #if ANY(DWIN_LCD_PROUI, DWIN_CREALITY_LCD_JYERSUI)
-      process_subcommands_now(F("G28O"));
-    #endif
+    TERN_(DWIN_LCD_PROUI, process_subcommands_now(F("G28O"));)
 
     const ProbePtRaise raise_after = parser.boolval('E', true) ? PROBE_PT_STOW : PROBE_PT_NONE;
 
@@ -83,13 +77,11 @@ void GcodeSuite::G30() {
       const xy_pos_t lpos = probepos.asLogical();
       SString<30> msg(
         F("Bed X:"), p_float_t(lpos.x, 2),
-        F(  " Y:"), p_float_t(lpos.y, 2),
-        F(  " Z:"), p_float_t(measured_z, 3)
+        F(   " Y:"), p_float_t(lpos.y, 2),
+        F(   " Z:"), p_float_t(measured_z, 3)
       );
       msg.echoln();
-      #if ANY(DWIN_LCD_PROUI, DWIN_CREALITY_LCD_JYERSUI)
-        ui.set_status(msg);
-      #endif
+      TERN_(DWIN_LCD_PROUI, ui.set_status(msg);)
     }
 
     restore_feedrate_and_scaling();

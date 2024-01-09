@@ -1,13 +1,12 @@
 /**
- * Marlin 3D Printer Firmware
- * Copyright (c) 2021 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
- *
- * Based on Sprinter and grbl.
- * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
+ * DWIN Enhanced implementation for PRO UI
+ * Author: Miguel A. Risco-Castillo (MRISCOC)
+ * Version: 3.21.1
+ * Date: 2023/03/21
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -15,46 +14,36 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
- */
-
-/**
- * DWIN Enhanced implementation for PRO UI
- * Author: Miguel A. Risco-Castillo (MRISCOC)
- * Version: 3.21.1
- * Date: 2023/03/21
  */
 
 #include "../../../inc/MarlinConfig.h"
 
 #if ENABLED(DWIN_LCD_PROUI)
 
-#include "dwin_defines.h"
-#include "dwinui.h"
+#include "dwin.h"
 
 xy_int_t DWINUI::cursor = { 0 };
-uint16_t DWINUI::penColor = COLOR_WHITE;
-uint16_t DWINUI::textColor = defColorText;
-uint16_t DWINUI::backColor = defColorBackground;
-uint16_t DWINUI::buttonColor = defColorButton;
-uint8_t  DWINUI::fontID = font8x16;
-FSTR_P const DWINUI::author = F(STRING_CONFIG_H_AUTHOR);
+uint16_t DWINUI::textcolor = Def_Text_Color;       // Text color
+uint16_t DWINUI::backcolor = Def_Background_Color; // Background color
+uint16_t DWINUI::buttoncolor = Def_TitleBg_Color;  // Title color
+uint8_t  DWINUI::fontid = font8x16;                // Font size 8x16
+FSTR_P const DWINUI::Author = F(STRING_CONFIG_H_AUTHOR);
 
-void (*DWINUI::onTitleDraw)(Title* t) = nullptr;
+void (*DWINUI::onTitleDraw)(TitleClass* title) = nullptr;
 
 void DWINUI::init() {
   cursor.reset();
-  penColor = COLOR_WHITE;
-  textColor = defColorText;
-  backColor = defColorBackground;
-  buttonColor = defColorButton;
-  fontID = font8x16;
+  textcolor = HMI_data.Text_Color;
+  backcolor = HMI_data.Background_Color;
+  buttoncolor = HMI_data.TitleBg_Color;
+  fontid = font8x16;
 }
 
 // Set text/number font
-void DWINUI::setFont(fontid_t fid) { fontID = fid; }
+void DWINUI::setFont(fontid_t fid) { fontid = fid; }
 
 // Get font character width
 uint8_t DWINUI::fontWidth(fontid_t fid) {
@@ -79,7 +68,7 @@ uint8_t DWINUI::fontWidth(fontid_t fid) {
 uint8_t DWINUI::fontHeight(fontid_t fid) {
   switch (fid) {
     #if DISABLED(TJC_DISPLAY)
-    case font6x12 : return 12;
+      case font6x12 : return 12;
       case font20x40: return 40;
       case font24x48: return 48;
       case font28x56: return 56;
@@ -95,33 +84,36 @@ uint8_t DWINUI::fontHeight(fontid_t fid) {
 }
 
 // Get screen x coordinates from text column
-uint16_t DWINUI::colToX(uint8_t col) { return col * fontWidth(fontID); }
+uint16_t DWINUI::ColToX(uint8_t col) { return col * fontWidth(fontid); }
 
 // Get screen y coordinates from text row
-uint16_t DWINUI::rowToY(uint8_t row) { return row * fontHeight(fontID); }
+uint16_t DWINUI::RowToY(uint8_t row) { return row * fontHeight(fontid); }
 
 // Set text/number color
-void DWINUI::setColors(uint16_t fgcolor, uint16_t bgcolor, uint16_t alcolor) {
-  textColor = fgcolor;
-  backColor = bgcolor;
-  buttonColor = alcolor;
+void DWINUI::SetColors(uint16_t fgcolor, uint16_t bgcolor, uint16_t alcolor) {
+  textcolor = fgcolor;
+  backcolor = bgcolor;
+  buttoncolor = alcolor;
 }
-void DWINUI::setTextColor(uint16_t fgcolor) {
-  textColor = fgcolor;
+void DWINUI::SetTextColor(uint16_t fgcolor) {
+  textcolor = fgcolor;
 }
-void DWINUI::setBackgroundColor(uint16_t bgcolor) {
-  backColor = bgcolor;
+void DWINUI::SetBackgroundColor(uint16_t bgcolor) {
+  backcolor = bgcolor;
+}
+void DWINUI::SetButtonColor(uint16_t alcolor) {
+  buttoncolor = alcolor;
 }
 
 // Moves cursor to point
 //  x: abscissa of the display
 //  y: ordinate of the display
 //  point: xy coordinate
-void DWINUI::moveTo(int16_t x, int16_t y) {
+void DWINUI::MoveTo(int16_t x, int16_t y) {
   cursor.x = x;
   cursor.y = y;
 }
-void DWINUI::moveTo(xy_int_t point) {
+void DWINUI::MoveTo(xy_int_t point) {
   cursor = point;
 }
 
@@ -129,18 +121,18 @@ void DWINUI::moveTo(xy_int_t point) {
 //  x: abscissa of the display
 //  y: ordinate of the display
 //  point: xy coordinate
-void DWINUI::moveBy(int16_t x, int16_t y) {
+void DWINUI::MoveBy(int16_t x, int16_t y) {
   cursor.x += x;
   cursor.y += y;
 }
-void DWINUI::moveBy(xy_int_t point) {
+void DWINUI::MoveBy(xy_int_t point) {
   cursor += point;
 }
 
 // Draw a Centered string using arbitrary x1 and x2 margins
-void DWINUI::drawCenteredString(bool bShow, fontid_t fid, uint16_t color, uint16_t bColor, uint16_t x1, uint16_t x2, uint16_t y, const char * const string) {
+void DWINUI::Draw_CenteredString(bool bShow, fontid_t fid, uint16_t color, uint16_t bColor, uint16_t x1, uint16_t x2, uint16_t y, const char * const string) {
   const uint16_t x = _MAX(0U, x2 + x1 - strlen_P(string) * fontWidth(fid)) / 2 - 1;
-  dwinDrawString(bShow, fid, color, bColor, x, y, string);
+  DWIN_Draw_String(bShow, fid, color, bColor, x, y, string);
 }
 
 // Draw a char
@@ -148,28 +140,28 @@ void DWINUI::drawCenteredString(bool bShow, fontid_t fid, uint16_t color, uint16
 //  x: abscissa of the display
 //  y: ordinate of the display
 //  c: ASCII code of char
-void DWINUI::drawChar(uint16_t color, uint16_t x, uint16_t y, const char c) {
+void DWINUI::Draw_Char(uint16_t color, uint16_t x, uint16_t y, const char c) {
   const char string[2] = { c, 0};
-  dwinDrawString(false, fontID, color, backColor, x, y, string, 1);
+  DWIN_Draw_String(false, fontid, color, backcolor, x, y, string, 1);
 }
 
 // Draw a char at cursor position and increment cursor
-void DWINUI::drawChar(uint16_t color, const char c) {
-  drawChar(color, cursor.x, cursor.y, c);
-  moveBy(fontWidth(fontID), 0);
+void DWINUI::Draw_Char(uint16_t color, const char c) {
+  Draw_Char(color, cursor.x, cursor.y, c);
+  MoveBy(fontWidth(fontid), 0);
 }
 
 // Draw a string at cursor position
 //  color: Character color
 //  *string: The string
 //  rlimit: For draw less chars than string length use rlimit
-void DWINUI::drawString(const char * const string, uint16_t rlimit) {
-  dwinDrawString(false, fontID, textColor, backColor, cursor.x, cursor.y, string, rlimit);
-  moveBy(strlen(string) * fontWidth(fontID), 0);
+void DWINUI::Draw_String(const char * const string, uint16_t rlimit) {
+  DWIN_Draw_String(false, fontid, textcolor, backcolor, cursor.x, cursor.y, string, rlimit);
+  MoveBy(strlen(string) * fontWidth(fontid), 0);
 }
-void DWINUI::drawString(uint16_t color, const char * const string, uint16_t rlimit) {
-  dwinDrawString(false, fontID, color, backColor, cursor.x, cursor.y, string, rlimit);
-  moveBy(strlen(string) * fontWidth(fontID), 0);
+void DWINUI::Draw_String(uint16_t color, const char * const string, uint16_t rlimit) {
+  DWIN_Draw_String(false, fontid, color, backcolor, cursor.x, cursor.y, string, rlimit);
+  MoveBy(strlen(string) * fontWidth(fontid), 0);
 }
 
 // Draw a numeric integer value
@@ -181,10 +173,10 @@ void DWINUI::drawString(uint16_t color, const char * const string, uint16_t rlim
 //  iNum: Number of digits
 //  x/y: Upper-left coordinate
 //  value: Integer value
-void DWINUI::drawInt(uint8_t bShow, bool signedMode, fontid_t fid, uint16_t color, uint16_t bColor, uint8_t iNum, uint16_t x, uint16_t y, int32_t value) {
+void DWINUI::Draw_Int(uint8_t bShow, bool signedMode, fontid_t fid, uint16_t color, uint16_t bColor, uint8_t iNum, uint16_t x, uint16_t y, long value) {
   char nstr[10];
   sprintf_P(nstr, PSTR("%*li"), (signedMode ? iNum + 1 : iNum), value);
-  dwinDrawString(bShow, fid, color, bColor, x, y, nstr);
+  DWIN_Draw_String(bShow, fid, color, bColor, x, y, nstr);
 }
 
 // Draw a numeric float value
@@ -197,9 +189,9 @@ void DWINUI::drawInt(uint8_t bShow, bool signedMode, fontid_t fid, uint16_t colo
 //  fNum: Number of decimal digits
 //  x/y: Upper-left coordinate
 //  value: float value
-void DWINUI::drawFloat(uint8_t bShow, bool signedMode, fontid_t fid, uint16_t color, uint16_t bColor, uint8_t iNum, uint8_t fNum, uint16_t x, uint16_t y, float value) {
+void DWINUI::Draw_Float(uint8_t bShow, bool signedMode, fontid_t fid, uint16_t color, uint16_t bColor, uint8_t iNum, uint8_t fNum, uint16_t x, uint16_t y, float value) {
   char nstr[10];
-  dwinDrawString(bShow, fid, color, bColor, x, y, dtostrf(value, iNum + (signedMode ? 2:1) + fNum, fNum, nstr));
+  DWIN_Draw_String(bShow, fid, color, bColor, x, y, dtostrf(value, iNum + (signedMode ? 2 : 1) + fNum, fNum, nstr));
 }
 
 // ------------------------- Icons -------------------------------//
@@ -210,28 +202,39 @@ void DWINUI::drawFloat(uint8_t bShow, bool signedMode, fontid_t fid, uint16_t co
 //  picID: Icon ID
 //  x/y: Upper-left point
 void DWINUI::ICON_Show(bool BG, uint8_t icon, uint16_t x, uint16_t y) {
-  const uint8_t libID = ICON TERN_(HAS_CUSTOMICONS, + (icon / 100));
-  const uint8_t picID = icon TERN_(HAS_CUSTOMICONS, % 100);
-  dwinIconShow(BG, false, !BG, libID, picID, x, y);
+  const uint8_t libID = ICON;
+  const uint8_t picID = icon;
+  DWIN_ICON_Show(BG, false, !BG, libID, picID, x, y);
 }
 
 // ------------------------- Buttons ------------------------------//
 
-void DWINUI::drawButton(uint16_t color, uint16_t bcolor, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, const char * const caption) {
-  dwinDrawRectangle(1, bcolor, x1, y1, x2, y2);
-  drawCenteredString(0, fontID, color, bcolor, x1, x2, (y2 + y1 - fontHeight())/2, caption);
+void DWINUI::Draw_Select_Box(uint16_t xpos, uint16_t ypos) {
+  const uint16_t c1 = HMI_data.Cursor_Color;
+  DWIN_Draw_Rectangle(0, c1, xpos - 1, ypos - 1, xpos + 100, ypos + 38);
+  DWIN_Draw_Rectangle(0, c1, xpos - 2, ypos - 2, xpos + 101, ypos + 39);
 }
 
-void DWINUI::drawButton(uint8_t id, uint16_t x, uint16_t y) {
+void DWINUI::Draw_Button(uint16_t color, uint16_t bcolor, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, const char * const caption) {
+  DWIN_Draw_Rectangle(1, bcolor, x1, y1, x2, y2);
+  Draw_CenteredString(0, fontid, color, bcolor, x1, x2, (y2 + y1 - fontHeight()) / 2, caption);
+}
+
+void DWINUI::Draw_Button(uint8_t id, uint16_t x, uint16_t y, bool sel) {
+  if (sel) { Draw_Select_Box(x, y); }
   switch (id) {
-    case BTN_Cancel  : drawButton(GET_TEXT_F(MSG_BUTTON_CANCEL), x, y); break;
-    case BTN_Confirm : drawButton(GET_TEXT_F(MSG_BUTTON_CONFIRM), x, y); break;
-    case BTN_Continue: drawButton(GET_TEXT_F(MSG_BUTTON_CONTINUE), x, y); break;
-    case BTN_Print   : drawButton(GET_TEXT_F(MSG_BUTTON_PRINT), x, y); break;
-    case BTN_Save    : drawButton(GET_TEXT_F(MSG_BUTTON_SAVE), x, y); break;
-    case BTN_Purge   : drawButton(GET_TEXT_F(MSG_BUTTON_PURGE), x, y); break;
+    case BTN_Continue: Draw_Button(GET_TEXT_F(MSG_BUTTON_CONTINUE), x, y); break;
+    case BTN_Cancel  : Draw_Button(GET_TEXT_F(MSG_BUTTON_CANCEL),   x, y); break;
+    case BTN_Confirm : Draw_Button(GET_TEXT_F(MSG_BUTTON_CONFIRM),  x, y); break;
+    case BTN_Print   : Draw_Button(GET_TEXT_F(MSG_BUTTON_PRINT),    x, y); break;
+    case BTN_Save    : Draw_Button(GET_TEXT_F(MSG_BUTTON_SAVE),     x, y); break;
+    case BTN_Purge   : Draw_Button(GET_TEXT_F(MSG_BUTTON_PURGE),    x, y); break;
     default: break;
   }
+}
+
+void DWINUI::Draw_Button(uint8_t id, uint16_t x, uint16_t y) {
+  Draw_Button(id, x, y, false);
 }
 
 // -------------------------- Extra -------------------------------//
@@ -241,19 +244,19 @@ void DWINUI::drawButton(uint8_t id, uint16_t x, uint16_t y) {
 //  x: the abscissa of the center of the circle
 //  y: ordinate of the center of the circle
 //  r: circle radius
-void DWINUI::drawCircle(uint16_t color, uint16_t x, uint16_t y, uint8_t r) {
+void DWINUI::Draw_Circle(uint16_t color, uint16_t x, uint16_t y, uint8_t r) {
   int a = 0, b = 0;
   while (a <= b) {
     b = SQRT(sq(r) - sq(a));
     if (a == 0) b--;
-    dwinDrawPoint(color, 1, 1, x + a, y + b);   // Draw some sector 1
-    dwinDrawPoint(color, 1, 1, x + b, y + a);   // Draw some sector 2
-    dwinDrawPoint(color, 1, 1, x + b, y - a);   // Draw some sector 3
-    dwinDrawPoint(color, 1, 1, x + a, y - b);   // Draw some sector 4
-    dwinDrawPoint(color, 1, 1, x - a, y - b);   // Draw some sector 5
-    dwinDrawPoint(color, 1, 1, x - b, y - a);   // Draw some sector 6
-    dwinDrawPoint(color, 1, 1, x - b, y + a);   // Draw some sector 7
-    dwinDrawPoint(color, 1, 1, x - a, y + b);   // Draw some sector 8
+    DWIN_Draw_Point(color, 1, 1, x + a, y + b);   // Draw some sector 1
+    DWIN_Draw_Point(color, 1, 1, x + b, y + a);   // Draw some sector 2
+    DWIN_Draw_Point(color, 1, 1, x + b, y - a);   // Draw some sector 3
+    DWIN_Draw_Point(color, 1, 1, x + a, y - b);   // Draw some sector 4
+    DWIN_Draw_Point(color, 1, 1, x - a, y - b);   // Draw some sector 5
+    DWIN_Draw_Point(color, 1, 1, x - b, y - a);   // Draw some sector 6
+    DWIN_Draw_Point(color, 1, 1, x - b, y + a);   // Draw some sector 7
+    DWIN_Draw_Point(color, 1, 1, x - a, y + b);   // Draw some sector 8
     a++;
   }
 }
@@ -263,13 +266,13 @@ void DWINUI::drawCircle(uint16_t color, uint16_t x, uint16_t y, uint8_t r) {
 //  x: the abscissa of the center of the circle
 //  y: ordinate of the center of the circle
 //  r: circle radius
-void DWINUI::drawFillCircle(uint16_t bcolor, uint16_t x, uint16_t y, uint8_t r) {
-  dwinDrawLine(bcolor, x - r, y, x + r, y);
+void DWINUI::Draw_FillCircle(uint16_t bcolor, uint16_t x, uint16_t y, uint8_t r) {
+  DWIN_Draw_Line(bcolor, x - r, y, x + r, y);
   uint16_t b = 1;
   while (b <= r) {
     uint16_t a = SQRT(sq(r) - sq(b));
-    dwinDrawLine(bcolor, x - a, y + b, x + a, y + b);
-    dwinDrawLine(bcolor, x - a, y - b, x + a, y - b);
+    DWIN_Draw_Line(bcolor, x - a, y + b, x + a, y + b);
+    DWIN_Draw_Line(bcolor, x - a, y - b, x + a, y - b);
     b += TERN(TJC_DISPLAY, 2, 1);
   }
 }
@@ -280,20 +283,20 @@ void DWINUI::drawFillCircle(uint16_t bcolor, uint16_t x, uint16_t y, uint8_t r) 
 //  maxv : Maximum value
 //  color1 : Start color
 //  color2 : End color
-uint16_t DWINUI::colorInt(int16_t val, int16_t minv, int16_t maxv, uint16_t color1, uint16_t color2) {
+uint16_t DWINUI::ColorInt(int16_t val, int16_t minv, int16_t maxv, uint16_t color1, uint16_t color2) {
   uint8_t B, G, R;
-  const float n = float(val - minv) / (maxv - minv + 1);
+  const float n = (float)(val - minv) / (maxv - minv + 1);
   R = (1.0f - n) * GetRColor(color1) + n * GetRColor(color2);
   G = (1.0f - n) * GetGColor(color1) + n * GetGColor(color2);
   B = (1.0f - n) * GetBColor(color1) + n * GetBColor(color2);
   return RGB(R, G, B);
 }
 
-// Color Interpolator through Red->Yellow->Green->Blue (Pro UI)
+// Color Interpolator through Red->Orange->Yellow->Green->Blue (Pro UI)
 //  val : Interpolator minv..maxv
 //  minv : Minimum value
 //  maxv : Maximum value
-uint16_t DWINUI::rainbowInt(int16_t val, int16_t minv, int16_t maxv) {
+uint16_t DWINUI::RainbowInt(int16_t val, int16_t minv, int16_t maxv) {
   const int16_t limv = _MAX(abs(minv), abs(maxv));
   float n = (minv >= 0) ? float(val - minv) / (maxv - minv + 1) : (float)val / limv;
   LIMIT(n, -1, 1);
@@ -312,54 +315,34 @@ uint16_t DWINUI::rainbowInt(int16_t val, int16_t minv, int16_t maxv) {
 //  bColor: Background color
 //  x/y: Upper-left point
 //  mode : 0 : unchecked, 1 : checked
-void DWINUI::drawCheckbox(uint16_t color, uint16_t bcolor, uint16_t x, uint16_t y, bool checked=false) {
-  dwinDrawRectangle(0, color, x + 2, y + 2, x + 17, y + 17);
-  dwinDrawRectangle(1, checked ? color : bcolor, x + 6, y + 6, x + 13, y + 13);
+void DWINUI::Draw_Checkbox(uint16_t color, uint16_t bcolor, uint16_t x, uint16_t y, bool checked=false) {
+  DWIN_Draw_Rectangle(0, color, x + 2, y + 2, x + 17, y + 17);
+  DWIN_Draw_Rectangle(1, checked ? color : bcolor, x + 6, y + 6, x + 13, y + 13);
 }
 
 // Clear Menu by filling the menu area with background color
-void DWINUI::clearMainArea() {
-  dwinDrawRectangle(1, backColor, 0, TITLE_HEIGHT, DWIN_WIDTH - 1, STATUS_Y - 1);
+void DWINUI::ClearMainArea() {
+  DWIN_Draw_Rectangle(1, HMI_data.Background_Color, 0, TITLE_HEIGHT, DWIN_WIDTH - 1, STATUS_Y - 1);
 }
 
 /* Title Class ==============================================================*/
 
-Title title;
+TitleClass Title;
 
-void Title::draw() {
+void TitleClass::draw() {
   if (DWINUI::onTitleDraw != nullptr) (*DWINUI::onTitleDraw)(this);
 }
 
-void Title::setCaption(const char * const titleStr) {
-  frameid = 0;
-  if ( caption == titleStr ) return;
-  const uint8_t len = _MIN(sizeof(caption) - 1, strlen(titleStr));
-  memcpy(&caption[0], titleStr, len);
+void TitleClass::SetCaption(const char * const title) {
+  if ( caption == title ) return;
+  const uint8_t len = _MIN(sizeof(caption) - 1, strlen(title));
+  memcpy(&caption[0], title, len);
   caption[len] = '\0';
 }
 
-void Title::showCaption(const char * const titleStr) {
-  setCaption(titleStr);
+void TitleClass::ShowCaption(const char * const title) {
+  SetCaption(title);
   draw();
-}
-
-void Title::setFrame(uint8_t id, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) {
-  caption[0] = '\0';
-  frameid = id;
-  frame = { x1, y1, x2, y2 };
-}
-
-void Title::setFrame(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
-  setFrame(1, x, y, x + w - 1, y + h - 1);
-}
-
-void Title::frameCopy(uint8_t id, uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2) {
-  setFrame(id, x1, y1, x2, y2);
-  draw();
-}
-
-void Title::frameCopy(uint16_t x, uint16_t y, uint16_t w, uint16_t h) {
-  frameCopy(1, x, y, x + w - 1, y + h - 1);
 }
 
 #endif // DWIN_LCD_PROUI

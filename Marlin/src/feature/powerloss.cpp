@@ -69,6 +69,10 @@ uint32_t PrintJobRecovery::cmd_sdpos, // = 0
 #define DEBUG_OUT ENABLED(DEBUG_POWER_LOSS_RECOVERY)
 #include "../core/debug_out.h"
 
+#if ENABLED(DWIN_LCD_PROUI)
+  #include "../lcd/e3v2/proui/dwin_popup.h"
+#endif
+
 PrintJobRecovery recovery;
 
 #ifndef POWER_LOSS_PURGE_LEN
@@ -121,6 +125,15 @@ void PrintJobRecovery::changed() {
  * If a saved state exists send 'M1000 S' to initiate job recovery.
  */
 bool PrintJobRecovery::check() {
+
+  // 激光暂不做断电续打 107011 -20211015
+  #if ENABLED(CV_LASER_MODULE)
+    if(laser_device.is_laser_device()) {// 激光模式下不做断电续打
+      purge();
+      return false;
+    }
+  #endif
+
   //if (!card.isMounted()) card.mount();
   bool success = false;
   if (card.isMounted()) {
@@ -168,6 +181,10 @@ void PrintJobRecovery::prepare() {
 void PrintJobRecovery::save(const bool force/*=false*/, const float zraise/*=POWER_LOSS_ZRAISE*/, const bool raised/*=false*/) {
 
   // We don't check IS_SD_PRINTING here so a save may occur during a pause
+
+  #if ENABLED(CV_LASER_MODULE)
+    if (laser_device.is_laser_device()) return;
+  #endif
 
   #if SAVE_INFO_INTERVAL_MS > 0
     static millis_t next_save_ms; // = 0
@@ -219,15 +236,13 @@ void PrintJobRecovery::save(const bool force/*=false*/, const float zraise/*=POW
       #endif
     #endif
 
-    #if HAS_EXTRUDERS
+    #if HAS_HOTEND
       HOTEND_LOOP() info.target_temperature[e] = thermalManager.degTargetHotend(e);
     #endif
 
     TERN_(HAS_HEATED_BED, info.target_temperature_bed = thermalManager.degTargetBed());
 
-    #if HAS_FAN
-      COPY(info.fan_speed, thermalManager.fan_speed);
-    #endif
+    TERN_(HAS_FAN, COPY(info.fan_speed, thermalManager.fan_speed));
 
     #if HAS_LEVELING
       info.flag.leveling = planner.leveling_active;
@@ -406,6 +421,10 @@ void PrintJobRecovery::resume() {
   // establish the current position as best we can.
   //
 
+  #if ENABLED(DWIN_LCD_PROUI) && DISABLED(NOZZLE_CLEAN_FEATURE)
+    xyze_pos_t save_pos = info.current_position;
+  #endif
+
   PROCESS_SUBCOMMANDS_NOW(F("G92.9E0")); // Reset E to 0
 
   #if Z_HOME_TO_MAX
@@ -462,6 +481,14 @@ void PrintJobRecovery::resume() {
       // The physical Z was adjusted at power-off so undo the M420S1 correction to Z with G92.9.
       PROCESS_SUBCOMMANDS_NOW(TS(F("G92.9Z"), p_float_t(z_now, 1)));
     #endif
+  #endif
+
+  #if ENABLED(DWIN_LCD_PROUI) && DISABLED(NOZZLE_CLEAN_FEATURE)
+    // Parking head to allow clean before of heating the hotend
+    gcode.process_subcommands_now(F("G27"));
+    DWIN_Popup_Continue(ICON_Leveling_0, GET_TEXT_F(MSG_NOZZLE_PARKED), GET_TEXT_F(MSG_NOZZLE_CLEAN));
+    wait_for_user_response();
+    info.current_position = save_pos;
   #endif
 
   #if ENABLED(POWER_LOSS_RECOVER_ZHOME)
@@ -540,15 +567,19 @@ void PrintJobRecovery::resume() {
   PROCESS_SUBCOMMANDS_NOW(TS(
     F("G1F3000X"), p_float_t(info.current_position.x, 3), 'Y', p_float_t(info.current_position.y, 3)
   ));
+  DEBUG_ECHOLNPGM("Move XY : ",cmd);
 
   // Move back down to the saved Z for printing
   PROCESS_SUBCOMMANDS_NOW(TS(F("G1F600Z"), p_float_t(z_print, 3)));
+  DEBUG_ECHOLNPGM("Move Z : ",cmd);
 
   // Restore the feedrate
   PROCESS_SUBCOMMANDS_NOW(TS(F("G1F"), info.feedrate));
+  DEBUG_ECHOLNPGM("Feedrate: ",cmd);
 
   // Restore E position with G92.9
   PROCESS_SUBCOMMANDS_NOW(TS(F("G92.9E"), p_float_t(info.current_position.e, 3)));
+  DEBUG_ECHOLNPGM("Extruder : ",cmd);
 
   TERN_(GCODE_REPEAT_MARKERS, repeat = info.stored_repeat);
   TERN_(HAS_HOME_OFFSET, home_offset = info.home_offset);
@@ -583,9 +614,10 @@ void PrintJobRecovery::resume() {
         DEBUG_ECHOLNPGM("zraise: ", info.zraise, " ", info.flag.raised ? "(before)" : "");
 
         #if ENABLED(GCODE_REPEAT_MARKERS)
-          DEBUG_ECHOLNPGM("repeat index: ", info.stored_repeat.index);
-          for (uint8_t i = 0; i < info.stored_repeat.index; ++i)
-            DEBUG_ECHOLNPGM("..... sdpos: ", info.stored_repeat.marker.sdpos, " count: ", info.stored_repeat.marker.counter);
+          const uint8_t ind = info.stored_repeat.count();
+          DEBUG_ECHOLNPGM("repeat markers: ", ind);
+          for (uint8_t i = ind; i--;)
+            DEBUG_ECHOLNPGM("...", i, " sdpos: ", info.stored_repeat.get_marker_sdpos(i), " count: ", info.stored_repeat.get_marker_counter(i));
         #endif
 
         #if HAS_HOME_OFFSET
@@ -672,7 +704,9 @@ void PrintJobRecovery::resume() {
 
         DEBUG_ECHOLNPGM("flag.dryrun: ", AS_DIGIT(info.flag.dryrun));
         DEBUG_ECHOLNPGM("flag.allow_cold_extrusion: ", AS_DIGIT(info.flag.allow_cold_extrusion));
-        DEBUG_ECHOLNPGM("flag.volumetric_enabled: ", AS_DIGIT(info.flag.volumetric_enabled));
+        #if DISABLED(NO_VOLUMETRICS)
+          DEBUG_ECHOLNPGM("flag.volumetric_enabled: ", AS_DIGIT(info.flag.volumetric_enabled));
+        #endif
       }
       else
         DEBUG_ECHOLNPGM("INVALID DATA");

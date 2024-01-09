@@ -26,7 +26,10 @@
  */
 
 #define BOARD_INFO_NAME      "Creality v4.2.2"
-#define DEFAULT_MACHINE_NAME "Creality3D"
+
+#ifndef DEFAULT_MACHINE_NAME
+  #define DEFAULT_MACHINE_NAME "Ender-3 V2"
+#endif
 
 #define EMIT_CREALITY_422_WARNING
 

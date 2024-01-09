@@ -50,7 +50,7 @@ EncoderRate encoderRate;
 
 // TODO: Replace with ui.quick_feedback
 void Encoder_tick() {
-  TERN_(HAS_BEEPER, if (ui.sound_on) buzzer.click(10));
+  TERN_(HAS_BEEPER, if (ui.tick_on) buzzer.click(10);)
 }
 
 // Encoder initialization
@@ -87,9 +87,7 @@ EncoderState encoderReceiveAnalyze() {
       #if PIN_EXISTS(LCD_LED)
         //LED_Action();
       #endif
-      #if LCD_BACKLIGHT_TIMEOUT_MINS
-        ui.refresh_backlight_timeout();
-      #endif
+      TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout());
       if (!ui.backlight) {
         ui.refresh_brightness();
         return ENCODER_DIFF_NO;
@@ -123,15 +121,18 @@ EncoderState encoderReceiveAnalyze() {
   }
 
   if (ABS(temp_diff) >= ENCODER_PULSES_PER_STEP) {
-    if (temp_diff > 0) temp_diffState = TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CCW, ENCODER_DIFF_CW);
-    else temp_diffState = TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CW, ENCODER_DIFF_CCW);
+    if (temp_diff > 0) { temp_diffState = TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CCW, ENCODER_DIFF_CW); }
+    else { temp_diffState = TERN(REVERSE_ENCODER_DIRECTION, ENCODER_DIFF_CW, ENCODER_DIFF_CCW); }
 
     #if ENABLED(ENCODER_RATE_MULTIPLIER)
-
+      #if ENABLED(ENC_MENU_ITEM)
+        uint16_t a = ui.enc_rateA;
+        uint16_t b = ui.enc_rateB;
+      #endif
       millis_t ms = millis();
       int32_t encoderMultiplier = 1;
 
-      // if must encoder rati multiplier
+      // if must encoder rate multiplier
       if (encoderRate.enabled) {
         const float abs_diff = ABS(temp_diff),
                     encoderMovementSteps = abs_diff / (ENCODER_PULSES_PER_STEP);
@@ -139,8 +140,8 @@ EncoderState encoderReceiveAnalyze() {
           // Note that the rate is always calculated between two passes through the
           // loop and that the abs of the temp_diff value is tracked.
           const float encoderStepRate = encoderMovementSteps / float(ms - encoderRate.lastEncoderTime) * 1000;
-               if (encoderStepRate >= ENCODER_100X_STEPS_PER_SEC) encoderMultiplier = 100;
-          else if (encoderStepRate >= ENCODER_10X_STEPS_PER_SEC)  encoderMultiplier = 10;
+               if (encoderStepRate >= ENCODER_100X_STEPS_PER_SEC) encoderMultiplier = TERN(ENC_MENU_ITEM, a, 135);
+          else if (encoderStepRate >= ENCODER_10X_STEPS_PER_SEC)  encoderMultiplier = TERN(ENC_MENU_ITEM, b, 25);
           #if ENCODER_5X_STEPS_PER_SEC
             else if (encoderStepRate >= ENCODER_5X_STEPS_PER_SEC) encoderMultiplier = 5;
           #endif
@@ -161,9 +162,7 @@ EncoderState encoderReceiveAnalyze() {
     temp_diff = 0;
   }
   if (temp_diffState != ENCODER_DIFF_NO) {
-    #if LCD_BACKLIGHT_TIMEOUT_MINS
-      ui.refresh_backlight_timeout();
-    #endif
+    TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout());
     if (!ui.backlight) ui.refresh_brightness();
   }
   return temp_diffState;

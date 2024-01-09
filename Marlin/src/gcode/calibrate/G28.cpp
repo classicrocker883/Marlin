@@ -50,8 +50,6 @@
 
 #if ENABLED(EXTENSIBLE_UI)
   #include "../../lcd/extui/ui_api.h"
-#elif ENABLED(DWIN_CREALITY_LCD)
-  #include "../../lcd/e3v2/creality/dwin.h"
 #elif ENABLED(DWIN_LCD_PROUI)
   #include "../../lcd/e3v2/proui/dwin.h"
 #endif
@@ -119,7 +117,7 @@
      * Move the Z probe (or just the nozzle) to the safe homing point
      * (Z is already at the right height)
      */
-    constexpr xy_float_t safe_homing_xy = { Z_SAFE_HOMING_X_POINT, Z_SAFE_HOMING_Y_POINT };
+    TERN(PROUI_EX, , constexpr) xy_float_t safe_homing_xy = { Z_SAFE_HOMING_X_POINT, Z_SAFE_HOMING_Y_POINT };
     destination.set(safe_homing_xy, current_position.z);
 
     TERN_(HOMING_Z_WITH_PROBE, destination -= probe.offset_xy);
@@ -155,7 +153,7 @@
     planner.settings.max_acceleration_mm_per_s2[X_AXIS] = 100;
     planner.settings.max_acceleration_mm_per_s2[Y_AXIS] = 100;
     TERN_(DELTA, planner.settings.max_acceleration_mm_per_s2[Z_AXIS] = 100);
-    #if HAS_CLASSIC_JERK
+    #if ENABLED(CLASSIC_JERK)
       motion_state.jerk_state = planner.max_jerk;
       planner.max_jerk.set(0, 0 OPTARG(DELTA, 0));
     #endif
@@ -167,7 +165,7 @@
     planner.settings.max_acceleration_mm_per_s2[X_AXIS] = motion_state.acceleration.x;
     planner.settings.max_acceleration_mm_per_s2[Y_AXIS] = motion_state.acceleration.y;
     TERN_(DELTA, planner.settings.max_acceleration_mm_per_s2[Z_AXIS] = motion_state.acceleration.z);
-    TERN_(HAS_CLASSIC_JERK, planner.max_jerk = motion_state.jerk_state);
+    TERN_(CLASSIC_JERK, planner.max_jerk = motion_state.jerk_state);
     planner.refresh_acceleration_rates();
   }
 
@@ -223,7 +221,7 @@ void GcodeSuite::G28() {
     set_and_report_grblstate(M_HOMING);
   #endif
 
-  TERN_(HAS_DWIN_E3V2_BASIC, dwinHomingStart());
+  TERN_(HAS_DWIN_E3V2_BASIC, DWIN_HomingStart());
   TERN_(EXTENSIBLE_UI, ExtUI::onHomingStart());
 
   planner.synchronize();          // Wait for planner moves to finish!
@@ -263,7 +261,7 @@ void GcodeSuite::G28() {
 
       #if ENABLED(DEBUG_LEVELING_FEATURE)
         auto debug_current = [](FSTR_P const s, const int16_t a, const int16_t b) {
-          if (DEBUGGING(LEVELING)) { DEBUG_ECHOF(s); DEBUG_ECHOLNPGM(" current: ", a, " -> ", b); }
+          if (DEBUGGING(LEVELING)) { DEBUG_ECHOLN(s, F(" current: "), a, F(" -> "), b); }
         };
       #else
         #define debug_current(...)
@@ -409,8 +407,13 @@ void GcodeSuite::G28() {
         // Use raise given by 'R' or Z_CLEARANCE_FOR_HOMING (above the probe trigger point)
         float z_homing_height = seenR ? parser.value_linear_units() : Z_CLEARANCE_FOR_HOMING;
 
-        // Check for any lateral motion that might require clearance
-        const bool may_skate = seenR NUM_AXIS_GANG(|| doX, || doY, || TERN0(Z_SAFE_HOMING, doZ), || doI, || doJ, || doK, || doU, || doV, || doW);
+        #if ENABLED(CV_LASER_MODULE)
+          // Check for any lateral motion that might require clearance
+          const bool may_skate = !laser_device.is_laser_device() && (seenR || NUM_AXIS_GANG(doX, || doY, || TERN0(Z_SAFE_HOMING, doZ), || doI, || doJ, || doK, || doU, || doV, || doW));
+        #else
+          // Check for any lateral motion that might require clearance
+          const bool may_skate = seenR || NUM_AXIS_GANG(doX, || doY, || TERN0(Z_SAFE_HOMING, doZ), || doI, || doJ, || doK, || doU, || doV, || doW);
+        #endif
 
         if (seenR && z_homing_height == 0) {
           if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("R0 = No Z raise");
@@ -500,7 +503,7 @@ void GcodeSuite::G28() {
 
         // Home Z last if homing towards the bed
         #if DISABLED(HOME_Z_FIRST)
-          if (doZ) {
+          if (doZ && TERN1(CV_LASER_MODULE, !laser_device.is_laser_device())) {
             #if ANY(Z_MULTI_ENDSTOPS, Z_STEPPER_AUTO_ALIGN)
               stepper.set_all_z_lock(false);
               stepper.set_separate_multi_axis(false);
@@ -638,6 +641,11 @@ void GcodeSuite::G28() {
       tool_change(old_tool_index, TERN(PARKING_EXTRUDER, !pe_final_change_must_unpark, DISABLED(DUAL_X_CARRIAGE)));   // Do move if one of these
     #endif
 
+    #ifdef XY_AFTER_HOMING
+      if (!axes_should_home(_BV(X_AXIS) | _BV(Y_AXIS)))
+        do_blocking_move_to(xy_pos_t(XY_AFTER_HOMING));
+    #endif
+
     restore_feedrate_and_scaling();
 
     if (ENABLED(NANODLP_Z_SYNC) && (ENABLED(NANODLP_ALL_AXIS) || TERN0(HAS_Z_AXIS, doZ)))
@@ -647,11 +655,15 @@ void GcodeSuite::G28() {
 
   ui.refresh();
 
-  TERN_(HAS_DWIN_E3V2_BASIC, dwinHomingDone());
+  TERN_(HAS_DWIN_E3V2_BASIC, DWIN_HomingDone());
   TERN_(EXTENSIBLE_UI, ExtUI::onHomingDone());
 
   report_current_position();
 
   TERN_(FULL_REPORT_TO_HOST_FEATURE, set_and_report_grblstate(old_grblstate));
+
+  #ifdef EVENT_GCODE_AFTER_HOMING
+    gcode.process_subcommands_now(F(EVENT_GCODE_AFTER_HOMING));
+  #endif
 
 }

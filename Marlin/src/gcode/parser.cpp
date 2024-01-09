@@ -173,7 +173,7 @@ void GCodeParser::parse(char *p) {
    * With Motion Modes enabled any axis letter can come first.
    */
   switch (letter) {
-    case 'G': case 'M': case 'T': TERN_(MARLIN_DEV_MODE, case 'D':) {
+    case 'G': case 'M': case 'T': TERN_(MARLIN_DEV_MODE, case 'D':) TERN_(DWIN_LCD_PROUI, case 'C':) {
       // Skip spaces to get the numeric part
       while (*p == ' ') p++;
 
@@ -339,7 +339,7 @@ void GCodeParser::parse(char *p) {
 
       #if ENABLED(DEBUG_GCODE_PARSER)
         if (debug) {
-          SERIAL_ECHOPGM("Got param ", AS_CHAR(param), " at index ", p - command_ptr - 1);
+          SERIAL_ECHOPGM("Got param ", C(param), " at index ", p - command_ptr - 1);
           if (has_val) SERIAL_ECHOPGM(" (has_val)");
         }
       #endif

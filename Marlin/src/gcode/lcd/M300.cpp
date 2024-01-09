@@ -32,17 +32,24 @@
 /**
  * M300: Play a Tone / Add a tone to the queue
  *
+ *  M300 E1 ; enable sounds
+ *  M300 E0 ; disable sounds
+ *
+ *  M300 T1 ; enable tick
+ *  M300 T0 ; disable tick
+ * 
  *  S<frequency> - (Hz) The frequency of the tone. 0 for silence.
  *  P<duration>  - (ms) The duration of the tone.
- *
- * With SOUND_MENU_ITEM:
- *  E<0|1>       - Mute or enable sound
  */
 void GcodeSuite::M300() {
 
   #if ENABLED(SOUND_MENU_ITEM)
-    if (parser.seen('E')) {
+    if (parser.seen('E')) { 
       ui.sound_on = parser.value_bool();
+      return;
+    }
+    if (parser.seen('T')) { 
+      ui.tick_on = parser.value_bool();
       return;
     }
   #endif

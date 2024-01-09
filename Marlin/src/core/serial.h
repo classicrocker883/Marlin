@@ -33,19 +33,14 @@
 //
 enum MarlinDebugFlags : uint8_t {
   MARLIN_DEBUG_NONE          = 0,
-  MARLIN_DEBUG_ECHO          = _BV(0), ///< Echo commands in order as they are processed
-  MARLIN_DEBUG_INFO          = _BV(1), ///< Print messages for code that has debug output
-  MARLIN_DEBUG_ERRORS        = _BV(2), ///< Not implemented
-  MARLIN_DEBUG_DRYRUN        = _BV(3), ///< Ignore temperature setting and E movement commands
-  MARLIN_DEBUG_COMMUNICATION = _BV(4), ///< Not implemented
-  #if ENABLED(DEBUG_LEVELING_FEATURE)
-    MARLIN_DEBUG_LEVELING    = _BV(5), ///< Print detailed output for homing and leveling
-    MARLIN_DEBUG_MESH_ADJUST = _BV(6), ///< UBL bed leveling
-  #else
-    MARLIN_DEBUG_LEVELING    = 0,
-    MARLIN_DEBUG_MESH_ADJUST = 0,
-  #endif
-  MARLIN_DEBUG_ALL           = 0xFF
+  MARLIN_DEBUG_ECHO          = TERN0(DEBUG_FLAGS_GCODE,      _BV(0)), //!< Echo commands in order as they are processed
+  MARLIN_DEBUG_INFO          = TERN0(DEBUG_FLAGS_GCODE,      _BV(1)), //!< Print messages for code that has debug output
+  MARLIN_DEBUG_ERRORS        = TERN0(DEBUG_FLAGS_GCODE,      _BV(2)), //!< Not implemented
+  MARLIN_DEBUG_DRYRUN        =                               _BV(3),  //!< Ignore temperature setting and E movement commands
+  MARLIN_DEBUG_COMMUNICATION = TERN0(DEBUG_FLAGS_GCODE,      _BV(4)), //!< Not implemented
+  MARLIN_DEBUG_LEVELING      = TERN0(DEBUG_LEVELING_FEATURE, _BV(5)), //!< Print detailed output for homing and leveling
+  MARLIN_DEBUG_MESH_ADJUST   = TERN0(DEBUG_LEVELING_FEATURE, _BV(6)), //!< UBL bed leveling
+  MARLIN_DEBUG_ALL           = MARLIN_DEBUG_ECHO|MARLIN_DEBUG_INFO|MARLIN_DEBUG_ERRORS|MARLIN_DEBUG_COMMUNICATION|MARLIN_DEBUG_LEVELING|MARLIN_DEBUG_MESH_ADJUST
 };
 
 extern uint8_t marlin_debug_flags;
@@ -143,15 +138,15 @@ void SERIAL_CHAR(char a, Args ... args) { SERIAL_IMPL.write(a); SERIAL_CHAR(args
  *
  * NOTE: Use SERIAL_CHAR to print char as a single character.
  */
-template <typename T> void SERIAL_ECHO(T x)   { SERIAL_IMPL.print(x); }
+template <typename T> void SERIAL_ECHO(  T x) { SERIAL_IMPL.print(  x); }
 template <typename T> void SERIAL_ECHOLN(T x) { SERIAL_IMPL.println(x); }
 
 // Wrapper for ECHO commands to interpret a char
 void SERIAL_ECHO(serial_char_t x);
-#define AS_DIGIT(C) AS_CHAR('0' + (C))
+#define AS_DIGIT(n) C('0' + (n))
 
 // Print an integer with a numeric base such as PrintBase::Hex
-template <typename T> void SERIAL_PRINT(T x, PrintBase y)   { SERIAL_IMPL.print(x, y); }
+template <typename T> void SERIAL_PRINT(  T x, PrintBase y) { SERIAL_IMPL.print(  x, y); }
 template <typename T> void SERIAL_PRINTLN(T x, PrintBase y) { SERIAL_IMPL.println(x, y); }
 
 // Flush the serial port
@@ -167,7 +162,7 @@ void SERIAL_WARN_START();
 void SERIAL_EOL();
 
 // Print a single PROGMEM, PGM_P, or PSTR() string.
-void SERIAL_ECHO_P(PGM_P pstr);
+void SERIAL_ECHO_P(  PGM_P pstr);
 void SERIAL_ECHOLN_P(PGM_P pstr);
 
 // Specializations for float, p_float_t, and w_float_t
@@ -176,12 +171,12 @@ template<> void SERIAL_ECHO(const p_float_t pf);
 template<> void SERIAL_ECHO(const w_float_t wf);
 
 // Specializations for F-string
-template<> void SERIAL_ECHO(const FSTR_P fstr);
+template<> void SERIAL_ECHO(  const FSTR_P fstr);
 template<> void SERIAL_ECHOLN(const FSTR_P fstr);
 
 // Print any number of items with arbitrary types (except loose PROGMEM strings)
 template <typename T, typename ... Args>
-void SERIAL_ECHO(T arg1, Args ... args) { SERIAL_ECHO(arg1); SERIAL_ECHO(args ...); }
+void SERIAL_ECHO(  T arg1, Args ... args) { SERIAL_ECHO(arg1); SERIAL_ECHO(args ...); }
 template <typename T, typename ... Args>
 void SERIAL_ECHOLN(T arg1, Args ... args) { SERIAL_ECHO(arg1); SERIAL_ECHO(args ...); SERIAL_EOL(); }
 
@@ -203,7 +198,7 @@ void SERIAL_ECHOLN(T arg1, Args ... args) { SERIAL_ECHO(arg1); SERIAL_ECHO(args 
 #define __SELP_N(N,V...)          _SELP_##N(V)
 #define _SELP_N(N,V...)           __SELP_N(N,V)
 #define _SELP_N_REF()             _SELP_N
-#define _SELP_1(s)                SERIAL_ECHO(F(s "\n"));
+#define _SELP_1(s)                SERIAL_ECHO(  F(s "\n"));
 #define _SELP_2(s,v)              SERIAL_ECHOLN(F(s),v);
 #define _SELP_3(s,v,V...)         _SEP_2(s,v); DEFER2(_SELP_N_REF)()(TWO_ARGS(V),V);
 #define SERIAL_ECHOLNPGM(V...)    do{ EVAL(_SELP_N(TWO_ARGS(V),V)); }while(0)
@@ -238,7 +233,7 @@ void serial_ternary(FSTR_P const pre, const bool onoff, FSTR_P const on, FSTR_P 
 // Print up to 255 spaces
 void SERIAL_ECHO_SP(uint8_t count);
 
-void serialprint_onoff(const bool onoff);
+void serialprint_onoff(  const bool onoff);
 void serialprintln_onoff(const bool onoff);
 void serialprint_truefalse(const bool tf);
 void serial_offset(const_float_t v, const uint8_t sp=0); // For v==0 draw space (sp==1) or plus (sp==2)
@@ -246,16 +241,16 @@ void serial_offset(const_float_t v, const uint8_t sp=0); // For v==0 draw space 
 void print_bin(const uint16_t val);
 
 void print_xyz(NUM_AXIS_ARGS_(const_float_t) FSTR_P const prefix=nullptr, FSTR_P const suffix=nullptr);
-inline void print_xyz(const xyz_pos_t &xyz, FSTR_P const prefix=nullptr, FSTR_P const suffix=nullptr) {
+inline void print_xyz( const xyz_pos_t &xyz, FSTR_P const prefix=nullptr, FSTR_P const suffix=nullptr) {
   print_xyz(NUM_AXIS_ELEM_(xyz) prefix, suffix);
 }
 
 void print_xyze(LOGICAL_AXIS_ARGS_(const_float_t) FSTR_P const prefix=nullptr, FSTR_P const suffix=nullptr);
-inline void print_xyze(const xyze_pos_t &xyze, FSTR_P const prefix=nullptr, FSTR_P const suffix=nullptr) {
+inline void print_xyze(   const xyze_pos_t &xyze, FSTR_P const prefix=nullptr, FSTR_P const suffix=nullptr) {
   print_xyze(LOGICAL_AXIS_ELEM_(xyze) prefix, suffix);
 }
 
-#define SERIAL_POS(SUFFIX,VAR) do { print_xyz(VAR, F("  " STRINGIFY(VAR) "="), F(" : " SUFFIX "\n")); }while(0)
+#define SERIAL_POS(SUFFIX,VAR) do  { print_xyz(VAR, F("  " STRINGIFY(VAR) "="), F(" : " SUFFIX "\n")); }while(0)
 #define SERIAL_XYZ(PREFIX,V...) do { print_xyz(V, F(PREFIX)); }while(0)
 
 /**
@@ -276,28 +271,28 @@ public:
   SString& set() { super::set(); return *this; }
 
   template<typename... Args>
-  SString& setf_P(PGM_P const fmt, Args... more) { snprintf_P(str, SIZE, fmt, more...); debug(F("setf_P")); return *this; }
+  SString& setf_P(PGM_P const fmt, Args... more) { super::setf_P(fmt, more...); return *this; }
 
   template<typename... Args>
-  SString& setf(const char *fmt, Args... more)   { snprintf(str, SIZE, fmt, more...);   debug(F("setf"));   return *this; }
+  SString& setf(const char *fmt, Args... more)   { super::setf(fmt, more...); return *this; }
 
   template<typename... Args>
-  SString& setf(FSTR_P const fmt, Args... more)  { return setf_P(FTOP(fmt), more...); }
+  SString& setf(FSTR_P const fmt, Args... more)  { super::setf(fmt, more...); return *this; }
 
   template <typename T>
-  SString& set(const T &v) { super::set(v); return *this; }
+  SString& set(const T &v)                       { super::set(v); return *this; }
 
   template <typename T>
-  SString& append(const T &v) { super::append(v); return *this; }
+  SString& append(const T &v)                    { super::append(v); return *this; }
 
   template<typename T, typename... Args>
-  SString& set(T arg1, Args... more) { set(arg1).append(more...); return *this; }
+  SString& set(T arg1, Args... more)             { set(arg1).append(more...); return *this; }
 
   template<typename T, typename... Args>
-  SString& append(T arg1, Args... more) { append(arg1).append(more...); return *this; }
+  SString& append(T arg1, Args... more)          { append(arg1).append(more...); return *this; }
 
   SString& clear() { set(); return *this; }
-  SString& eol() { append('\n'); return *this; }
+  SString& eol()   { append('\n'); return *this; }
   SString& trunc(const int &i) { super::trunc(i); return *this; }
 
   // Extended with methods to print to serial

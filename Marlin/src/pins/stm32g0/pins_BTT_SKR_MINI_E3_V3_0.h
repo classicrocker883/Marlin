@@ -177,7 +177,7 @@
    */
 
   #ifndef NO_CONTROLLER_CUSTOM_WIRING_WARNING
-    #error "CAUTION! DWIN_CREALITY_LCD requires a custom cable, see diagram above this line. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this warning.)"
+    //#error "CAUTION! DWIN_LCD_PROUI requires a custom cable, see diagram above this line. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this warning.)"
   #endif
 
   #define BEEPER_PIN                 EXP1_02_PIN
@@ -439,4 +439,19 @@
 //
 #ifndef NEOPIXEL_PIN
   #define NEOPIXEL_PIN                      PA8   // LED driving pin
+#endif
+
+//
+// M3/M4/M5 - Spindle/Laser Control
+//
+#if HAS_CUTTER
+  //#define HEATER_0_PIN                    -1
+  //#define HEATER_BED_PIN                  -1
+  #if DISABLED(CV_LASER_MODULE)
+    #define FAN0_PIN                        -1
+  #endif
+  #define SPINDLE_LASER_ENA_PIN             PA8   // FET 1
+  #define SPINDLE_LASER_PWM_PIN             PA8   // Bed FET
+  #define SPINDLE_DIR_PIN                   PA8   // FET 4
+  #define LASER_SOFT_PWM_PIN                PA8
 #endif

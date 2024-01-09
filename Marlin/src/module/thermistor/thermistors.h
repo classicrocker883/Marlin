@@ -167,6 +167,9 @@ typedef struct { raw_adc_t value; celsius_t celsius; } temp_entry_t;
 #if ANY_THERMISTOR_IS(75)     // beta25 = 4100 K, R25 = 100kΩ, Pullup = 4.7kΩ, "MGB18-104F39050L32 thermistor"
   #include "thermistor_75.h"
 #endif
+#if ANY_THERMISTOR_IS(98)     // beta25 = 3950 K, R25 = 100 kOhm, Pull-up = 4.7 kOhm, "HT-NTC-100k 300ºC"
+  #include "thermistor_98.h"
+#endif
 #if ANY_THERMISTOR_IS(666)    // beta25 = UNK, R25 = 200K, Pullup = 10kΩ, "Unidentified 200K NTC thermistor (Einstart S)"
   #include "thermistor_666.h"
 #endif

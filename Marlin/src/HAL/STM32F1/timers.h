@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- *
  * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
- * Copyright (c) 2016 Bob Cousins bobcousins42@googlemail.com
- * Copyright (c) 2017 Victor Perez
+ *
+ * Based on Sprinter and grbl.
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ typedef uint16_t hal_timer_t;
   //#define MF_TIMER_TEMP       4  // 2->4, Timer 2 for Stepper Current PWM
 #endif
 
-#if MB(BTT_SKR_MINI_E3_V1_0, BTT_SKR_E3_DIP, BTT_SKR_MINI_E3_V1_2, MKS_ROBIN_LITE, MKS_ROBIN_E3D, MKS_ROBIN_E3)
+#if MB(BTT_SKR_MINI_E3_V1_0, BTT_SKR_E3_DIP, BTT_SKR_MINI_E3_V1_2, MKS_ROBIN_LITE, MKS_ROBIN_E3D, MKS_ROBIN_E3, VOXELAB_AQUILA)
   // SKR Mini E3 boards use PA8 as FAN0_PIN, so TIMER 1 is used for Fan PWM.
   #ifdef STM32_HIGH_DENSITY
     #define MF_TIMER_SERVO0  8  // tone.cpp uses Timer 4
@@ -199,3 +199,21 @@ FORCE_INLINE static void timer_no_ARR_preload_ARPE(timer_dev *dev) {
 void HAL_timer_set_interrupt_priority(uint_fast8_t timer_num, uint_fast8_t priority);
 
 #define TIMER_OC_NO_PRELOAD 0 // Need to disable preload also on compare registers.
+
+// Support for Creality CV Laser module
+// Code from CrealityOfficial laser support repository:
+// https://github.com/CrealityOfficial/Ender-3S1/tree/ender-3s1-lasermodel
+// 107011 激光模式
+
+#define LASER_TIMER_NUM	               3
+#define LASER_TIMER_DEV	               TIMER_DEV(LASER_TIMER_NUM)
+#define LASER_TIMER_FREQUENCY          1000 // PWM freq:1000Hz
+#define LASER_TIMER_PWM_MAX            255 // PWM value range: 0~255
+#define LASER_TIMER_PRESCALE(freq)     (HAL_TIMER_RATE / (freq * (LASER_TIMER_PWM_MAX + 1))) // (72M/1000*256)=281
+#define LASER_TIMER_CHAN		           1
+#define LASER_TIMER_IRQ_PRIO	         1
+
+void laser_timer_soft_pwm_init();
+void laser_timer_soft_pwm_start(uint8_t pwm);
+void laser_timer_soft_pwm_stop(void);
+void laser_timer_soft_pwm_close();

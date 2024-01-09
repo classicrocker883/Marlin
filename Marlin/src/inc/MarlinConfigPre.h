@@ -37,6 +37,8 @@
 #include "../core/macros.h"
 #include "../core/boards.h"
 #include "../../Configuration.h"
+//#include "../../../configurations/_Undef_Configuration.h"   //**EXPERIMENTAL** Uncomment to use
+//#include "../../../configurations/_Defines_Configuration.h" //**EXPERIMENTAL** Uncomment to use
 
 #ifdef CUSTOM_VERSION_FILE
   #if __has_include(STRINGIFY(../../CUSTOM_VERSION_FILE))
@@ -54,9 +56,16 @@
 
 #include "../core/drivers.h"
 #include "../../Configuration_adv.h"
+//#include "../../../configurations/_Undef_Configuration_adv.h"   //**EXPERIMENTAL** Uncomment to use
+//#include "../../../configurations/_Defines_Configuration_adv.h" //**EXPERIMENTAL** Uncomment to use
 
 #include "Conditionals_adv.h"
 
 #ifndef __MARLIN_DEPS__
   #include HAL_PATH(.., inc/Conditionals_adv.h)
+#endif
+
+// DWIN general ProUI defines and data structs
+#if ENABLED(DWIN_LCD_PROUI)
+  #include "../lcd/e3v2/proui/dwin_defines.h"
 #endif

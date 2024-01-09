@@ -36,7 +36,7 @@ namespace LanguageNarrow_el {
   constexpr uint8_t CHARSIZE              = 2;
   LSTR LANGUAGE                           = _UxGT("Greek (Greece)");
 
-  LSTR WELCOME_MSG                        = MACHINE_NAME _UxGT(" έτοιμος.");
+  LSTR WELCOME_MSG                        = CUSTOM_MACHINE_NAME _UxGT(" έτοιμος");
   LSTR MSG_YES                            = _UxGT("ΝΑΙ");
   LSTR MSG_NO                             = _UxGT("ΟΧΙ");
   LSTR MSG_BACK                           = _UxGT("Πίσω");
@@ -96,11 +96,8 @@ namespace LanguageNarrow_el {
   LSTR MSG_MOVE_E                         = _UxGT("Εξωθητής");
   LSTR MSG_MOVE_EN                        = _UxGT("Εξωθητής *");
   LSTR MSG_MOVE_N_MM                      = _UxGT("Μετακίνηση $μμ");
-  LSTR MSG_MOVE_01MM                      = _UxGT("Μετακίνηση 0,1 μμ");
-  LSTR MSG_MOVE_1MM                       = _UxGT("Μετακίνηση 1 μμ");
-  LSTR MSG_MOVE_10MM                      = _UxGT("Μετακίνηση 10 μμ");
-  LSTR MSG_MOVE_50MM                      = _UxGT("Μετακίνηση 50 μμ");
-  LSTR MSG_MOVE_100MM                     = _UxGT("Μετακίνηση 100 μμ");
+  LSTR MSG_MOVE_N_IN                      = _UxGT("Μετακίνηση $in");
+  LSTR MSG_MOVE_N_DEG                     = _UxGT("Μετακίνηση $") LCD_STR_DEGREE;
   LSTR MSG_SPEED                          = _UxGT("Ταχύτητα");
   LSTR MSG_MESH_Z_OFFSET                  = _UxGT("Επ. Εκτύπωσης Z");
   LSTR MSG_NOZZLE                         = _UxGT("Ακροφύσιο");

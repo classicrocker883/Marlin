@@ -160,7 +160,7 @@
 #define SD_DETECT_PIN                       PC7
 #define SDCARD_CONNECTION ONBOARD
 #define ONBOARD_SDIO
-#define NO_SD_HOST_DRIVE                          // This board's SD is only seen by the printer
+#undef NO_SD_HOST_DRIVE                           // This board's SD is only seen by the printer
 
 #if ANY(RET6_12864_LCD, HAS_DWIN_E3V2, IS_DWIN_MARLINUI)
 
@@ -299,3 +299,11 @@
 #define UART4_RX_PIN                        PC11  // default uses sdcard SDIO_D3
 #define UART5_TX_PIN                        PC12  // default uses sdcard SDIO_CK
 #define UART5_RX_PIN                        PD2   // default uses sdcard SDIO_CMD
+
+// SDIO pins
+#define BOARD_SDIO_D0                       PC8
+#define BOARD_SDIO_D1                       PC9
+#define BOARD_SDIO_D2                       PC10
+#define BOARD_SDIO_D3                       PC11
+#define BOARD_SDIO_CK                       PC12
+#define BOARD_SDIO_CMD                      PD2

@@ -242,30 +242,37 @@ public:
      * close it can get the RIGHT edge of the bed (unless the nozzle is able move
      * far enough past the right edge).
      */
-    static constexpr float _min_x(const xy_pos_t &probe_offset_xy=offset_xy) {
-      return TERN(IS_KINEMATIC,
-        (X_CENTER) - probe_radius(probe_offset_xy),
-        _MAX((X_MIN_BED) + (PROBING_MARGIN_LEFT), (X_MIN_POS) + probe_offset_xy.x)
-      );
-    }
-    static constexpr float _max_x(const xy_pos_t &probe_offset_xy=offset_xy) {
-      return TERN(IS_KINEMATIC,
-        (X_CENTER) + probe_radius(probe_offset_xy),
-        _MIN((X_MAX_BED) - (PROBING_MARGIN_RIGHT), (X_MAX_POS) + probe_offset_xy.x)
-      );
-    }
-    static constexpr float _min_y(const xy_pos_t &probe_offset_xy=offset_xy) {
-      return TERN(IS_KINEMATIC,
-        (Y_CENTER) - probe_radius(probe_offset_xy),
-        _MAX((Y_MIN_BED) + (PROBING_MARGIN_FRONT), (Y_MIN_POS) + probe_offset_xy.y)
-      );
-    }
-    static constexpr float _max_y(const xy_pos_t &probe_offset_xy=offset_xy) {
-      return TERN(IS_KINEMATIC,
-        (Y_CENTER) + probe_radius(probe_offset_xy),
-        _MIN((Y_MAX_BED) - (PROBING_MARGIN_BACK), (Y_MAX_POS) + probe_offset_xy.y)
-      );
-    }
+    #if PROUI_EX
+      static float _min_x(const xy_pos_t &probe_offset_xy = TERN(HAS_BED_PROBE,offset_xy,{0}));
+      static float _max_x(const xy_pos_t &probe_offset_xy = TERN(HAS_BED_PROBE,offset_xy,{0}));
+      static float _min_y(const xy_pos_t &probe_offset_xy = TERN(HAS_BED_PROBE,offset_xy,{0}));
+      static float _max_y(const xy_pos_t &probe_offset_xy = TERN(HAS_BED_PROBE,offset_xy,{0}));
+    #else
+      static constexpr float _min_x(const xy_pos_t &probe_offset_xy = offset_xy) {
+        return TERN(IS_KINEMATIC,
+          (X_CENTER) - probe_radius(probe_offset_xy),
+          _MAX((X_MIN_BED) + (PROBING_MARGIN_LEFT), (X_MIN_POS) + probe_offset_xy.x)
+        );
+      }
+      static constexpr float _max_x(const xy_pos_t &probe_offset_xy = offset_xy) {
+        return TERN(IS_KINEMATIC,
+          (X_CENTER) + probe_radius(probe_offset_xy),
+          _MIN((X_MAX_BED) - (PROBING_MARGIN_RIGHT), (X_MAX_POS) + probe_offset_xy.x)
+        );
+      }
+      static constexpr float _min_y(const xy_pos_t &probe_offset_xy = offset_xy) {
+        return TERN(IS_KINEMATIC,
+          (Y_CENTER) - probe_radius(probe_offset_xy),
+          _MAX((Y_MIN_BED) + (PROBING_MARGIN_FRONT), (Y_MIN_POS) + probe_offset_xy.y)
+        );
+      }
+      static constexpr float _max_y(const xy_pos_t &probe_offset_xy = offset_xy) {
+        return TERN(IS_KINEMATIC,
+          (Y_CENTER) + probe_radius(probe_offset_xy),
+          _MIN((Y_MAX_BED) - (PROBING_MARGIN_BACK), (Y_MAX_POS) + probe_offset_xy.y)
+        );
+      }
+    #endif
 
     static float min_x() { return _min_x() TERN_(NOZZLE_AS_PROBE, TERN_(HAS_HOME_OFFSET, - home_offset.x)); }
     static float max_x() { return _max_x() TERN_(NOZZLE_AS_PROBE, TERN_(HAS_HOME_OFFSET, - home_offset.x)); }
@@ -284,7 +291,7 @@ public:
       static constexpr xy_pos_t default_probe_xy_offset = xy_pos_t({ default_probe_xyz_offset.x,  default_probe_xyz_offset.y });
 
     public:
-      static constexpr bool can_reach(float x, float y) {
+      TERN(PROUI_EX, static, static constexpr) bool can_reach(float x, float y) {
         #if IS_KINEMATIC
           return HYPOT2(x, y) <= sq(probe_radius(default_probe_xy_offset));
         #else
@@ -293,7 +300,7 @@ public:
         #endif
       }
 
-      static constexpr bool can_reach(const xy_pos_t &point) { return can_reach(point.x, point.y); }
+      TERN(PROUI_EX, static, static constexpr) bool can_reach(const xy_pos_t &point) { return can_reach(point.x, point.y); }
     };
 
     #if NEEDS_THREE_PROBE_POINTS
@@ -314,7 +321,7 @@ public:
             points[0] = xy_float_t({ (X_CENTER) + probe_radius() * COS0,   (Y_CENTER) + probe_radius() * SIN0 });
             points[1] = xy_float_t({ (X_CENTER) + probe_radius() * COS120, (Y_CENTER) + probe_radius() * SIN120 });
             points[2] = xy_float_t({ (X_CENTER) + probe_radius() * COS240, (Y_CENTER) + probe_radius() * SIN240 });
-          #elif ENABLED(AUTO_BED_LEVELING_UBL)
+          #elif ENABLED(AUTO_BED_LEVELING_UBL) && DISABLED(PROUI_EX)
             points[0] = xy_float_t({ _MAX(float(MESH_MIN_X), min_x()), _MAX(float(MESH_MIN_Y), min_y()) });
             points[1] = xy_float_t({ _MIN(float(MESH_MAX_X), max_x()), _MAX(float(MESH_MIN_Y), min_y()) });
             points[2] = xy_float_t({ (_MAX(float(MESH_MIN_X), min_x()) + _MIN(float(MESH_MAX_X), max_x())) / 2, _MIN(float(MESH_MAX_Y), max_y()) });

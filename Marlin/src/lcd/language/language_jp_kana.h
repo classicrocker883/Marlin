@@ -41,7 +41,7 @@ namespace LanguageNarrow_jp_kana {
   // This translation can be improved by using the full charset of unicode codeblock U+30A0 to U+30FF.
 
   // 片仮名表示定義
-  LSTR WELCOME_MSG                        = MACHINE_NAME _UxGT(" ジュンビカンリョウ");
+  LSTR WELCOME_MSG                        = CUSTOM_MACHINE_NAME _UxGT(" ジュンビカンリョウ");
   LSTR MSG_MEDIA_INSERTED                 = _UxGT("メディアガソウニュウサレマシタ"); // "Card inserted"
   LSTR MSG_MEDIA_REMOVED                  = _UxGT("メディアガアリマセン"); // "Card removed"
   LSTR MSG_RELEASE_MEDIA                  = _UxGT("メディアノトリダシ");
@@ -95,12 +95,9 @@ namespace LanguageNarrow_jp_kana {
   LSTR MSG_MOVE_N                         = _UxGT("@ジク イドウ"); // "Move @"
   LSTR MSG_MOVE_E                         = _UxGT("エクストルーダー"); // "Extruder"
   LSTR MSG_MOVE_EN                        = _UxGT("* エクストルーダー"); // "En"
-  LSTR MSG_MOVE_N_MM                      = _UxGT("$mm イドウ"); // "Move 0.025mm"
-  LSTR MSG_MOVE_01MM                      = _UxGT("0.1mm イドウ"); // "Move 0.1mm"
-  LSTR MSG_MOVE_1MM                       = _UxGT("  1mm イドウ"); // "Move 1mm"
-  LSTR MSG_MOVE_10MM                      = _UxGT(" 10mm イドウ"); // "Move 10mm"
-  LSTR MSG_MOVE_50MM                      = _UxGT(" 50mm イドウ"); // "Move 50mm"
-  LSTR MSG_MOVE_100MM                     = _UxGT(" 100mm イドウ"); // "Move 100mm"
+  LSTR MSG_MOVE_N_MM                      = _UxGT("$mm イドウ"); // "Move $mm"
+  LSTR MSG_MOVE_N_IN                      = _UxGT("$in イドウ"); // "Move $in"
+  LSTR MSG_MOVE_N_DEG                     = _UxGT("$" LCD_STR_DEGREE " イドウ"); // "Move $°"
   LSTR MSG_SPEED                          = _UxGT("ソクド"); // "Speed"
   LSTR MSG_MESH_Z_OFFSET                  = _UxGT("Zオフセット"); // "Bed Z"
   LSTR MSG_NOZZLE                         = _UxGT("ノズル"); // "Nozzle"

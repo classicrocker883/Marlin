@@ -795,7 +795,7 @@ void RTS::handleData() {
           tmp_zprobe_offset = (float(recdat.data[0]) - 65536) / 100;
         else
           tmp_zprobe_offset = float(recdat.data[0]) / 100;
-        if (WITHIN((tmp_zprobe_offset), Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX)) {
+        if (WITHIN((tmp_zprobe_offset), PROBE_OFFSET_ZMIN, PROBE_OFFSET_ZMAX)) {
           int16_t tmpSteps = mmToWholeSteps(getZOffset_mm() - tmp_zprobe_offset, axis_t(Z));
           if (tmpSteps == 0) tmpSteps = getZOffset_mm() < tmp_zprobe_offset ? 1 : -1;
           smartAdjustAxis_steps(-tmpSteps, axis_t(Z), false);
@@ -1116,7 +1116,7 @@ void RTS::handleData() {
         #if HAS_BED_PROBE
 
           case 2: { // Z-axis to Up
-            if (WITHIN((getZOffset_mm() + 0.1), Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX)) {
+            if (WITHIN((getZOffset_mm() + 0.1), PROBE_OFFSET_ZMIN, PROBE_OFFSET_ZMAX)) {
               smartAdjustAxis_steps(getAxisSteps_per_mm(Z) / 10, axis_t(Z), false);
               //setZOffset_mm(getZOffset_mm() + 0.1);
               sendData(getZOffset_mm() * 100, ProbeOffset_Z);
@@ -1125,7 +1125,7 @@ void RTS::handleData() {
             break;
           }
           case 3: { // Z-axis to Down
-            if (WITHIN((getZOffset_mm() - 0.1), Z_PROBE_OFFSET_RANGE_MIN, Z_PROBE_OFFSET_RANGE_MAX)) {
+            if (WITHIN((getZOffset_mm() - 0.1), PROBE_OFFSET_ZMIN, PROBE_OFFSET_ZMAX)) {
               smartAdjustAxis_steps(-getAxisSteps_per_mm(Z) / 10, axis_t(Z), false);
               //babystepAxis_steps(int16_t(-getAxisSteps_per_mm(Z)) / 10, axis_t(Z));
               //setZOffset_mm(getZOffset_mm() - 0.1);
@@ -1655,9 +1655,9 @@ void RTS::handleData() {
 
     case AutolevelVal: {
       uint8_t meshPoint = (recdat.addr - AutolevelVal) / 2,
-              yPnt = floor(meshPoint / GRID_MAX_POINTS_X),
-              xPnt = meshPoint - (yPnt * GRID_MAX_POINTS_X);
-      if (yPnt % 2 != 0) xPnt = (GRID_MAX_POINTS_X - 1) - xPnt; // zag row
+              yPnt = meshPoint / (GRID_MAX_POINTS_X),
+              xPnt = meshPoint - yPnt * (GRID_MAX_POINTS_X);
+      if (yPnt % 2 != 0) xPnt = (GRID_MAX_POINTS_X) - 1 - xPnt; // zag row
 
       float meshVal = float(recdat.data[0] - (recdat.data[0] >= 32768 ? 65536 : 0)) / 1000;
 

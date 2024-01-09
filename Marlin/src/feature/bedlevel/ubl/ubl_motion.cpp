@@ -463,6 +463,9 @@
           TERN_(ENABLE_LEVELING_FADE_HEIGHT, * fade_scaling_factor); // apply fade factor to interpolated height
 
         const float oldz = raw.z; raw.z += z_cxcy;
+
+        LIMIT(raw.z, Z_PROBE_LOW_POINT, Z_MAX_POS);
+
         planner.buffer_line(raw, scaled_fr_mm_s, active_extruder, hints);
         raw.z = oldz;
 

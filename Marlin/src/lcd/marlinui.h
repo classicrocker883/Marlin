@@ -47,9 +47,7 @@
   #include "../feature/pause.h"
 #endif
 
-#if ENABLED(DWIN_CREALITY_LCD)
-  #include "e3v2/creality/dwin.h"
-#elif ENABLED(DWIN_LCD_PROUI)
+#if ENABLED(DWIN_LCD_PROUI)
   #include "e3v2/proui/dwin.h"
 #endif
 
@@ -86,9 +84,9 @@ typedef bool (*statusResetFunc_t)();
 
 #endif // HAS_WIRED_LCD
 
-#if ANY(HAS_WIRED_LCD, DWIN_CREALITY_LCD_JYERSUI)
+#if HAS_WIRED_LCD
   #define LCD_WITH_BLINK 1
-  #define LCD_UPDATE_INTERVAL TERN(HAS_TOUCH_BUTTONS, 50, 100)
+  #define LCD_UPDATE_INTERVAL DIV_TERN(DOUBLE_LCD_FRAMERATE, TERN(HAS_TOUCH_BUTTONS, 50, 100), 2)
 #endif
 
 #if HAS_MARLINUI_U8GLIB
@@ -198,6 +196,22 @@ public:
     TERN_(HAS_MARLINUI_MENU, currentScreen = status_screen);
   }
 
+  #ifdef BED_SCREW_INSET
+    static float screw_pos; // bed corner screw inset
+  #endif
+
+  #if PROUI_EX && HAS_MESH // workaround for mesh inset not saving on restart
+    static float mesh_inset_min_x;
+    static float mesh_inset_max_x;
+    static float mesh_inset_min_y;
+    static float mesh_inset_max_y;
+  #endif
+
+  #if ENABLED(ENCODER_RATE_MULTIPLIER) && ENABLED(ENC_MENU_ITEM)
+    static uint16_t enc_rateA;
+    static uint16_t enc_rateB;
+  #endif
+
   static void init();
 
   #if HAS_DISPLAY || HAS_DWIN_E3V2
@@ -225,6 +239,7 @@ public:
 
   #if ENABLED(SOUND_MENU_ITEM)
     static bool sound_on; // Initialized by settings.load()
+    static bool tick_on;  // added to disable encoder tick/beep while keeping sound on
   #else
     static constexpr bool sound_on = true;
   #endif
@@ -272,17 +287,25 @@ public:
     FORCE_INLINE static void refresh_brightness() { set_brightness(brightness); }
   #endif
 
-  #if LCD_BACKLIGHT_TIMEOUT_MINS
+  #if HAS_BACKLIGHT_TIMEOUT
+    #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
+      static uint8_t backlight_timeout_minutes;
+    #else
+      static constexpr uint8_t backlight_timeout_minutes = LCD_BACKLIGHT_TIMEOUT_MINS;
+    #endif
     static constexpr uint8_t backlight_timeout_min = 0;
     static constexpr uint8_t backlight_timeout_max = 99;
-    static uint8_t backlight_timeout_minutes;
     static millis_t backlight_off_ms;
     static void refresh_backlight_timeout();
   #elif HAS_DISPLAY_SLEEP
+    #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
+      static uint8_t sleep_timeout_minutes;
+    #else
+      static constexpr uint8_t sleep_timeout_minutes = DISPLAY_SLEEP_MINUTES;
+    #endif
     static constexpr uint8_t sleep_timeout_min = 0;
     static constexpr uint8_t sleep_timeout_max = 99;
-    static uint8_t sleep_timeout_minutes;
-    static millis_t screen_timeout_millis;
+    static millis_t screen_timeout_ms;
     static void refresh_screen_timeout();
     static void sleep_display(const bool sleep=true);
   #endif
@@ -329,6 +352,7 @@ public:
       #if ENABLED(SET_INTERACTION_TIME)
         static uint32_t interaction_time;
         FORCE_INLINE static void set_interaction_time(const uint32_t r) { interaction_time = r; }
+        FORCE_INLINE static uint32_t get_interaction_time() { return interaction_time; }
         FORCE_INLINE static void reset_interaction_time() { set_interaction_time(0); }
       #endif
     #endif
@@ -443,6 +467,7 @@ public:
    */
   static void _set_alert(const char * const ustr, int8_t level, const bool pgm=false);
 
+  static void set_status(FSTR_P const, int8_t); // set_status undefined reference libproui.a PROUI_EX workaround
   static void set_status(const char * const cstr, const bool persist=false) { _set_status(cstr, persist, false); }
   static void set_status_P(PGM_P const pstr, const bool persist=false)      { _set_status(pstr, persist, true);  }
   static void set_status(FSTR_P const fstr, const bool persist=false)       { set_status_P(FTOP(fstr), persist); }
@@ -457,7 +482,7 @@ public:
    * @param fstr  A constant F-string to set as the status.
    * @param level Alert level. Negative to ignore and reset the level. Non-zero never expires.
    */
-  static void set_status_and_level(const char * const cstr, const int8_t level) { _set_status_and_level(cstr, level, false); }
+  static void set_status_and_level(const char * const cstr, const int8_t level=0) { _set_status_and_level(cstr, level, false); }
 
   /**
    * @brief Set Status with a P-string and alert level.
@@ -465,7 +490,7 @@ public:
    * @param ustr  A C- or P-string, according to pgm.
    * @param level Alert level. Negative to ignore and reset the level. Non-zero never expires.
    */
-  static void set_status_and_level_P(PGM_P const pstr, const int8_t level) { _set_status_and_level(pstr, level, true); }
+  static void set_status_and_level_P(PGM_P const pstr, const int8_t level=0) { _set_status_and_level(pstr, level, true); }
 
   /**
    * @brief Set Status with a fixed string and alert level.
@@ -473,7 +498,7 @@ public:
    * @param fstr  A constant F-string to set as the status.
    * @param level Alert level. Negative to ignore and reset the level. Non-zero never expires.
    */
-  static void set_status_and_level(FSTR_P const fstr, const int8_t level) { set_status_and_level_P(FTOP(fstr), level); }
+  static void set_status_and_level(FSTR_P const fstr, const int8_t level=0) { set_status_and_level_P(FTOP(fstr), level); }
 
   static void set_max_status(FSTR_P const fstr) { set_status_and_level(fstr, 127); }
   static void set_min_status(FSTR_P const fstr) { set_status_and_level(fstr,  -1); }
@@ -485,7 +510,7 @@ public:
    */
   static void set_status_no_expire_P(PGM_P const pstr)      { set_status_P(pstr, true); }
   static void set_status_no_expire(const char * const cstr) { set_status(cstr, true); }
-  static void set_status_no_expire(FSTR_P const fstr)       { set_status(fstr, true); }
+  static void set_status_no_expire(FSTR_P const fstr)       { set_status(fstr, (bool)true); }
 
   /**
    * @brief Set a status with a format string and parameters.
@@ -660,7 +685,7 @@ public:
 
     #if HAS_TOUCH_BUTTONS
       static uint8_t touch_buttons;
-      static uint8_t repeat_delay;
+      static uint16_t repeat_delay;
     #else
       static constexpr uint8_t touch_buttons = 0;
     #endif
@@ -729,7 +754,7 @@ public:
       static float ubl_mesh_value();
     #endif
 
-    static void draw_select_screen_prompt(FSTR_P const pref, const char * const string=nullptr, FSTR_P const suff=nullptr);
+    static void draw_select_screen_prompt(FSTR_P const fpre, const char * const string=nullptr, FSTR_P const fsuf=nullptr);
 
   #else
 
@@ -755,7 +780,7 @@ public:
     static bool use_click() { return false; }
   #endif
 
-  #if ENABLED(ADVANCED_PAUSE_FEATURE) && ANY(HAS_MARLINUI_MENU, EXTENSIBLE_UI, DWIN_LCD_PROUI, DWIN_CREALITY_LCD_JYERSUI)
+  #if ENABLED(ADVANCED_PAUSE_FEATURE) && ANY(HAS_MARLINUI_MENU, EXTENSIBLE_UI, DWIN_LCD_PROUI)
     static void pause_show_message(const PauseMessage message, const PauseMode mode=PAUSE_MODE_SAME, const uint8_t extruder=active_extruder);
   #else
     static void _pause_show_message() {}

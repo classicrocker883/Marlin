@@ -32,9 +32,7 @@
 #include "../libs/hex_print.h"
 #include "../lcd/marlinui.h"
 
-#if ENABLED(DWIN_CREALITY_LCD)
-  #include "../lcd/e3v2/creality/dwin.h"
-#elif ENABLED(DWIN_LCD_PROUI)
+#if ENABLED(DWIN_LCD_PROUI)
   #include "../lcd/e3v2/proui/dwin.h"
 #endif
 
@@ -446,8 +444,7 @@ void CardReader::ls(const uint8_t lsflags/*=0*/) {
       diveDir.close();
 
       if (longFilename[0]) {
-        strncpy_P(pathLong, longFilename, 63);
-        pathLong[63] = '\0';
+        strlcpy_P(pathLong, longFilename, 64);
         break;
       }
     }
@@ -488,9 +485,9 @@ void CardReader::mount() {
     #endif
   ) SERIAL_ECHO_MSG(STR_SD_INIT_FAIL);
   else if (!volume.init(driver))
-    SERIAL_ERROR_MSG(STR_SD_VOL_INIT_FAIL);
+    SERIAL_WARN_MSG(STR_SD_VOL_INIT_FAIL);
   else if (!root.openRoot(&volume))
-    SERIAL_ERROR_MSG(STR_SD_OPENROOT_FAIL);
+    SERIAL_WARN_MSG(STR_SD_OPENROOT_FAIL);
   else {
     flag.mounted = true;
     SERIAL_ECHO_MSG(STR_SD_CARD_OK);
@@ -500,7 +497,7 @@ void CardReader::mount() {
     cdroot();
   else {
     #if ANY(HAS_SD_DETECT, USB_FLASH_DRIVE_SUPPORT)
-      if (marlin_state != MF_INITIALIZING) LCD_ALERTMESSAGE(MSG_MEDIA_INIT_FAIL);
+      if (marlin_state != MF_INITIALIZING) LCD_MESSAGE(MSG_MEDIA_INIT_FAIL);
     #endif
   }
 
@@ -588,6 +585,8 @@ void CardReader::release() {
   flag.workDirIsRoot = true;
   nrItems = -1;
   SERIAL_ECHO_MSG(STR_SD_CARD_RELEASED);
+
+  TERN_(NO_SD_DETECT, ui.refresh());
 }
 
 /**
@@ -621,7 +620,6 @@ void CardReader::startOrResumeFilePrinting() {
 //
 void CardReader::endFilePrintNow(TERN_(SD_RESORT, const bool re_sort/*=false*/)) {
   TERN_(ADVANCED_PAUSE_FEATURE, did_pause_print = 0);
-  TERN_(DWIN_CREALITY_LCD, hmiFlag.print_finish = flag.sdprinting);
   flag.abort_sd_printing = false;
   if (isFileOpen()) file.close();
   TERN_(SD_RESORT, if (re_sort) presort());
@@ -717,6 +715,10 @@ void CardReader::openFileRead(const char * const path, const uint8_t subcall_typ
         break;
 
     #endif
+
+    #if PROUI_EX
+       case 100: break;  // Reserved for read file header.
+    #endif
   }
 
   abortFilePrintNow();
@@ -737,6 +739,7 @@ void CardReader::openFileRead(const char * const path, const uint8_t subcall_typ
 
     selectFileByName(fname);
     ui.set_status(longFilename[0] ? longFilename : fname);
+    TERN_(DWIN_LCD_PROUI, DWIN_Print_Header(longFilename[0] ? longFilename : fname));
   }
   else
     openFailed(fname);
@@ -1073,8 +1076,7 @@ const char* CardReader::diveToFile(const bool update_cwd, MediaFile* &inDirPtr, 
     // Isolate the next subitem name
     const uint8_t len = name_end - atom_ptr;
     char dosSubdirname[len + 1];
-    strncpy(dosSubdirname, atom_ptr, len);
-    dosSubdirname[len] = 0;
+    strlcpy(dosSubdirname, atom_ptr, len + 1);
 
     if (echo) SERIAL_ECHOLN(dosSubdirname);
 
@@ -1179,7 +1181,7 @@ void CardReader::cdroot() {
       #endif
     #else
       // Copy filenames into the static array
-      #define _SET_SORTNAME(I) strncpy(sortnames[I], longest_filename(), SORTED_LONGNAME_MAXLEN)
+      #define _SET_SORTNAME(I) strlcpy(sortnames[I], longest_filename(), sizeof(sortnames[I]))
       #if SORTED_LONGNAME_MAXLEN == LONG_FILENAME_LENGTH
         // Short name sorting always use LONG_FILENAME_LENGTH with no trailing nul
         #define SET_SORTNAME(I) _SET_SORTNAME(I)

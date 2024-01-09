@@ -29,7 +29,7 @@
 #include "../../../inc/MarlinConfig.h"
 
 // If max edit values are not specified use default * DEFAULT_MAX_MULTIPLIER
-#define DEFAULT_MAX_MULTIPLIER 2
+//#define DEFAULT_MAX_MULTIPLIER 2
 
 //
 // Feedrate limits
@@ -41,6 +41,8 @@ constexpr xyze_float_t min_feedrate_edit_values = LOGICAL_AXIS_ARRAY_1(MIN_FEEDR
                        max_feedrate_edit_values =
                          #ifdef MAX_FEEDRATE_EDIT_VALUES
                            MAX_FEEDRATE_EDIT_VALUES
+                         #elif DISABLED(DEFAULT_MAX_MULTIPLIER)
+                           { 1000, 1000, 40, 200 }
                          #else
                            default_max_feedrate * float(DEFAULT_MAX_MULTIPLIER)
                          #endif
@@ -56,6 +58,8 @@ constexpr xyze_float_t min_acceleration_edit_values = LOGICAL_AXIS_ARRAY_1(MIN_A
                        max_acceleration_edit_values =
                         #ifdef MAX_ACCEL_EDIT_VALUES
                           MAX_ACCEL_EDIT_VALUES
+                         #elif DISABLED(DEFAULT_MAX_MULTIPLIER)
+                           { 6000, 6000, 300, 9999 }
                         #else
                           default_max_acceleration * float(DEFAULT_MAX_MULTIPLIER)
                         #endif
@@ -67,7 +71,7 @@ constexpr xyze_float_t min_acceleration_edit_values = LOGICAL_AXIS_ARRAY_1(MIN_A
 #define MIN_JERK_EDIT_VALUE 0.1
 #define DEFAULT_MAX_JERK_MULTIPLIER 2
 
-#if HAS_CLASSIC_JERK
+#if ENABLED(CLASSIC_JERK)
   constexpr xyze_float_t min_jerk_edit_values = LOGICAL_AXIS_ARRAY_1(MIN_JERK_EDIT_VALUE),
                          default_jerk = LOGICAL_AXIS_ARRAY(
                            DEFAULT_EJERK,
@@ -78,6 +82,8 @@ constexpr xyze_float_t min_acceleration_edit_values = LOGICAL_AXIS_ARRAY_1(MIN_A
                          max_jerk_edit_values =
                            #ifdef MAX_JERK_EDIT_VALUES
                              MAX_JERK_EDIT_VALUES
+                           #elif DISABLED(DEFAULT_MAX_MULTIPLIER)
+                             { DEFAULT_XJERK * 2, DEFAULT_YJERK * 2, DEFAULT_ZJERK * 4, DEFAULT_EJERK * 4 }
                            #else
                              default_jerk * float(DEFAULT_MAX_JERK_MULTIPLIER)
                            #endif
@@ -94,7 +100,39 @@ constexpr xyze_float_t min_steps_edit_values = LOGICAL_AXIS_ARRAY_1(MIN_STEPS_ED
                        max_steps_edit_values =
                          #ifdef MAX_STEPS_EDIT_VALUES
                            MAX_STEPS_EDIT_VALUES
+                         #elif DISABLED(DEFAULT_MAX_MULTIPLIER)
+                           { 200, 200, 2000, 2000 }
                          #else
                            default_steps * float(DEFAULT_MAX_MULTIPLIER)
                          #endif
                        ;
+
+//
+// Old Values
+//
+
+// constexpr float max_feedrate_edit_values[] =
+//   #ifdef MAX_FEEDRATE_EDIT_VALUES
+//     MAX_FEEDRATE_EDIT_VALUES
+//   #else
+//     { 1000, 1000, 40, 200 }
+//   #endif
+// ;
+
+// constexpr float max_acceleration_edit_values[] =
+//   #ifdef MAX_ACCEL_EDIT_VALUES
+//     MAX_ACCEL_EDIT_VALUES
+//   #else
+//     { 3000, 3000, 300, 9999 }
+//   #endif
+// ;
+
+// #if ENABLED(CLASSIC_JERK)
+//   constexpr float max_jerk_edit_values[] =
+//     #ifdef MAX_JERK_EDIT_VALUES
+//       MAX_JERK_EDIT_VALUES
+//     #else
+//       { DEFAULT_XJERK * 2, DEFAULT_YJERK * 2, DEFAULT_ZJERK * 4, DEFAULT_EJERK * 4 }
+//     #endif
+//   ;
+// #endif

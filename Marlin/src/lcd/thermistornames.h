@@ -91,13 +91,13 @@
 #elif THERMISTOR_ID == 10
   #define THERMISTOR_NAME "RS 198-961"
 #elif THERMISTOR_ID == 11
-  #define THERMISTOR_NAME "1% beta 3950"
+  #define THERMISTOR_NAME "QWG-104F-3950 (1% beta 3950)"
 #elif THERMISTOR_ID == 12
   #define THERMISTOR_NAME "E3104FXT (alt)"
 #elif THERMISTOR_ID == 13
-  #define THERMISTOR_NAME "Hisens 3950"
+  #define THERMISTOR_NAME "Hisens 4100"
 #elif THERMISTOR_ID == 14
-  #define THERMISTOR_NAME "100k Ender-5 S1"
+  #define THERMISTOR_NAME "100k Ender-5 S1 (EPCOS 4092)"
 #elif THERMISTOR_ID == 15
   #define THERMISTOR_NAME "100k JGAurora A5"
 #elif THERMISTOR_ID == 17
@@ -110,6 +110,8 @@
   #define THERMISTOR_NAME "Hephestos 2"
 #elif THERMISTOR_ID == 75
   #define THERMISTOR_NAME "MGB18"
+#elif THERMISTOR_ID == 98
+  #define THERMISTOR_NAME "HT-NTC-100k with 4.7k pull-up"
 
 // Analog Thermistors - 1kΩ pullup
 #elif THERMISTOR_ID == 51

@@ -8,7 +8,7 @@ name: CI
 on:
   pull_request:
     branches:
-    - bugfix-2.1.x
+    - 2024-January!
     paths-ignore:
     - config/**
     - data/**
@@ -16,7 +16,7 @@ on:
     - '**/*.md'
   push:
     branches:
-    - bugfix-2.1.x
+    - 2024-January!
     paths-ignore:
     - config/**
     - data/**
@@ -26,7 +26,7 @@ on:
 jobs:
   test_builds:
     name: Run All Tests
-    if: github.repository == 'MarlinFirmware/Marlin'
+    if: github.repository == 'classicrocker883/MRiscoCProUI'
 
     runs-on: ubuntu-latest
 
@@ -118,6 +118,7 @@ jobs:
 
         # STM32H7
         - BTT_SKR_SE_BX
+        #- STM32H743VI_btt
 
         # STM32F1 (Maple)
         - jgaurora_a5s_a1_maple
@@ -132,6 +133,12 @@ jobs:
         #- mks_robin_nano_v1v2_maple
         #- STM32F103RC_btt_maple
         #- STM32F103RE_creality_maple
+        #- STM32F103RC_creality_maple
+        #- GD32F303RC_creality_maple
+        #- GD32F303RC_creality_maple
+        - GD32F103RC_voxelab_maple
+        - N32F103RC_voxelab_maple
+        - N32G455RE_voxelab_maple
 
         # STM32G0
         - STM32G0B1RE_btt
@@ -143,10 +150,10 @@ jobs:
     steps:
 
     - name: Check out the PR
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Cache pip
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -154,19 +161,21 @@ jobs:
           ${{ runner.os }}-pip-
 
     - name: Cache PlatformIO
-      uses: actions/cache@v3
+      uses: actions/cache@v3.3.2
       with:
         path: ~/.platformio
         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
 
-    - name: Select Python 3.7
-      uses: actions/setup-python@v3
+    - name: Select Python 3.9
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.7' # Version range or exact version of a Python version to use, using semvers version range syntax.
-        architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+        python-version: '3.9'
+        architecture: 'x64'
 
     - name: Install PlatformIO
       run: |
+        pip install -U pip
+        pip install -U wheel
         pip install -U platformio
         pio upgrade --dev
         pio pkg update --global

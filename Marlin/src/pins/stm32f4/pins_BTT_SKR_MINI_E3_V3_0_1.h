@@ -122,16 +122,16 @@
 
   // Default TMC slave addresses
   #ifndef X_SLAVE_ADDRESS
-    #define X_SLAVE_ADDRESS                    0
+    #define X_SLAVE_ADDRESS  0
   #endif
   #ifndef Y_SLAVE_ADDRESS
-    #define Y_SLAVE_ADDRESS                    2
+    #define Y_SLAVE_ADDRESS  2
   #endif
   #ifndef Z_SLAVE_ADDRESS
-    #define Z_SLAVE_ADDRESS                    1
+    #define Z_SLAVE_ADDRESS  1
   #endif
   #ifndef E0_SLAVE_ADDRESS
-    #define E0_SLAVE_ADDRESS                   3
+    #define E0_SLAVE_ADDRESS 3
   #endif
 #endif
 
@@ -184,7 +184,7 @@
    * All pins are labeled as printed on DWIN PCB. Connect TX-TX, A-A and so on.
    */
 
-  #error "DWIN_CREALITY_LCD requires a custom cable, see diagram above this line. Comment out this line to continue."
+  //#error "DWIN_LCD_PROUI requires a custom cable, see diagram above this line. Comment out this line to continue."
 
   #define BEEPER_PIN                 EXP1_02_PIN
   #define BTN_EN1                    EXP1_08_PIN
