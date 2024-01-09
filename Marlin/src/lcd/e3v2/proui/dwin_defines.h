@@ -58,9 +58,7 @@
   #define HAS_ZOFFSET_ITEM 1
 #endif
 
-#if ANY(PIDTEMP, PIDTEMPBED)
-  #define PROUI_PID_TUNE 1
-#endif
+#define PROUI_PID_TUNE 1
 
 #define defColorBackground  RGB( 1, 12,  8)
 #define defColorCursor      RGB(20, 49, 31)
