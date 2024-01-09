@@ -74,7 +74,7 @@ enum processID : uint8_t {
 #if ANY(HAS_PID_TUNE, MPC_AUTOTUNE)
 
   enum tempcontrol_t : uint8_t {
-    #if HAS_PID_TUNE
+    #if ENABLED(HAS_PID_TUNE)
       PIDTEMP_START,
       PIDTEMPBED_START,
       PID_BAD_HEATER_ID,
