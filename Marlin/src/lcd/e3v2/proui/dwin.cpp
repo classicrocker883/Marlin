@@ -117,7 +117,7 @@
   #include "endstop_diag.h"
 #endif
 
-#if HAS_TUNING_GRAPH
+#if PROUI_TUNING_GRAPH
   #include "plot.h"
 #endif
 
@@ -1278,7 +1278,7 @@ void eachMomentUpdate() {
     #if HAS_ESDIAG
       if (checkkey == ID_ESDiagProcess) esDiag.update();
     #endif
-    #if HAS_TUNING_GRAPH
+    #if PROUI_TUNING_GRAPH
       if (checkkey == ID_PIDProcess) {
         TERN_(PIDTEMP, if (hmiValue.tempControl == PIDTEMP_START) plot.update(thermalManager.wholeDegHotend(0)));
         TERN_(PIDTEMPBED, if (hmiValue.tempControl == PIDTEMPBED_START) plot.update(thermalManager.wholeDegBed()));
@@ -1438,7 +1438,7 @@ void dwinHandleScreen() {
 
     TERN_(HAS_BED_PROBE, case ID_Leveling:)
     case ID_Homing:
-    TERN_(HAS_PID_HEATING, case ID_PIDProcess:)
+    TERN_(PROUI_PID_TUNE, case ID_PIDProcess:)
     TERN_(MPCTEMP, case ID_MPCProcess:)
     case ID_NothingToDo:
     default: break;
@@ -1453,7 +1453,7 @@ bool idIsPopUp() {    // If ID is popup...
     case ID_WaitResponse:
     case ID_Popup:
     case ID_Homing:
-    TERN_(HAS_PID_HEATING, case ID_PIDProcess:)
+    TERN_(PROUI_PID_TUNE, case ID_PIDProcess:)
     TERN_(MPCTEMP, case ID_MPCProcess:)
     TERN_(PROUI_ITEM_PLOT, case ID_PlotProcess:)
       return true;
@@ -1541,7 +1541,7 @@ void dwinLevelingDone() {
 
 // PID/MPC process
 
-#if HAS_TUNING_GRAPH
+#if PROUI_TUNING_GRAPH
 
   #include "plot.h"
 
@@ -1634,9 +1634,9 @@ void dwinLevelingDone() {
 
   #endif // PROUI_ITEM_PLOT
 
-#endif // HAS_TUNING_GRAPH
+#endif // PROUI_TUNING_GRAPH
 
-#if HAS_PID_HEATING
+#if PROUI_PID_TUNE
 
   void dwinStartM303(const bool seenC, const int c, const bool seenS, const heater_id_t hid, const celsius_t temp) {
     if (seenC) hmiData.pidCycles = c;
@@ -1655,7 +1655,7 @@ void dwinLevelingDone() {
       #if ENABLED(PIDTEMP)
         case PIDTEMP_START:
           hmiSaveProcessID(ID_PIDProcess);
-          #if HAS_TUNING_GRAPH
+          #if PROUI_TUNING_GRAPH
             dwinDrawPIDMPCPopup();
           #else
             dwinDrawPopup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), F("for Nozzle is running."));
@@ -1669,7 +1669,7 @@ void dwinLevelingDone() {
       #if ENABLED(PIDTEMPBED)
         case PIDTEMPBED_START:
           hmiSaveProcessID(ID_PIDProcess);
-          #if HAS_TUNING_GRAPH
+          #if PROUI_TUNING_GRAPH
             dwinDrawPIDMPCPopup();
           #else
             dwinDrawPopup(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE), F("for BED is running."));
@@ -1694,7 +1694,7 @@ void dwinLevelingDone() {
     }
   }
 
-#endif // HAS_PID_HEATING
+#endif // PROUI_PID_TUNE
 
 #if ENABLED(MPC_AUTOTUNE)
 
@@ -1703,7 +1703,7 @@ void dwinLevelingDone() {
     switch (result) {
       case MPCTEMP_START:
         hmiSaveProcessID(ID_MPCProcess);
-        #if HAS_TUNING_GRAPH
+        #if PROUI_TUNING_GRAPH
           dwinDrawPIDMPCPopup();
         #else
           dwinDrawPopup(ICON_TempTooHigh, GET_TEXT_F(MSG_MPC_AUTOTUNE), F("for Nozzle is running."));
@@ -1814,7 +1814,7 @@ void dwinSetDataDefaults() {
   DWINUI::setColors(hmiData.colorText, hmiData.colorBackground, hmiData.colorStatusBg);
   TERN_(PIDTEMP, hmiData.hotendPidT = DEF_HOTENDPIDT);
   TERN_(PIDTEMPBED, hmiData.bedPidT = DEF_BEDPIDT);
-  TERN_(HAS_PID_HEATING, hmiData.pidCycles = DEF_PIDCYCLES);
+  TERN_(PROUI_PID_TUNE, hmiData.pidCycles = DEF_PIDCYCLES);
   #if ENABLED(PREVENT_COLD_EXTRUSION)
     hmiData.extMinT = EXTRUDE_MINTEMP;
     applyExtMinT();
@@ -3074,7 +3074,7 @@ void drawPrepareMenu() {
       REPEAT_1(PREHEAT_COUNT, _ITEM_PREHEAT)
     #endif
     MENU_ITEM(ICON_Cool, MSG_COOLDOWN, onDrawCooldown, doCoolDown);
-    #if ALL(HAS_TUNING_GRAPH, PROUI_ITEM_PLOT)
+    #if ALL(PROUI_TUNING_GRAPH, PROUI_ITEM_PLOT)
       MENU_ITEM(ICON_PIDNozzle, MSG_HOTEND_TEMP_GRAPH, onDrawMenuItem, drawHPlot);
       MENU_ITEM(ICON_PIDBed, MSG_BED_TEMP_GRAPH, onDrawMenuItem, drawBPlot);
     #endif
@@ -3405,7 +3405,7 @@ void drawTuneMenu() {
     #if ENABLED(EDITABLE_DISPLAY_TIMEOUT)
       EDIT_ITEM(ICON_RemainTime, MSG_SCREEN_TIMEOUT, onDrawPIntMenu, setTimer, &ui.backlight_timeout_minutes);
     #endif
-    #if ALL(HAS_TUNING_GRAPH, PROUI_ITEM_PLOT)
+    #if ALL(PROUI_TUNING_GRAPH, PROUI_ITEM_PLOT)
       MENU_ITEM(ICON_PIDNozzle, MSG_HOTEND_TEMP_GRAPH, onDrawMenuItem, drawHPlot);
       MENU_ITEM(ICON_PIDBed, MSG_BED_TEMP_GRAPH, onDrawMenuItem, drawBPlot);
     #endif
@@ -3841,7 +3841,7 @@ void drawStepsMenu() {
 
 #endif // MPC_EDIT_MENU || MPC_AUTOTUNE_MENU
 
-#if HAS_PID_HEATING
+#if PROUI_PID_TUNE
   void setPID(celsius_t t, heater_id_t h) {
     gcode.process_subcommands_now(
       MString<60>(F("G28OXY\nG0Z5F300\nG0X"), X_CENTER, F("Y"), Y_CENTER, F("F5000\nM84\nM400"))
@@ -3851,7 +3851,7 @@ void drawStepsMenu() {
   void setPidCycles() { setPIntOnClick(3, 50); }
 #endif
 
-#if ALL(HAS_PID_HEATING, PID_EDIT_MENU)
+#if ALL(PROUI_PID_TUNE, PID_EDIT_MENU)
 
   void setKp() { setPFloatOnClick(0, 1000, 2); }
   void applyPIDi() {
@@ -3875,7 +3875,7 @@ void drawStepsMenu() {
   void onDrawPIDi(MenuItem* menuitem, int8_t line) { onDrawFloatMenu(menuitem, line, 2, unscalePID_i(*(float*)static_cast<MenuItemPtr*>(menuitem)->value)); }
   void onDrawPIDd(MenuItem* menuitem, int8_t line) { onDrawFloatMenu(menuitem, line, 2, unscalePID_d(*(float*)static_cast<MenuItemPtr*>(menuitem)->value)); }
 
-#endif // HAS_PID_HEATING && PID_EDIT_MENU
+#endif // PROUI_PID_TUNE && PID_EDIT_MENU
 
 #if ENABLED(PIDTEMP) && ANY(PID_AUTOTUNE_MENU, PID_EDIT_MENU)
 

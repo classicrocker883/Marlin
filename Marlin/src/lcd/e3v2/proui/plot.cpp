@@ -33,7 +33,7 @@
 
 #include "dwin_defines.h"
 
-#if HAS_TUNING_GRAPH
+#if PROUI_TUNING_GRAPH
 
 #include "dwin.h"
 #include "../../marlinui.h"
@@ -78,5 +78,5 @@ void Plot::update(const_celsius_float_t value) {
   TERN_(HAS_BACKLIGHT_TIMEOUT, ui.refresh_backlight_timeout());
 }
 
-#endif // HAS_TUNING_GRAPH
+#endif // PROUI_TUNING_GRAPH
 #endif // DWIN_LCD_PROUI

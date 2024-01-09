@@ -2490,6 +2490,9 @@
 // PID heating
 #if ANY(PIDTEMP, PIDTEMPBED, PIDTEMPCHAMBER)
   #define HAS_PID_HEATING 1
+  #if ENABLED(DWIN_LCD_PROUI) && ANY(PIDTEMP, PIDTEMPBED)
+    #define PROUI_PID_TUNE 1
+  #endif
 #endif
 #define NO_CONTROLLER_CUSTOM_WIRING_WARNING
 // Thermal protection
@@ -2945,7 +2948,11 @@
 /**
  * Bed Probe dependencies
  */
-#if ANY(MESH_BED_LEVELING, HAS_BED_PROBE)
+#if ANY(BABYSTEPPING, PROBE_SELECTED)
+  #define HAS_ZOFFSET_ITEM 1
+#endif
+
+#if ANY(PROBE_SELECTED, HAS_ZOFFSET_ITEM)
   #ifndef PROBE_OFFSET_ZMIN
     #define PROBE_OFFSET_ZMIN -20
   #endif
