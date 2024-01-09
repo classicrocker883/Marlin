@@ -71,10 +71,10 @@ enum processID : uint8_t {
   ID_NothingToDo
 };
 
-#if ANY(HAS_PID_TUNE, MPC_AUTOTUNE)
+#if ANY(HAS_PID_HEATING, MPC_AUTOTUNE)
 
   enum tempcontrol_t : uint8_t {
-    #if ENABLED(HAS_PID_TUNE)
+    #if ENABLED(HAS_PID_HEATING)
       PIDTEMP_START,
       PIDTEMPBED_START,
       PID_BAD_HEATER_ID,
@@ -116,7 +116,7 @@ typedef struct {
   uint16_t colorCoordinate;
 
   // Temperatures
-  #if HAS_PID_TUNE
+  #if HAS_PID_HEATING
     int16_t pidCycles = DEF_PIDCYCLES;
     #if ENABLED(PIDTEMP)
       int16_t hotendPidT = DEF_HOTENDPIDT;
@@ -173,7 +173,7 @@ typedef struct {
 
 typedef struct {
   rgb_t color;                        // Color
-  #if ANY(HAS_PID_TUNE, MPCTEMP)
+  #if ANY(HAS_PID_HEATING, MPCTEMP)
     tempcontrol_t tempControl = AUTOTUNE_DONE;
   #endif
   uint8_t select = 0;                 // Auxiliary selector variable
@@ -311,7 +311,7 @@ void dwinRebootScreen();
 #if HAS_ESDIAG
   void drawEndStopDiag();
 #endif
-#if ALL(HAS_PID_TUNE, PROUI_ITEM_PLOT)
+#if ALL(HAS_PID_HEATING, PROUI_ITEM_PLOT)
   void dwinDrawPlot(tempcontrol_t result);
   void drawHPlot();
   void drawBPlot();
@@ -377,7 +377,7 @@ void drawStepsMenu();
 #endif
 
 // PID
-#if HAS_PID_TUNE
+#if HAS_PID_HEATING
   #include "../../../module/temperature.h"
   void dwinStartM303(const bool seenC, const int c, const bool seenS, const heater_id_t hid, const celsius_t temp);
   void dwinPidTuning(tempcontrol_t result);

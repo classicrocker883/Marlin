@@ -1438,7 +1438,7 @@ void dwinHandleScreen() {
 
     TERN_(HAS_BED_PROBE, case ID_Leveling:)
     case ID_Homing:
-    TERN_(HAS_PID_TUNE, case ID_PIDProcess:)
+    TERN_(HAS_PID_HEATING, case ID_PIDProcess:)
     TERN_(MPCTEMP, case ID_MPCProcess:)
     case ID_NothingToDo:
     default: break;
@@ -1453,7 +1453,7 @@ bool idIsPopUp() {    // If ID is popup...
     case ID_WaitResponse:
     case ID_Popup:
     case ID_Homing:
-    TERN_(HAS_PID_TUNE, case ID_PIDProcess:)
+    TERN_(HAS_PID_HEATING, case ID_PIDProcess:)
     TERN_(MPCTEMP, case ID_MPCProcess:)
     TERN_(PROUI_ITEM_PLOT, case ID_PlotProcess:)
       return true;
@@ -1636,7 +1636,7 @@ void dwinLevelingDone() {
 
 #endif // HAS_TUNING_GRAPH
 
-#if HAS_PID_TUNE
+#if HAS_PID_HEATING
 
   void dwinStartM303(const bool seenC, const int c, const bool seenS, const heater_id_t hid, const celsius_t temp) {
     if (seenC) hmiData.pidCycles = c;
@@ -1694,7 +1694,7 @@ void dwinLevelingDone() {
     }
   }
 
-#endif // HAS_PID_TUNE
+#endif // HAS_PID_HEATING
 
 #if ENABLED(MPC_AUTOTUNE)
 
@@ -1814,7 +1814,7 @@ void dwinSetDataDefaults() {
   DWINUI::setColors(hmiData.colorText, hmiData.colorBackground, hmiData.colorStatusBg);
   TERN_(PIDTEMP, hmiData.hotendPidT = DEF_HOTENDPIDT);
   TERN_(PIDTEMPBED, hmiData.bedPidT = DEF_BEDPIDT);
-  TERN_(HAS_PID_TUNE, hmiData.pidCycles = DEF_PIDCYCLES);
+  TERN_(HAS_PID_HEATING, hmiData.pidCycles = DEF_PIDCYCLES);
   #if ENABLED(PREVENT_COLD_EXTRUSION)
     hmiData.extMinT = EXTRUDE_MINTEMP;
     applyExtMinT();
@@ -3841,7 +3841,7 @@ void drawStepsMenu() {
 
 #endif // MPC_EDIT_MENU || MPC_AUTOTUNE_MENU
 
-#if HAS_PID_TUNE
+#if HAS_PID_HEATING
   void setPID(celsius_t t, heater_id_t h) {
     gcode.process_subcommands_now(
       MString<60>(F("G28OXY\nG0Z5F300\nG0X"), X_CENTER, F("Y"), Y_CENTER, F("F5000\nM84\nM400"))
