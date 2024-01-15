@@ -23,6 +23,8 @@ def _GetMarlinEnv(marlinEnv, feature):
 # Get Marlin evironment vars
 if "MARLIN_FEATURES" in env:
     print("Processing Professional Firmware requirements")
+    if os.environ.get('PWR') == 'true' and os.environ.get('TP') == 'true':
+      exit(0)
     MarlinEnv = env['MARLIN_FEATURES']
     prouiex = _GetMarlinEnv(MarlinEnv, 'PROUI_EX')
     marlin_manualmesh = _GetMarlinEnv(MarlinEnv, 'MESH_BED_LEVELING')
