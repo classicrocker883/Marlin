@@ -61,8 +61,8 @@ jobs:
         cp configurations/Voxelab\ Aquila/Default-NP/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/.*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
@@ -145,8 +145,8 @@ jobs:
         cp configurations/Voxelab\ Aquila/MM/Version.h Marlin/Version.h
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/.*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
@@ -222,6 +222,7 @@ jobs:
         if ($TJC); then DTMP=TJC-; else DTMP=; fi;
         if ($PWR); then PLTMP=-PWRLOSS; else PLTMP=; fi;
         if ($T13); then TTMP=-SpriteT13; else TTMP=; fi;
+        if [ "$PWR" = true ] && [ "$TP" = true ]; then exit 0; fi;
         echo "filename=${DTMP}Aquila${TTMP}_${AVTMP}_UBL-ProUI${TPTMP}${PLTMP}.bin" >> $GITHUB_OUTPUT
         > Marlin/Configuration.h
         > Marlin/Configuration_adv.h
@@ -248,9 +249,6 @@ jobs:
         sed -i "s/.*#define CAPABILITIES_REPORT/${PLMP}#define CAPABILITIES_REPORT/" Marlin/Configuration_adv.h
         if ($T13); then THMP="13"; else THMP="1"; fi;
         sed -i "s/.*#define TEMP_SENSOR_0 1/#define TEMP_SENSOR_0 ${THMP}/" Marlin/Configuration.h
-        if [ "$PWR" = true ] && [ "$TP" = true ]; then
-        sed -i "s/.*#define POWER_LOSS_RECOVERY/\/\/define POWER_LOSS_RECOVERY/" Marlin/Configuration_adv.h;
-        fi;
         pio run
         mkdir temp
         mv .pio/build/${AQUILA_VER}F103RC_voxelab_maple/*.bin temp/build.bin
@@ -396,8 +394,8 @@ jobs:
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
         sed -i "s/.*#define GRID_MAX_POINTS_X.*/#define GRID_MAX_POINTS_X ${GRID}/g" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/.*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
@@ -561,8 +559,8 @@ jobs:
         sed -i "s/default_envs =.*/default_envs = ${AQUILA_VER}F103RC_voxelab_maple/" platformio.ini
         sed -i "s/.*#define GRID_MAX_POINTS_X.*/#define GRID_MAX_POINTS_X ${GRID}/g" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/.*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
@@ -806,8 +804,8 @@ jobs:
         if [ "$AQUILA_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
         sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/.*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
@@ -892,8 +890,8 @@ jobs:
         if [ "$AQUILA_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
         sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/.*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
@@ -980,8 +978,8 @@ jobs:
         if [ "$AQUILA_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
         sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/.*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
@@ -1069,8 +1067,8 @@ jobs:
         if [ "$AQUILA_VER" = 427 ]; then DBORD='CREALITY_V427'; else DBORD='CREALITY_V422'; fi;
         sed -i "s/.*#define MOTHERBOARD BOARD_.*/#define MOTHERBOARD BOARD_${DBORD}/" Marlin/Configuration.h
         if ($IS); then TEMP=; else TEMP='\/\/'; fi;
-        sed -i "s/.*#define INPUT_SHAPING_X/$TEMP#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
-        sed -i "s/.*#define INPUT_SHAPING_Y/$TEMP#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_X/${TEMP}#define INPUT_SHAPING_X/" Marlin/Configuration_adv.h
+        sed -i "s/.*#define INPUT_SHAPING_Y/${TEMP}#define INPUT_SHAPING_Y/" Marlin/Configuration_adv.h
         if ($TP); then PTEMP='\/\/'; else PTEMP=; fi;
         sed -i "0,/^#define PIDTEMP/ s/.*#define PIDTEMP/${PTEMP}#define PIDTEMP/" Marlin/Configuration.h
         if ($TP); then MTEMP=; else MTEMP='\/\/'; fi;
