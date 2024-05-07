@@ -1,6 +1,6 @@
 <ul>
-<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/27032">🩹 Fix printf et.al. expecting F-strings (#27032)</a></li>
-<li>🧑‍💻Improve <a href="https://github.com/MarlinFirmware/Marlin/pull/27040">🧑‍💻Improve make tests-all-local (#27040)
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/27032">Fix printf et.al. expecting F-strings</a></li>
+<li>🧑‍💻Improve <a href="https://github.com/MarlinFirmware/Marlin/pull/27040">make tests-all-local
 
 * Sleep 5 seconds between platforms
 
@@ -9,47 +9,40 @@
 * Fix old workflow name
 
 * Skip linux_native on Darwin</a></li>
-<li>🎨 <a href="https://github.com/MarlinFirmware/Marlin/pull/26949">🎨 Clarify some string parameters (#26949)
+<li>🎨 <a href="https://github.com/MarlinFirmware/Marlin/pull/26949">Clarify some string parameters
 
 Co-authored-by: Scott Lahteine <thinkyhead@users.noreply.github.com></a></li>
-<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26842">🔧 Assert TMC slave addresses, minor pins cleanup (#26842)</a></li>
-<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/27009">🔧 More suppressible warnings (#27009)
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26842">Assert TMC slave addresses, minor pins cleanup</a></li>
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/27009">More suppressible warnings
 
 * 🔧 Suppressible LCD contrast warning
 
 * 🔧 Suppressible Z_SAFE_HOMING warning
 
 * 🔧 Suppressible user feedback warning</a></li>
-<li>🩹Free <a href="https://github.com/MarlinFirmware/Marlin/pull/26985">🩹Free debug pins in HC32 HAL (#26985)
+<li>🩹Free <a href="https://github.com/MarlinFirmware/Marlin/pull/26985">debug pins in HC32 HAL
 
 implements DISABLE_DEBUG and DISABLE_JTAG in HAL</a></li>
-<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26988">🔧 Rework MKS Monster8 pins (#26988)</a></li>
-<li>📝Update <a href="https://github.com/MarlinFirmware/Marlin/pull/27016">📝Update comments to match board labeling  (#27016)</a></li>
-<li>🩹 🩹 IA-Creality minor cleanup</li>
-<li>🩹 🩹 Simple IA-Creality babystep patch
-
-See https://github.com/MarlinFirmware/Marlin/issues/26896#issuecomment-2015630458
-
-Co-Authored-By: ellensp <530024+ellensp@users.noreply.github.com></li>
-<li>🚸 <a href="https://github.com/MarlinFirmware/Marlin/pull/26952">🚸 Fix duplicate temperature report (#26952)</a></li>
-<li>✏️ <a href="https://github.com/MarlinFirmware/Marlin/pull/27002">✏️ MPCTEMP_START => MPC_STARTED (#27002)</a></li>
-<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/27008">🔧 BIQU MicroProbe V2 pull-up warning (#27008)</a></li>
-<li>🎨 <a href="https://github.com/MarlinFirmware/Marlin/pull/27007">🎨 Format pins which fail validation (#27007)</a></li>
-<li>✅ <a href="https://github.com/MarlinFirmware/Marlin/pull/26996">✅  CI - Validate Pins Formatting (#26996)</a></li>
-<li>🎨 🎨 Clean up after recent PRs</li>
-<li>🐛 <a href="https://github.com/MarlinFirmware/Marlin/pull/26995">🐛 Fix Flags<N> data storage width (#26995)
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26988">Rework MKS Monster8 pins</a></li>
+<li>📝Update <a href="https://github.com/MarlinFirmware/Marlin/pull/27016">comments to match board labeling</a></li>
+<li>🚸 <a href="https://github.com/MarlinFirmware/Marlin/pull/26952">Fix duplicate temperature report</a></li>
+<li>✏️ <a href="https://github.com/MarlinFirmware/Marlin/pull/27002">MPCTEMP_START => MPC_STARTED</a></li>
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/27008">BIQU MicroProbe V2 pull-up warning</a></li>
+<li>🎨 <a href="https://github.com/MarlinFirmware/Marlin/pull/27007">Format pins which fail validation</a></li>
+<li>✅ <a href="https://github.com/MarlinFirmware/Marlin/pull/26996"> CI - Validate Pins Formatting</a></li>
+<li>🐛 <a href="https://github.com/MarlinFirmware/Marlin/pull/26995">Fix Flags<N> data storage width
 
 * Fix Flags and associated unit tests</a></li>
-<li>✅ <a href="https://github.com/MarlinFirmware/Marlin/pull/26994">✅ Add additional unit tests for types.h (#26994)
+<li>✅ <a href="https://github.com/MarlinFirmware/Marlin/pull/26994">Add additional unit tests for types.h
 
-* Add more XYval (and similar) unit tests
+* Add more XYval unit tests
 
 * Add  Flags tests, with multiple BUGs identified</a></li>
-<li>✅ <a href="https://github.com/MarlinFirmware/Marlin/pull/26993">✅ Unit test improvements (#26993)
+<li>✅ <a href="https://github.com/MarlinFirmware/Marlin/pull/26993">Unit test improvements
 
 - Reset config.ini in restore_configs
 - Allow running a single configuration of unit tests locally</a></li>
-<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26960">🔧 Add RAMPS TMC SPI pins when !TMC_USE_SW_SPI (#26960)
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26960">Add RAMPS TMC SPI pins when !TMC_USE_SW_SPI
 
 * Allows RAMPS to auto assign HW SPI Pins for TMC</a></li>
 </ul>
