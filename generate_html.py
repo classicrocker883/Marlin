@@ -26,13 +26,15 @@ with open('output_HTML.txt', 'w') as file:
                         if commit_id_match:
                             commit_id = commit_id_match.group(1)
                             description = message
-                            if emoji and not re.match(r'^[a-zA-Z]+', message):
+                            # if emoji and message[len(emoji):].endswith('^[a-zA-Z]+'):
+                            #     emoji = re.sub(r'^[a-zA-Z]+', '', emoji)  # Remove emoji
+                            #     if emoji and not message[len(emoji):].startswith(' '):
+                            #         next_space_index = message.find(' ', len(emoji))
+                            #         if next_space_index != -1:
+                            #             word = message[len(emoji):next_space_index]
+                            #             description = f'{word} {description}'
+                            if not message.startswith(' ') and not re.match(r'^[a-zA-Z]+', message):
                                 emoji = f'{emoji} '  # Add space after emoji if needed
-                                if emoji and not message[len(emoji):].startswith(' '):
-                                    next_space_index = message.find(' ', len(emoji))
-                                    if next_space_index != -1:
-                                        word = message[len(emoji):next_space_index]
-                                        description = f'{word} {description}'
                             description = re.sub(r'^[^ ]+ ', '', description)  # Remove emoji
                             description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
                             file.write(f'<li>{emoji}<a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
