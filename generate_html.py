@@ -49,7 +49,7 @@ with open('output_HTML_commits.txt', 'w', encoding='utf-8') as file:
                     description = message
                     description = description.lstrip()  # Remove leading whitespace
                     description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
-                    file.write(f'<li>{emoji_str}<a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
+                    file.write(f'<li>{emoji_str} <a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
                 else:
                     file.write(f'<li>{emoji_str}{message}</a></li>\n')  # Include emoji and description without commit ID
 
