@@ -26,7 +26,7 @@ with open('output_HTML.txt', 'w') as file:
                         if commit_id_match:
                             commit_id = commit_id_match.group(1)
                             description = message
-                            if emoji.endswith('^[a-zA-Z]+') and re.match(r'^[a-zA-Z]+', description):
+                            if emoji.endswith('^[a-zA-Z]+'):
                                emoji = f'{emoji} '  # Add space after emoji
                             description = re.sub(r'^[^ ]+ ', '', description)  # Remove emoji
                             description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
