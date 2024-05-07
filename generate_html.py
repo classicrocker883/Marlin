@@ -23,13 +23,12 @@ with open('output_HTML.txt', 'w') as file:
                         emoji_match = re.search(r'^([^ ]+)', message)
                         emoji = emoji_match.group(1) if emoji_match else ''
                         if emoji and not emoji.endswith(' '):
-                            if len(emoji) > 1:
-                                if len(emoji) > 2 and re.match(r'^\w', emoji[2]):
-                                    emoji = emoji[0] + emoji[1] + ' '  # Add space after the second character
-                                    message = message.replace(emoji[0], '', 1).replace(emoji[1], '', 1)
-                                elif len(emoji) > 1 and re.match(r'^\w', emoji[1]):
-                                    emoji = emoji[0] + ' '  # Add space after the first character
-                                    message = message.replace(emoji[0], '', 1)
+                            if len(emoji) > 2 and re.match(r'^[^\s]', emoji[2]) or re.match(r'^\w', emoji[2]):
+                                message = message.replace(emoji[0], '', 1).replace(emoji[1], '', 1)
+                                emoji = emoji[0] + emoji[1] + ' '  # Add space after the second character
+                            elif len(emoji) > 1 and re.match(r'^[^\s]', emoji[1]) or re.match(r'^\w', emoji[1]):
+                                message = message.replace(emoji[0], '', 1)
+                                emoji = emoji[0] + ' '  # Add space after the first character
                             else:
                                 message = message.replace(emoji[0], '', 1)  # Remove the character after the emoji
                         commit_id_match = re.search(r'\(#(\d+)\)', message)
