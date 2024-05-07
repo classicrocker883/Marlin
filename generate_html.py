@@ -21,7 +21,7 @@ with open('output_HTML.txt', 'w') as file:
                     commit_date = datetime.strptime(commit_date_str, '%Y-%m-%dT%H:%M:%SZ')
                     if commit_date >= one_week_ago and not commit.get('commit', {}).get('message', '').startswith('[cron]'):
                         message = commit['commit']['message'].split('\n')[0]  # Extract the first line as description
-                        emojis = emoji.emoji_lis(message)
+                        emojis = emoji.emoji_list(message)
                         if emojis:
                             emoji = emojis[0]['emoji']
                             message = message.replace(emoji, '', 1)  # Remove the emoji from the message
