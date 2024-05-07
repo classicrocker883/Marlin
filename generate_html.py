@@ -29,8 +29,9 @@ with open('output_HTML.txt', 'w') as file:
                                     message = message.replace(emoji[0], '', 1).replace(emoji[1], '', 1)
                                 elif len(emoji) > 1 and re.match(r'^\w', emoji[1]):
                                     emoji = emoji[0] + ' '  # Add space after the first character
-                                else:
-                                    message = message.replace(emoji[0], '', 1)  # Remove the character after the emoji
+                                    message = message.replace(emoji[0], '', 1)
+                            else:
+                                message = message.replace(emoji[0], '', 1)  # Remove the character after the emoji
                         commit_id_match = re.search(r'\(#(\d+)\)', message)
                         if commit_id_match:
                             commit_id = commit_id_match.group(1)
