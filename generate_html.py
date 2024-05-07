@@ -23,7 +23,10 @@ with open('output_HTML.txt', 'w') as file:
                         emoji_match = re.search(r'^([^ ]+)', message)
                         emoji = emoji_match.group(1) if emoji_match else ''
                         if emoji and not emoji.endswith(' '):
-                            emoji += ' '  # Add space after emoji if it doesn't end with a space
+                            if len(emoji) > 1:
+                                emoji = emoji[0] + ' ' + emoji[1:]  # Add space after the first character
+                            else:
+                                emoji += ' '  # Add space after emoji if it doesn't end with a space
                             message = message.replace(emoji[0], '', 1)  # Remove the character after the emoji
                         commit_id_match = re.search(r'\(#(\d+)\)', message)
                         if commit_id_match:
@@ -31,7 +34,7 @@ with open('output_HTML.txt', 'w') as file:
                             description = message
                             description = re.sub(r'^[^ ]+ ', '', description)  # Remove emoji
                             description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
-                            file.write(f'<li>{emoji} <a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
+                            file.write(f'<li>{emoji}<a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
 
         # Check for pagination and fetch the next page of commits
         if 'Link' in response.headers:
