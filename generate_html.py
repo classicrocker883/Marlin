@@ -22,12 +22,13 @@ with open('output_HTML.txt', 'w') as file:
                         message = commit['commit']['message']
                         emoji_match = re.search(r'^([^ ]+)', message)
                         emoji = emoji_match.group(1) if emoji_match else ''
-                        if not message.startswith(emoji + ' '):
-                            emoji += ' '  # Add space to emoji if missing
                         commit_id_match = re.search(r'\(#(\d+)\)', message)
                         if commit_id_match:
                             commit_id = commit_id_match.group(1)
-                            description = message.split('\n')[0]  # Extract the first line as description
+                            description = message
+                            emoji = f'{emoji} '  # Add space after emoji
+                            if not description.startswith(' ') and not re.match(r'^[a-zA-Z]+', description):
+                                description = f' {description}'  # Add space at the beginning if needed
                             description = re.sub(r'^[^ ]+ ', '', description)  # Remove emoji
                             description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
                             file.write(f'<li>{emoji}<a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
