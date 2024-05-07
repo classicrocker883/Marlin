@@ -28,10 +28,10 @@ def fetch_commits(url, params):
     return commits
 
 url = 'https://api.github.com/repos/MarlinFirmware/Marlin/commits'
-params = {'per_page': 100, 'since': (datetime.now() - timedelta(days=250)).isoformat()}  # Increase per_page to fetch more commits per request
+params = {'per_page': 100, 'since': (datetime.now() - timedelta(days=30)).isoformat()}  # Increase per_page to fetch more commits per request
 commits = fetch_commits(url, params)
 
-with open('output_HTML_commits.txt', 'w', encoding='utf-8') as file:
+with open('output_HTML_commits.txt', 'w') as file:
     file.write('<ul>\n')
     for commit in commits:
         commit_date_str = commit.get('commit', {}).get('author', {}).get('date')
