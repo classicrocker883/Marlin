@@ -3,7 +3,8 @@ import re
 from datetime import datetime, timedelta
 
 url = 'https://api.github.com/repos/MarlinFirmware/Marlin/commits'
-response = requests.get(url)
+params = {'per_page': 100}  # Set the number of commits per page
+response = requests.get(url, params=params)
 commits = response.json()
 
 # Calculate the date one week ago
@@ -11,18 +12,35 @@ one_week_ago = datetime.now() - timedelta(days=70)
 
 with open('output_HTML.txt', 'w') as file:
     file.write('<ul>\n')
-    for commit in commits:
-        commit_date = datetime.strptime(commit['commit']['author']['date'], '%Y-%m-%dT%H:%M:%SZ')
-        if commit_date >= one_week_ago and not commit['commit']['message'].startswith('[cron]'):
-            emoji_match = re.search(r'^([^ ]+)', commit['commit']['message'])
-            emoji = emoji_match.group(1) if emoji_match else ''
-            commit_id_match = re.search(r'\(#(\d+)\)', commit['commit']['message'])
-            if commit_id_match:
-                commit_id = commit_id_match.group(1)
-                description = commit['commit']['message'].split('\n')[0]  # Extract the first line as description
-                description = re.sub(r'^[^ ]+ ', '', description)  # Remove emoji
-                description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
-                if not description.startswith(' '):
-                    description = f'{emoji} {description}'  # Add space after emoji if missing
-                file.write(f'<li>{emoji} <a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
+    while len(commits) > 0:
+        for commit in commits:
+            commit_date = datetime.strptime(commit['commit']['author']['date'], '%Y-%m-%dT%H:%M:%SZ')
+            if commit_date >= one_week_ago and not commit['commit']['message'].startswith('[cron]'):
+                emoji_match = re.search(r'^([^ ]+)', commit['commit']['message'])
+                emoji = emoji_match.group(1) if emoji_match else ''
+                commit_id_match = re.search(r'\(#(\d+)\)', commit['commit']['message'])
+                if commit_id_match:
+                    commit_id = commit_id_match.group(1)
+                    description = commit['commit']['message'].split('\n')[0]  # Extract the first line as description
+                    if not description.startswith(' '):
+                        description = f'{emoji} {description}'  # Add space after emoji if missing
+                    description = re.sub(r'^[^ ]+ ', '', description)  # Remove emoji
+                    description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
+                    file.write(f'<li>{emoji} <a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
+
+        # Check for pagination and fetch the next page of commits
+        if 'Link' in response.headers:
+            next_url = None
+            links = response.headers['Link'].split(',')
+            for link in links:
+                if 'rel="next"' in link:
+                    next_url = link.split(';')[0].strip('<>')
+            if next_url:
+                response = requests.get(next_url)
+                commits = response.json()
+            else:
+                break
+        else:
+            break
+
     file.write('</ul>')
