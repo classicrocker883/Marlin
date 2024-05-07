@@ -1,85 +1,235 @@
 <ul>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/27032">Fix printf et.al. expecting F-strings</a></li>
-<li>🧑‍💻Improve<a href="https://github.com/MarlinFirmware/Marlin/pull/27040">make tests-all-local</a></li>
-<li>🎨<a href="https://github.com/MarlinFirmware/Marlin/pull/26949">Clarify some string parameters</a></li>
-<li>🔧<a href="https://github.com/MarlinFirmware/Marlin/pull/26842">Assert TMC slave addresses, minor pins cleanup</a></li>
-<li>🔧<a href="https://github.com/MarlinFirmware/Marlin/pull/27009">More suppressible warnings</a></li>
-<li>🩹Free<a href="https://github.com/MarlinFirmware/Marlin/pull/26985">debug pins in HC32 HAL</a></li>
-<li>🔧<a href="https://github.com/MarlinFirmware/Marlin/pull/26988">Rework MKS Monster8 pins</a></li>
-<li>📝Update<a href="https://github.com/MarlinFirmware/Marlin/pull/27016">comments to match board labeling</a></li>
-<li>🚸<a href="https://github.com/MarlinFirmware/Marlin/pull/26952">Fix duplicate temperature report</a></li>
-<li>✏️<a href="https://github.com/MarlinFirmware/Marlin/pull/27002">MPCTEMP_START => MPC_STARTED</a></li>
-<li>🔧<a href="https://github.com/MarlinFirmware/Marlin/pull/27008">BIQU MicroProbe V2 pull-up warning</a></li>
-<li>🎨<a href="https://github.com/MarlinFirmware/Marlin/pull/27007">Format pins which fail validation</a></li>
-<li>✅<a href="https://github.com/MarlinFirmware/Marlin/pull/26996"> CI - Validate Pins Formatting</a></li>
-<li>🐛<a href="https://github.com/MarlinFirmware/Marlin/pull/26995">Fix Flags<N> data storage width</a></li>
-<li>✅<a href="https://github.com/MarlinFirmware/Marlin/pull/26994">Add additional unit tests for types.h</a></li>
-<li>✅<a href="https://github.com/MarlinFirmware/Marlin/pull/26993">Unit test improvements</a></li>
-<li>🔧<a href="https://github.com/MarlinFirmware/Marlin/pull/26960">Add RAMPS TMC SPI pins when !TMC_USE_SW_SPI</a></li>
-<li>🐛<a href="https://github.com/MarlinFirmware/Marlin/pull/26926">Fix PID upon entering PID_FUNCTIONAL_RANGE</a></li>
-<li>🎨Match<a href="https://github.com/MarlinFirmware/Marlin/pull/26990">unit test folder structure to code</a></li>
-<li>✅<a href="https://github.com/MarlinFirmware/Marlin/pull/26991">Skip compile tests when editing unit tests</a></li>
-<li>📝Improve<a href="https://github.com/MarlinFirmware/Marlin/pull/26959">Freeze Feature comment</a></li>
-<li>add<a href="https://github.com/MarlinFirmware/Marlin/pull/26977">ui_api.h include</a></li>
-<li>🐛<a href="https://github.com/MarlinFirmware/Marlin/pull/26979">Fix auto-assignment errors for J and U axis</a></li>
-<li>🚨Fix<a href="https://github.com/MarlinFirmware/Marlin/pull/26984">buffer overrun warning in UBL</a></li>
-<li>🎨<a href="https://github.com/MarlinFirmware/Marlin/pull/26981">Rename some G-code files</a></li>
-<li>🐛<a href="https://github.com/MarlinFirmware/Marlin/pull/26983">Fix BLACKBEEZMINI fan, info</a></li>
-<li>🩹Fix<a href="https://github.com/MarlinFirmware/Marlin/pull/26976">ProUI error when !CASELIGHT_USES_BRIGHTNESS</a></li>
-<li>✨<a href="https://github.com/MarlinFirmware/Marlin/pull/26874">Add Dagoma D6 as found in DiscoUltimate v2 TMC</a></li>
-<li>✨🐛<a href="https://github.com/MarlinFirmware/Marlin/pull/26845">HC32 - Add SERIAL_DMA, fix SDIO and MEATPACK</a></li>
-<li>✅<a href="https://github.com/MarlinFirmware/Marlin/pull/26968">Add unit tests for macros.h</a></li>
-<li>⏪️<a href="https://github.com/MarlinFirmware/Marlin/pull/26967">Revert unintended README changes</a></li>
-<li>✅Unit<a href="https://github.com/MarlinFirmware/Marlin/pull/26965">test improvements</a></li>
-<li>✅<a href="https://github.com/MarlinFirmware/Marlin/pull/26948">Add unit testing framework</a></li>
-<li>🔧Fix<a href="https://github.com/MarlinFirmware/Marlin/pull/26957">M936 in features.ini</a></li>
-<li>⚡️Reduce<a href="https://github.com/MarlinFirmware/Marlin/pull/26964">DISPLAY_SLEEP_MINUTES overhead</a></li>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/26846">Fix M413 report</a></li>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/26945">Reduce Kill Pin Wait</a></li>
-<li>🐛Fix<a href="https://github.com/MarlinFirmware/Marlin/pull/26958">IDEX X2 Direction</a></li>
-<li>✏️Minor<a href="https://github.com/MarlinFirmware/Marlin/pull/26947">style and typo fixups</a></li>
-<li>📝<a href="https://github.com/MarlinFirmware/Marlin/pull/26951">Update RGB565 color picker url</a></li>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/26822">Fix ESP3D WiFi Support</a></li>
-<li>🔨<a href="https://github.com/MarlinFirmware/Marlin/pull/26955">MarlinSimUI updates</a></li>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/26831">Fix MCU check for STM32H7-based BTT Octopus Pro V1</a></li>
-<li>🔧<a href="https://github.com/MarlinFirmware/Marlin/pull/26871">Improve BIQU BX pins, allow Z swap</a></li>
-<li>🩹Fix<a href="https://github.com/MarlinFirmware/Marlin/pull/26832">ProUI Z probe offset text</a></li>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/26879">Set correct LCD serial port for MKS_MONSTER8_V1</a></li>
-<li>🩹Increase<a href="https://github.com/MarlinFirmware/Marlin/pull/26771">range of G34 accuracy target</a></li>
-<li>🔧<a href="https://github.com/MarlinFirmware/Marlin/pull/26825">Add UART 5 for SKR Mini E3 V3.0</a></li>
-<li>🐛<a href="https://github.com/MarlinFirmware/Marlin/pull/26908">Fix CREALITY_ENDER2P_V24S4 pins</a></li>
-<li>🩹Disable<a href="https://github.com/MarlinFirmware/Marlin/pull/26824">nonlinear extrusion on unretract</a></li>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/26819">Fix type mismatch when SEGMENT_LEVELED_MOVES disabled</a></li>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/26918">Fix Mini 12864 on BTT Kraken</a></li>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/26834">Fix active extruder indicator</a></li>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/26933">add onSetMinExtrusionTemp to anycubic_viper</a></li>
-<li>🐛<a href="https://github.com/MarlinFirmware/Marlin/pull/26935">Don't apply settings during validation</a></li>
-<li>🐛<a href="https://github.com/MarlinFirmware/Marlin/pull/26936">Fix bool evalution of XYval and similar types</a></li>
-<li>🔧<a href="https://github.com/MarlinFirmware/Marlin/pull/26882">Minor INPUT_SHAPING config fixes</a></li>
-<li>🚸<a href="https://github.com/MarlinFirmware/Marlin/pull/26563">Update ProUI Plot graph - part 2</a></li>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/26928">Misc. changes from ProUI / ExtUI updates</a></li>
-<li>🔨<a href="https://github.com/MarlinFirmware/Marlin/pull/26909">Fix binary upload firmware path</a></li>
-<li>🔨<a href="https://github.com/MarlinFirmware/Marlin/pull/26912">Fix HC32 preflight</a></li>
-<li>🔧🚸<a href="https://github.com/MarlinFirmware/Marlin/pull/26892">Tweaks for CNC</a></li>
-<li>📝<a href="https://github.com/MarlinFirmware/Marlin/pull/26901">Fix Cutter.md typo</a></li>
-<li>🐛<a href="https://github.com/MarlinFirmware/Marlin/pull/26884">Fix ESP32 laser M4 exception</a></li>
-<li>🚸<a href="https://github.com/MarlinFirmware/Marlin/pull/26853">Hide auto-run as needed</a></li>
-<li>✏️<a href="https://github.com/MarlinFirmware/Marlin/pull/26891">Fix stepper MS pin typos</a></li>
-<li>✨<a href="https://github.com/MarlinFirmware/Marlin/pull/26163">MAX7219_REINIT_ON_POWERUP</a></li>
-<li>🌐<a href="https://github.com/MarlinFirmware/Marlin/pull/26837">Update Italian language</a></li>
-<li>📝<a href="https://github.com/MarlinFirmware/Marlin/pull/26854">Fix M201 typos</a></li>
-<li>🎨<a href="https://github.com/MarlinFirmware/Marlin/pull/26777">Add MKS TinyBee silkscreen labels</a></li>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/26780">Fix G35 "Probing Failed" output</a></li>
-<li>🐛<a href="https://github.com/MarlinFirmware/Marlin/pull/26790">Fix DETECT_BROKEN_ENDSTOP on IDEX</a></li>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/26857">Thermistor name fixes</a></li>
-<li>🧑‍💻<a href="https://github.com/MarlinFirmware/Marlin/pull/26795">Fix RLE script for infille == outfile</a></li>
-<li>📝<a href="https://github.com/MarlinFirmware/Marlin/pull/26796">Remove Flattr Link</a></li>
-<li>✨<a href="https://github.com/MarlinFirmware/Marlin/pull/26751">Redundant PSU Control with EDM</a></li>
-<li>🔧<a href="https://github.com/MarlinFirmware/Marlin/pull/26823">MKS_ROBIN_PRO : I2C EEPROM + MKS Wifi</a></li>
-<li>✅<a href="https://github.com/MarlinFirmware/Marlin/pull/26814">Update Actions versions</a></li>
-<li>🚸<a href="https://github.com/MarlinFirmware/Marlin/pull/26806">M115 "KINEMATICS:…"</a></li>
-<li>🔧<a href="https://github.com/MarlinFirmware/Marlin/pull/26826">Simpler CREALITY_V422 warning</a></li>
-<li>🩹<a href="https://github.com/MarlinFirmware/Marlin/pull/26827">Fix AVR bootscreen RLE decode</a></li>
-<li>🚸<a href="https://github.com/MarlinFirmware/Marlin/pull/26174">Enable G92.9 with rotational axes</a></li>
-<li>🔥<a href="https://github.com/MarlinFirmware/Marlin/pull/26770">Drop TMC26X support</a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/27032"> 🩹 Fix printf et.al. expecting F-strings</a></li>
+<li>🧑‍💻Improve <a href="https://github.com/MarlinFirmware/Marlin/pull/27040"> 🧑‍💻Improve make tests-all-local
+
+* Sleep 5 seconds between platforms
+
+* Inform users if they need to install pyyaml
+
+* Fix old workflow name
+
+* Skip linux_native on Darwin</a></li>
+<li>🎨 <a href="https://github.com/MarlinFirmware/Marlin/pull/26949"> 🎨 Clarify some string parameters
+
+Co-authored-by: Scott Lahteine <thinkyhead@users.noreply.github.com></a></li>
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26842"> 🔧 Assert TMC slave addresses, minor pins cleanup</a></li>
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/27009"> 🔧 More suppressible warnings
+
+* 🔧 Suppressible LCD contrast warning
+
+* 🔧 Suppressible Z_SAFE_HOMING warning
+
+* 🔧 Suppressible user feedback warning</a></li>
+<li>🩹Free <a href="https://github.com/MarlinFirmware/Marlin/pull/26985"> 🩹Free debug pins in HC32 HAL
+
+implements DISABLE_DEBUG and DISABLE_JTAG in HAL</a></li>
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26988"> 🔧 Rework MKS Monster8 pins</a></li>
+<li>📝Update <a href="https://github.com/MarlinFirmware/Marlin/pull/27016"> 📝Update comments to match board labeling</a></li>
+<li>🚸 <a href="https://github.com/MarlinFirmware/Marlin/pull/26952"> 🚸 Fix duplicate temperature report</a></li>
+<li>✏️ <a href="https://github.com/MarlinFirmware/Marlin/pull/27002"> ✏️ MPCTEMP_START => MPC_STARTED</a></li>
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/27008"> 🔧 BIQU MicroProbe V2 pull-up warning</a></li>
+<li>🎨 <a href="https://github.com/MarlinFirmware/Marlin/pull/27007"> 🎨 Format pins which fail validation</a></li>
+<li>✅ <a href="https://github.com/MarlinFirmware/Marlin/pull/26996"> ✅  CI - Validate Pins Formatting</a></li>
+<li>🐛 <a href="https://github.com/MarlinFirmware/Marlin/pull/26995"> 🐛 Fix Flags<N> data storage width
+
+* Fix Flags and associated unit tests</a></li>
+<li>✅ <a href="https://github.com/MarlinFirmware/Marlin/pull/26994"> ✅ Add additional unit tests for types.h
+
+* Add more XYval unit tests
+
+* Add  Flags tests, with multiple BUGs identified</a></li>
+<li>✅ <a href="https://github.com/MarlinFirmware/Marlin/pull/26993"> ✅ Unit test improvements
+
+- Reset config.ini in restore_configs
+- Allow running a single configuration of unit tests locally</a></li>
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26960"> 🔧 Add RAMPS TMC SPI pins when !TMC_USE_SW_SPI
+
+* Allows RAMPS to auto assign HW SPI Pins for TMC</a></li>
+<li>🐛 <a href="https://github.com/MarlinFirmware/Marlin/pull/26926"> 🐛 Fix PID upon entering PID_FUNCTIONAL_RANGE
+
+The PID algorithm did not cache the last seen temperature until it entered the PID_FUNCTIONAL_RANGE. This caused an incorrect output power to be calculated temporarily while the algorithm caught up.
+
+This has likely always been a problem for bed and chamber PID. For the hotend this error was introduced in refactoring in commit 54e7b933cdb6d0bf0d69fd661b585100d76e3c88.</a></li>
+<li>🎨Match <a href="https://github.com/MarlinFirmware/Marlin/pull/26990"> 🎨Match unit test folder structure to code</a></li>
+<li>✅ <a href="https://github.com/MarlinFirmware/Marlin/pull/26991"> ✅ Skip compile tests when editing unit tests</a></li>
+<li>📝Improve <a href="https://github.com/MarlinFirmware/Marlin/pull/26959"> 📝Improve Freeze Feature comment
+
+* Fix and Improve Freeze Feature comment</a></li>
+<li>add <a href="https://github.com/MarlinFirmware/Marlin/pull/26977">ui_api.h include</a></li>
+<li>🐛 <a href="https://github.com/MarlinFirmware/Marlin/pull/26979"> 🐛 Fix auto-assignment errors for J and U axis</a></li>
+<li>🚨Fix <a href="https://github.com/MarlinFirmware/Marlin/pull/26984"> 🚨Fix buffer overrun warning in UBL
+
+to account for null terminator</a></li>
+<li>🎨 <a href="https://github.com/MarlinFirmware/Marlin/pull/26981"> 🎨 Rename some G-code files</a></li>
+<li>🐛 <a href="https://github.com/MarlinFirmware/Marlin/pull/26983"> 🐛 Fix BLACKBEEZMINI fan, info</a></li>
+<li>🩹Fix <a href="https://github.com/MarlinFirmware/Marlin/pull/26976"> 🩹Fix ProUI error when !CASELIGHT_USES_BRIGHTNESS
+
+* Fix the compile error with the case light menu
+
+Fix the compile error with the case light menu
+
+* Add failing test
+
+---------
+
+Co-authored-by: Jason Smith <jason.inet@gmail.com></a></li>
+<li>✨ <a href="https://github.com/MarlinFirmware/Marlin/pull/26874"> ✨ Add Dagoma D6 as found in DiscoUltimate v2 TMC
+
+* Add Dagoma D6 board as used in their DiscoUltimate v2 TMC.
+
+Taken from the Dagoma fork of Marlin DU_MC branch where it is called FYSETC_DAGOMA_F5 and explicitly confirmed by Dagoma as being the D6:
+
+"the BOARD_FYSETC_DAGOMA_F5 is effectively the definition for the D6"
+
+---------
+
+Co-authored-by: thisiskeithb <13375512+thisiskeithb@users.noreply.github.com>
+Co-authored-by: Orel <37673727+0r31@users.noreply.github.com></a></li>
+<li>✨🐛 <a href="https://github.com/MarlinFirmware/Marlin/pull/26845"> ✨🐛 HC32 - Add SERIAL_DMA, fix SDIO and MEATPACK
+
+* fix meatpack on hc32
+
+* add support for SERIAL_DMA on HC32
+
+* add additional checks in HC32 HAL
+
+* migrate HC32 HAL to use app_config.h
+
+* fix memory leak in HC32 sdio HAL
+https://github.com/MarlinFirmware/Marlin/pull/26845#issuecomment-1980218771
+
+* hc32: fail if both EMERGENCY_PARSER and SERIAL_DMA are enabled</a></li>
+<li>✅ <a href="https://github.com/MarlinFirmware/Marlin/pull/26968"> ✅ Add unit tests for macros.h</a></li>
+<li>⏪️ <a href="https://github.com/MarlinFirmware/Marlin/pull/26967"> ⏪️ Revert unintended README changes
+
+* Revert all the changes that went in with the unit test framework
+This restored broken links and other changes. Restoring to the prior revision seems the most appropriate action until the intentions of those file changes are known.
+---------
+
+Co-authored-by: Jason Smith <jason.inet@gmail.com></a></li>
+<li>✅Unit <a href="https://github.com/MarlinFirmware/Marlin/pull/26965"> ✅Unit test improvements
+
+* Do not warn about display in unit tests
+
+* Treat warnings as errors in unit tests
+
+* Report actual filenames with unit tests</a></li>
+<li>✅ <a href="https://github.com/MarlinFirmware/Marlin/pull/26948"> ✅ Add unit testing framework
+
+- Add a framework to build and execute unit tests for Marlin.
+- Enable unit test execution as part of PR checks.
+
+---------
+
+Co-authored-by: Costas Basdekis <costas.basdekis@gmail.com>
+Co-authored-by: Scott Lahteine <thinkyhead@users.noreply.github.com></a></li>
+<li>🔧Fix <a href="https://github.com/MarlinFirmware/Marlin/pull/26957"> 🔧Fix M936 in features.ini</a></li>
+<li>⚡️Reduce <a href="https://github.com/MarlinFirmware/Marlin/pull/26964"> ⚡️Reduce DISPLAY_SLEEP_MINUTES overhead</a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/26846"> 🩹 Fix M413 report</a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/26945"> 🩹 Reduce Kill Pin Wait
+
+Reduce kill pin wait time, and allow override by setting KILL_DELAY</a></li>
+<li>🐛Fix <a href="https://github.com/MarlinFirmware/Marlin/pull/26958"> 🐛Fix IDEX X2 Direction
+
+* Fix IDEX X2 Direction
+
+* Sanity Check IDEX X1_MAX_POS</a></li>
+<li>✏️Minor <a href="https://github.com/MarlinFirmware/Marlin/pull/26947"> ✏️Minor style and typo fixups
+
+* tweaks from PR, whitespace, wording in pause.h
+
+* Update Marlin/src/feature/pause.h</a></li>
+<li>📝 <a href="https://github.com/MarlinFirmware/Marlin/pull/26951"> 📝 Update RGB565 color picker url</a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/26822"> 🩹 Fix ESP3D WiFi Support</a></li>
+<li>🔨 <a href="https://github.com/MarlinFirmware/Marlin/pull/26955"> 🔨 MarlinSimUI updates</a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/26831"> 🩹 Fix MCU check for STM32H7-based BTT Octopus Pro V1
+
+* 🩹 Fix MCU check for STM32H7-based BTT Octopus Pro V1
+
+Co-authored-by: ellensp <530024+ellensp@users.noreply.github.com>
+
+* Update Marlin/src/pins/stm32f4/pins_BTT_OCTOPUS_V1_common.h
+
+---------
+
+Co-authored-by: ellensp <530024+ellensp@users.noreply.github.com></a></li>
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26871"> 🔧 Improve BIQU BX pins, allow Z swap
+
+* Add a swap Z & E1 option for BIQU BX
+
+Users can add #define BX_SWAP_ZM_E1M to their config instead of opening their printer up & swapping Z & E1 motor cables. Allows G34 to work correctly on early BX printers since both Z motor wires were installed without a standard procedure in place and wires could be swapped from the factory.
+
+* Add BOARD URL, DIAG pin info, update pin comments
+
+* Add WIFISUPPORT defines for documentation purposes
+
+WIFISUPPORT does not need to be enabled. Simply enable an available SERIAL_PORT*, set it to 4, and connect an ESP-01/ESP-01S flashed with luc-github's ESP3D firmware for basic WiFi functionality.
+
+* Sanity check TOUCH_SCREEN_CALIBRATION on GT911 TFTs
+
+Use a sanity check so it's clear which options are valid for TFT_TOUCH_DEVICE_GT911 / BIQU_BX_TFT70.</a></li>
+<li>🩹Fix <a href="https://github.com/MarlinFirmware/Marlin/pull/26832"> 🩹Fix ProUI Z probe offset text</a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/26879"> 🩹 Set correct LCD serial port for MKS_MONSTER8_V1</a></li>
+<li>🩹Increase <a href="https://github.com/MarlinFirmware/Marlin/pull/26771"> 🩹Increase range of G34 accuracy target
+
+* Allow G34 accuracy down to 0.001mm, previous minimum was 0.01mm.</a></li>
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26825"> 🔧 Add UART 5 for SKR Mini E3 V3.0</a></li>
+<li>🐛 <a href="https://github.com/MarlinFirmware/Marlin/pull/26908"> 🐛 Fix CREALITY_ENDER2P_V24S4 pins</a></li>
+<li>🩹Disable <a href="https://github.com/MarlinFirmware/Marlin/pull/26824"> 🩹Disable nonlinear extrusion on unretract
+
+* Fixes disable NLE on unretract #26808, which reported blobs at the start of lines during unretract.</a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/26819"> 🩹 Fix type mismatch when SEGMENT_LEVELED_MOVES disabled</a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/26918"> 🩹 Fix Mini 12864 on BTT Kraken
+
+Co-authored-by: ellensp <530024+ellensp@users.noreply.github.com></a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/26834"> 🩹 Fix active extruder indicator
+
+* 🩹 No active extruder when any of several incompatible features are enabled</a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/26933"> 🩹 add onSetMinExtrusionTemp to anycubic_viper</a></li>
+<li>🐛 <a href="https://github.com/MarlinFirmware/Marlin/pull/26935"> 🐛 Don't apply settings during validation
+
+Check the `validating` variable before applying settings for several features.
+This specifically avoids settings corruption for BACKLASH_PREVENTION, which has side-effects when first applied using incorrect values.</a></li>
+<li>🐛 <a href="https://github.com/MarlinFirmware/Marlin/pull/26936"> 🐛 Fix bool evalution of XYval and similar types
+
+Require explicit cast to get T* pointers from XYval and similar types. This prevents the pointer from being implicitly returned and checked for nullptr when trying to evaluate these structs in boolean expressions.</a></li>
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26882"> 🔧 Minor INPUT_SHAPING config fixes
+
+Co-authored-by: Scott Lahteine <thinkyhead@users.noreply.github.com></a></li>
+<li>🚸 <a href="https://github.com/MarlinFirmware/Marlin/pull/26563"> 🚸 Update ProUI Plot graph - part 2
+
+Co-authored-by: Scott Lahteine <thinkyhead@users.noreply.github.com></a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/26928"> 🩹 Misc. changes from ProUI / ExtUI updates</a></li>
+<li>🔨 <a href="https://github.com/MarlinFirmware/Marlin/pull/26909"> 🔨 Fix binary upload firmware path</a></li>
+<li>🔨 <a href="https://github.com/MarlinFirmware/Marlin/pull/26912"> 🔨 Fix HC32 preflight</a></li>
+<li>🔧🚸 <a href="https://github.com/MarlinFirmware/Marlin/pull/26892"> 🔧🚸 Tweaks for CNC
+
+Co-authored-by: Scott Lahteine <thinkyhead@users.noreply.github.com></a></li>
+<li>📝 <a href="https://github.com/MarlinFirmware/Marlin/pull/26901"> 📝 Fix Cutter.md typo</a></li>
+<li>🐛 <a href="https://github.com/MarlinFirmware/Marlin/pull/26884"> 🐛 Fix ESP32 laser M4 exception</a></li>
+<li>🚸 <a href="https://github.com/MarlinFirmware/Marlin/pull/26853"> 🚸 Hide auto-run as needed</a></li>
+<li>✏️ <a href="https://github.com/MarlinFirmware/Marlin/pull/26891"> ✏️ Fix stepper MS pin typos</a></li>
+<li>✨ <a href="https://github.com/MarlinFirmware/Marlin/pull/26163"> ✨ MAX7219_REINIT_ON_POWERUP</a></li>
+<li>🌐 <a href="https://github.com/MarlinFirmware/Marlin/pull/26837"> 🌐 Update Italian language</a></li>
+<li>📝 <a href="https://github.com/MarlinFirmware/Marlin/pull/26854"> 📝 Fix M201 typos</a></li>
+<li>🎨 <a href="https://github.com/MarlinFirmware/Marlin/pull/26777"> 🎨 Add MKS TinyBee silkscreen labels</a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/26780"> 🩹 Fix G35 "Probing Failed" output</a></li>
+<li>🐛 <a href="https://github.com/MarlinFirmware/Marlin/pull/26790"> 🐛 Fix DETECT_BROKEN_ENDSTOP on IDEX
+
+Co-authored-by: Scott Lahteine <thinkyhead@users.noreply.github.com></a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/26857"> 🩹 Thermistor name fixes</a></li>
+<li>🧑‍💻 <a href="https://github.com/MarlinFirmware/Marlin/pull/26795"> 🧑‍💻 Fix RLE script for infille == outfile</a></li>
+<li>📝 <a href="https://github.com/MarlinFirmware/Marlin/pull/26796"> 📝 Remove Flattr Link</a></li>
+<li>✨ <a href="https://github.com/MarlinFirmware/Marlin/pull/26751"> ✨ Redundant PSU Control with EDM</a></li>
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26823"> 🔧 MKS_ROBIN_PRO : I2C EEPROM + MKS Wifi
+
+Co-authored-by: Scott Lahteine <thinkyhead@users.noreply.github.com></a></li>
+<li>✅ <a href="https://github.com/MarlinFirmware/Marlin/pull/26814"> ✅ Update Actions versions</a></li>
+<li>🚸 <a href="https://github.com/MarlinFirmware/Marlin/pull/26806"> 🚸 M115 "KINEMATICS:…"</a></li>
+<li>🔧 <a href="https://github.com/MarlinFirmware/Marlin/pull/26826"> 🔧 Simpler CREALITY_V422 warning</a></li>
+<li>🩹 <a href="https://github.com/MarlinFirmware/Marlin/pull/26827"> 🩹 Fix AVR bootscreen RLE decode</a></li>
+<li>🚸 <a href="https://github.com/MarlinFirmware/Marlin/pull/26174"> 🚸 Enable G92.9 with rotational axes
+
+- Supporting axes that can rotate forever.</a></li>
+<li>🔥 <a href="https://github.com/MarlinFirmware/Marlin/pull/26770"> 🔥 Drop TMC26X support</a></li>
 </ul>
