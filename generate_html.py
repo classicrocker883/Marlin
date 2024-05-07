@@ -14,19 +14,21 @@ with open('output_HTML.txt', 'w') as file:
     file.write('<ul>\n')
     while len(commits) > 0:
         for commit in commits:
-            commit_date = datetime.strptime(commit['commit']['author']['date'], '%Y-%m-%dT%H:%M:%SZ')
-            if commit_date >= one_week_ago and not commit['commit']['message'].startswith('[cron]'):
-                emoji_match = re.search(r'^([^ ]+)', commit['commit']['message'])
-                emoji = emoji_match.group(1) if emoji_match else ''
-                commit_id_match = re.search(r'\(#(\d+)\)', commit['commit']['message'])
-                if commit_id_match:
-                    commit_id = commit_id_match.group(1)
-                    description = commit['commit']['message'].split('\n')[0]  # Extract the first line as description
-                    if not description.startswith(' '):
-                        description = f'{emoji} {description}'  # Add space after emoji if missing
-                    description = re.sub(r'^[^ ]+ ', '', description)  # Remove emoji
-                    description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
-                    file.write(f'<li>{emoji} <a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
+            commit_date_str = commit.get('commit', {}).get('author', {}).get('date')
+            if commit_date_str:
+                commit_date = datetime.strptime(commit_date_str, '%Y-%m-%dT%H:%M:%SZ')
+                if commit_date >= one_week_ago and not commit.get('commit', {}).get('message', '').startswith('[cron]'):
+                    emoji_match = re.search(r'^([^ ]+)', commit['commit']['message'])
+                    emoji = emoji_match.group(1) if emoji_match else ''
+                    commit_id_match = re.search(r'\(#(\d+)\)', commit['commit']['message'])
+                    if commit_id_match:
+                        commit_id = commit_id_match.group(1)
+                        description = commit['commit']['message'].split('\n')[0]  # Extract the first line as description
+                        if not description.startswith(' '):
+                            description = f'{emoji} {description}'  # Add space after emoji if missing
+                        description = re.sub(r'^[^ ]+ ', '', description)  # Remove emoji
+                        description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
+                        file.write(f'<li>{emoji} <a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
 
         # Check for pagination and fetch the next page of commits
         if 'Link' in response.headers:
