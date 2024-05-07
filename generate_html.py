@@ -1,6 +1,7 @@
 import requests
 import re
 from datetime import datetime, timedelta
+import emoji
 
 url = 'https://api.github.com/repos/MarlinFirmware/Marlin/commits'
 params = {'per_page': 100}  # Set the number of commits per page
@@ -20,22 +21,16 @@ with open('output_HTML.txt', 'w') as file:
                     commit_date = datetime.strptime(commit_date_str, '%Y-%m-%dT%H:%M:%SZ')
                     if commit_date >= one_week_ago and not commit.get('commit', {}).get('message', '').startswith('[cron]'):
                         message = commit['commit']['message'].split('\n')[0]  # Extract the first line as description
-                        emoji_match = re.search(r'^([^ ]+)', message)
-                        emoji = emoji_match.group(1) if emoji_match else ''
-                        if emoji and not emoji.endswith(' '):
-                            if len(emoji) > 2 and re.match(r'^[^\s]', emoji[2]) or re.match(r'^\w', emoji[2]):
-                                message = message.replace(emoji[0], '', 1).replace(emoji[1], '', 1)
-                                emoji = emoji[0] + emoji[1] + ' '  # Add space after the second character
-                            elif len(emoji) > 1 and re.match(r'^[^\s]', emoji[1]) or re.match(r'^\w', emoji[1]):
-                                message = message.replace(emoji[0], '', 1)
-                                emoji = emoji[0] + ' '  # Add space after the first character
-                            else:
-                                message = message.replace(emoji[0], '', 1)  # Remove the character after the emoji
+                        emojis = emoji.emoji_lis(message)
+                        if emojis:
+                            emoji = emojis[0]['emoji']
+                            message = message.replace(emoji, '', 1)  # Remove the emoji from the message
+                        else:
+                            emoji = ''
                         commit_id_match = re.search(r'\(#(\d+)\)', message)
                         if commit_id_match:
                             commit_id = commit_id_match.group(1)
                             description = message
-                            description = re.sub(r'^[^ ]+ ', '', description)  # Remove emoji
                             description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
                             file.write(f'<li>{emoji}<a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
 
