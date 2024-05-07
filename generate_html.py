@@ -19,16 +19,15 @@ with open('output_HTML.txt', 'w') as file:
                 if commit_date_str:
                     commit_date = datetime.strptime(commit_date_str, '%Y-%m-%dT%H:%M:%SZ')
                     if commit_date >= one_week_ago and not commit.get('commit', {}).get('message', '').startswith('[cron]'):
-                        message = commit['commit']['message']
+                        message = commit['commit']['message'].split('\n')[0]  # Extract the first line as description
                         emoji_match = re.search(r'^([^ ]+)', message)
                         emoji = emoji_match.group(1) if emoji_match else ''
                         commit_id_match = re.search(r'\(#(\d+)\)', message)
                         if commit_id_match:
                             commit_id = commit_id_match.group(1)
                             description = message
-                            emoji = f'{emoji} '  # Add space after emoji
-                            if not description.startswith(' ') and not re.match(r'^[a-zA-Z]+', description):
-                                description = f' {description}'  # Add space at the beginning if needed
+                            if emoji.endswith('^[a-zA-Z]+') and re.match(r'^[a-zA-Z]+', description):
+                               emoji = f'{emoji} '  # Add space after emoji
                             description = re.sub(r'^[^ ]+ ', '', description)  # Remove emoji
                             description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
                             file.write(f'<li>{emoji}<a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
