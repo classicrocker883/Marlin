@@ -8,7 +8,7 @@ response = requests.get(url, params=params)
 commits = response.json()
 
 # Calculate the date one week ago
-one_week_ago = datetime.now() - timedelta(days=7)
+one_week_ago = datetime.now() - timedelta(days=70)
 
 with open('output_HTML.txt', 'w') as file:
     file.write('<ul>\n')
@@ -19,18 +19,18 @@ with open('output_HTML.txt', 'w') as file:
                 if commit_date_str:
                     commit_date = datetime.strptime(commit_date_str, '%Y-%m-%dT%H:%M:%SZ')
                     if commit_date >= one_week_ago and not commit.get('commit', {}).get('message', '').startswith('[cron]'):
-                        emoji_match = re.search(r'^([^ ]+)', commit['commit']['message'])
+                        message = commit['commit']['message']
+                        emoji_match = re.search(r'^([^ ]+)', message)
                         emoji = emoji_match.group(1) if emoji_match else ''
-                        commit_id_match = re.search(r'\(#(\d+)\)', commit['commit']['message'])
+                        if not message.startswith(emoji + ' '):
+                            emoji += ' '  # Add space to emoji if missing
+                        commit_id_match = re.search(r'\(#(\d+)\)', message)
                         if commit_id_match:
                             commit_id = commit_id_match.group(1)
-                            description = commit['commit']['message'].split('\n')[0]  # Extract the first line as description
+                            description = message.split('\n')[0]  # Extract the first line as description
                             description = re.sub(r'^[^ ]+ ', '', description)  # Remove emoji
                             description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
-                            if not description.startswith(' '):
-                                emoji = emoji if not re.match(r'^[a-zA-Z]+$', description) else ''
-                                description = f'{description}'  # Add space after emoji if missing
-                            file.write(f'<li>{emoji} <a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
+                            file.write(f'<li>{emoji}<a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
 
         # Check for pagination and fetch the next page of commits
         if 'Link' in response.headers:
