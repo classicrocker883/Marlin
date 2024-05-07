@@ -22,22 +22,16 @@ with open('output_HTML.txt', 'w') as file:
                         message = commit['commit']['message'].split('\n')[0]  # Extract the first line as description
                         emoji_match = re.search(r'^([^ ]+)', message)
                         emoji = emoji_match.group(1) if emoji_match else ''
+                        if emoji and not emoji.endswith(' '):
+                            emoji += ' '  # Add space after emoji if it doesn't end with a space
+                            message = message.replace(emoji[0], '', 1)  # Remove the character after the emoji
                         commit_id_match = re.search(r'\(#(\d+)\)', message)
                         if commit_id_match:
                             commit_id = commit_id_match.group(1)
                             description = message
-                            # if emoji and message[len(emoji):].endswith('^[a-zA-Z]+'):
-                            #     emoji = re.sub(r'^[a-zA-Z]+', '', emoji)  # Remove emoji
-                            #     if emoji and not message[len(emoji):].startswith(' '):
-                            #         next_space_index = message.find(' ', len(emoji))
-                            #         if next_space_index != -1:
-                            #             word = message[len(emoji):next_space_index]
-                            #             description = f'{word} {description}'
-                            if not message.startswith(' ') and not re.match(r'^[a-zA-Z]+', message):
-                                emoji = f'{emoji} '  # Add space after emoji if needed
                             description = re.sub(r'^[^ ]+ ', '', description)  # Remove emoji
                             description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
-                            file.write(f'<li>{emoji}<a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
+                            file.write(f'<li>{emoji} <a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
 
         # Check for pagination and fetch the next page of commits
         if 'Link' in response.headers:
