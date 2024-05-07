@@ -8,7 +8,7 @@ response = requests.get(url, params=params)
 commits = response.json()
 
 # Calculate the date one week ago
-one_week_ago = datetime.now() - timedelta(days=120)  # Changed days to 7 for one week
+one_week_ago = datetime.now() - timedelta(days=150)  # Changed days to 7 for one week
 
 with open('output_HTML.txt', 'w') as file:
     file.write('<ul>\n')
