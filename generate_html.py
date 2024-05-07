@@ -12,9 +12,10 @@ with open('output_HTML.txt', 'w') as file:
         if not message.startswith('[cron]'):
             emoji_match = re.search(r'^([^ ]+)', message)
             emoji = emoji_match.group(1) if emoji_match else ''
-            if '(#' in message:
-                commit_id = re.search(r'\(#(\d+)\)', message).group(1)
-                file.write(f'<li>{emoji} <a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{message}</a></li>\n')
-            else:
-                file.write(f'<li>{emoji} {message}</li>\n')
+            commit_id_match = re.search(r'\(#(\d+)\)', message)
+            if commit_id_match:
+                commit_id = commit_id_match.group(1)
+                description = re.sub(r'^[^ ]+ ', '', message)  # Remove emoji
+                description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
+                file.write(f'<li>{emoji} <a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
     file.write('</ul>')
