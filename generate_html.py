@@ -24,10 +24,13 @@ with open('output_HTML.txt', 'w') as file:
                         emoji = emoji_match.group(1) if emoji_match else ''
                         if emoji and not emoji.endswith(' '):
                             if len(emoji) > 1:
-                                emoji = emoji[0] + ' ' + emoji[1:]  # Add space after the first character
-                            else:
-                                emoji += ' '  # Add space after emoji if it doesn't end with a space
-                            message = message.replace(emoji[0], '', 1)  # Remove the character after the emoji
+                                if len(emoji) > 2 and re.match(r'^\w', emoji[2]):
+                                    emoji = emoji[0] + emoji[1] + ' '  # Add space after the second character
+                                    message = message.replace(emoji[0], '', 1).replace(emoji[1], '', 1)
+                                elif len(emoji) > 1 and re.match(r'^\w', emoji[1]):
+                                    emoji = emoji[0] + ' '  # Add space after the first character
+                                else:
+                                    message = message.replace(emoji[0], '', 1)  # Remove the character after the emoji
                         commit_id_match = re.search(r'\(#(\d+)\)', message)
                         if commit_id_match:
                             commit_id = commit_id_match.group(1)
