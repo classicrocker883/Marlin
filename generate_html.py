@@ -8,7 +8,7 @@ response = requests.get(url, params=params)
 commits = response.json()
 
 # Calculate the date one week ago
-one_week_ago = datetime.now() - timedelta(days=150)  # Changed days to 7 for one week
+one_week_ago = datetime.now() - timedelta(days=150)
 
 with open('output_HTML.txt', 'w') as file:
     file.write('<ul>\n')
@@ -28,6 +28,11 @@ with open('output_HTML.txt', 'w') as file:
                             description = message
                             if emoji and not re.match(r'^[a-zA-Z]+', message):
                                 emoji = f'{emoji} '  # Add space after emoji if needed
+                                if emoji and not message[len(emoji):].startswith(' '):
+                                    next_space_index = message.find(' ', len(emoji))
+                                    if next_space_index != -1:
+                                        word = message[len(emoji):next_space_index]
+                                        description = f'{word} {description}'
                             description = re.sub(r'^[^ ]+ ', '', description)  # Remove emoji
                             description = re.sub(r'\s*\([^)]*\)', '', description)  # Remove commit ID
                             file.write(f'<li>{emoji}<a href="https://github.com/MarlinFirmware/Marlin/pull/{commit_id}">{description}</a></li>\n')
