@@ -24,7 +24,7 @@ def fetch_commits(url, params):
                 break
         else:
             print(f"Failed to fetch commits: {response.status_code}")
-            break
+            exit(KeyError(f"Error: Failed to fetch commits: {response.status_code}"))
     return commits
 
 url = 'https://api.github.com/repos/MarlinFirmware/Marlin/commits'
