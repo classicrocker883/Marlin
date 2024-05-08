@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+#
+
 import requests
 import re
 from datetime import datetime, timedelta
@@ -28,7 +31,7 @@ def fetch_commits(url, params):
     return commits
 
 url = 'https://api.github.com/repos/MarlinFirmware/Marlin/commits'
-params = {'per_page': 100, 'since': (datetime.now() - timedelta(days=30)).isoformat()}  # Increase per_page to fetch more commits per request
+params = {'per_page': 100, 'since': (datetime.now() - timedelta(days=31)).isoformat()}  # Increase per_page to fetch more commits per request
 commits = fetch_commits(url, params)
 
 with open('output_HTML_commits.txt', 'w') as file:
@@ -37,7 +40,7 @@ with open('output_HTML_commits.txt', 'w') as file:
         commit_date_str = commit.get('commit', {}).get('author', {}).get('date')
         if commit_date_str:
             commit_date = datetime.strptime(commit_date_str, '%Y-%m-%dT%H:%M:%SZ')
-            if commit_date >= (datetime.now() - timedelta(days=250)) and not commit.get('commit', {}).get('message', '').startswith('[cron]'):
+            if commit_date >= (datetime.now() - timedelta(days=31)) and not commit.get('commit', {}).get('message', '').startswith('[cron]'):
                 message = commit['commit']['message'].split('\n')[0]  # Extract the first line as description
                 emojis = emoji.emoji_list(message)  # Use emoji_list to get only distinct emojis
                 emojis_list = [emoji_data['emoji'] for emoji_data in emojis]  # Extract emojis from the list of emoji data

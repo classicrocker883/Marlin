@@ -1,0 +1,50 @@
+name: Generate HTML from Recent Commits
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 12 1 * *'  # Run 1st day of the month every 30 days
+
+jobs:
+  generate_html:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Checkout Wiki
+        uses: actions/checkout@v4
+        with:
+          repository: classicrocker883/Marlin.wiki
+          path: wiki
+          token: ${{ secrets.GITHUB_TOKEN }}
+          sparse-checkout: |
+            "What's-New-in-this-Release.md"
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run:
+          pip install requests && pip install emoji
+
+      - name: Generate Commits and merge with HTML
+        run: |
+          python buildroot/share/scripts/generate_html.py
+          while [ ! -f buildroot/share/scripts/output_HTML_commits.txt ]; do
+            sleep 1
+          done
+          python buildroot/share/scripts/commit_to_wiki.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "Andrew"
+          git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+          git remote add wiki https://github.com/classicrocker883/Marlin.wiki.git
+          git add "wiki/What's-New-in-this-Release.md"
+          git commit -m "⛙ Merge new commits into wiki"
+          git push wiki master
