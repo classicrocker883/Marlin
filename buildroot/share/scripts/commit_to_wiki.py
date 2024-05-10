@@ -19,8 +19,12 @@ if not os.path.exists(output_commits_path):
 with open(output_commits_path, 'r') as file1:
     file1_content = file1.readlines()
 
+
+# Define the file name with the special character
+file_name = "New‐in‐this‐Release.md"  # Make sure to use the correct special character
+
 # Define the path to New-in-this-Release.md within the workspace directory
-release_notes_path = os.path.join(os.getenv('GITHUB_WORKSPACE'), 'wiki', 'New-in-this-Release.md')
+release_notes_path = os.path.join(os.getenv('GITHUB_WORKSPACE'), 'wiki', file_name)
 
 # Define the path to the directory you want to check
 wiki_path = os.path.join(os.getenv('GITHUB_WORKSPACE'), 'wiki')
@@ -31,11 +35,11 @@ wiki_contents = os.listdir(wiki_path)
 for item in wiki_contents:
     print(item)
 
-# Check if the file 'New-in-this-Release.md' is present
-if 'New-in-this-Release.md' in wiki_contents:
-    print("File 'New-in-this-Release.md' found in the directory.")
+# Check if the file exists in the directory
+if file_name in wiki_contents:
+    print(f"File '{file_name}' found in the directory.")
 else:
-    print("File 'New-in-this-Release.md' not found in the directory.")
+    print(f"File '{file_name}' not found in the directory.")
 
 # Define the path to the GITHUB_WORKSPACE directory
 workspace_path = os.getenv('GITHUB_WORKSPACE')
@@ -47,10 +51,10 @@ for item in workspace_contents:
     print(item)
 
 # Check if the file 'New-in-this-Release.md' is present in the GITHUB_WORKSPACE directory
-if 'New-in-this-Release.md' in workspace_contents:
-    print("File 'New-in-this-Release.md' found in the GITHUB_WORKSPACE directory.")
+if file_name in workspace_contents:
+    print(f"File '{file_name}' found in the GITHUB_WORKSPACE directory.")
 else:
-    print("File 'New-in-this-Release.md' not found in the GITHUB_WORKSPACE directory.")
+    print(f"File '{file_name}' not found in the GITHUB_WORKSPACE directory.")
 
 def find_file(start_dir, target_file):
     for root, dirs, files in os.walk(start_dir):
@@ -62,12 +66,12 @@ def find_file(start_dir, target_file):
 workspace_path = os.getenv('GITHUB_WORKSPACE')
 
 # Search for the file 'New-in-this-Release.md' within the GITHUB_WORKSPACE directory
-file_path = find_file(workspace_path, 'New-in-this-Release.md')
+file_path = find_file(workspace_path, file_name)
 
 if file_path:
-    print(f"File 'New-in-this-Release.md' found at: {file_path}")
+    print(f"File '{file_name}' found at: {file_path}")
 else:
-    print("File 'New-in-this-Release.md' not found in the GITHUB_WORKSPACE directory.")
+    print(f"File '{file_name}' not found in the GITHUB_WORKSPACE directory.")
 
 
 
