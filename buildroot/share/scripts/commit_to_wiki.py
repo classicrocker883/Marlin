@@ -3,89 +3,27 @@
 import os
 
 # Define the path to output_HTML_commits.txt within the workspace directory
-output_commits_path = os.path.join(os.getenv('GITHUB_WORKSPACE'), 'buildroot', 'share', 'scripts', 'output_HTML_commits.txt')
-
-# Check if output_HTML_commits.txt exists
-if not os.path.exists(output_commits_path):
-    print(f"Error: output_HTML_commits.txt not found at {output_commits_path}")
-    print("Falling back to default path...")
-    output_commits_path = 'buildroot/share/scripts/output_HTML_commits.txt'
-
-if not os.path.exists(output_commits_path):
-    print(f"Error: output_HTML_commits.txt not found at buildroot/share/scripts")
-    exit(1)
+output_commits_path = 'output_HTML_commits.txt'
+print(f"is '{os.path.abspath(output_commits_path)}' is output_HTML_commits.txt.")
 
 # Read the contents of output_HTML_commits.txt
 with open(output_commits_path, 'r') as file1:
     file1_content = file1.readlines()
 
-
 # Define the file name with the special character
 file_name = "New‐in‐this‐Release.md"  # Make sure to use the correct special character
 
+wiki_file_path = os.path.join('..', '..', '..', 'wiki')
+print(f"is '{os.path.abspath(wiki_file_path)}'  wiki directory.")
+
 # Define the path to New-in-this-Release.md within the workspace directory
-release_notes_path = os.path.join(os.getenv('GITHUB_WORKSPACE'), 'wiki', file_name)
-
-# Define the path to the directory you want to check
-wiki_path = os.path.join(os.getenv('GITHUB_WORKSPACE'), 'wiki')
-
-# List the contents of the directory
-print(f"Contents of the directory: {wiki_path}")
-wiki_contents = os.listdir(wiki_path)
-for item in wiki_contents:
-    print(item)
-
-# Check if the file exists in the directory
-if file_name in wiki_contents:
-    print(f"File '{file_name}' found in the directory.")
-else:
-    print(f"File '{file_name}' not found in the directory.")
-
-# Define the path to the GITHUB_WORKSPACE directory
-workspace_path = os.getenv('GITHUB_WORKSPACE')
-
-# List the contents of the GITHUB_WORKSPACE directory
-print(f"Contents of the GITHUB_WORKSPACE directory: {workspace_path}")
-workspace_contents = os.listdir(workspace_path)
-for item in workspace_contents:
-    print(item)
-
-# Check if the file 'New-in-this-Release.md' is present in the GITHUB_WORKSPACE directory
-if file_name in workspace_contents:
-    print(f"File '{file_name}' found in the GITHUB_WORKSPACE directory.")
-else:
-    print(f"File '{file_name}' not found in the GITHUB_WORKSPACE directory.")
-
-def find_file(start_dir, target_file):
-    for root, dirs, files in os.walk(start_dir):
-        if target_file in files:
-            return os.path.join(root, target_file)
-    return None
-
-# Define the path to the GITHUB_WORKSPACE directory
-workspace_path = os.getenv('GITHUB_WORKSPACE')
-
-# Search for the file 'New-in-this-Release.md' within the GITHUB_WORKSPACE directory
-file_path = find_file(workspace_path, file_name)
-
-if file_path:
-    print(f"File '{file_name}' found at: {file_path}")
-else:
-    print(f"File '{file_name}' not found in the GITHUB_WORKSPACE directory.")
-
-
-
-# Check if New-in-this-Release.md exists
-if not os.path.exists(release_notes_path):
-    print(f"Error: New-in-this-Release.md not found at {release_notes_path}")
-    print("Falling back to default path...")
-    release_notes_path = "wiki/New-in-this-Release.md"
+release_notes_path = os.path.abspath(os.path.join(wiki_file_path, file_name))
 
 if not os.path.exists(release_notes_path):
     print(f"Error: New-in-this-Release.md not found at wiki")
     exit(1)
-# with open("https://raw.githubusercontent.com/wiki/classicrocker883/MRiscoCProUI/New-in-this-Release.md", 'r') as file2:
-#     file2_content = file2.readlines()
+# # with open("https://raw.githubusercontent.com/wiki/classicrocker883/MRiscoCProUI/New-in-this-Release.md", 'r') as file2:
+# #     file2_content = file2.readlines()
 
 # Read the content of New-in-this-Release.md
 with open(release_notes_path, 'r') as file2:
