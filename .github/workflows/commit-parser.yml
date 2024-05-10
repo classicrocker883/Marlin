@@ -35,7 +35,7 @@ jobs:
 
       - name: Generate Commits and merge with HTML
         run: |
-          python buildroot/share/scripts/generate_html.py
+          python buildroot/share/scripts/generate_html.py > buildroot/share/scripts/output_HTML_commits.txt
           python buildroot/share/scripts/commit_to_wiki.py
 
       - name: Commit and Push Changes
