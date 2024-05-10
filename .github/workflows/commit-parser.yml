@@ -16,12 +16,13 @@ jobs:
       - name: Checkout Wiki
         uses: actions/checkout@v4
         with:
-          repository: classicrocker883/Marlin.wiki
-          path: wiki
+          repository: ${{ github.repository }}.wiki
+          path: ${GITHUB_WORKSPACE}/wiki
           token: ${{ secrets.GITHUB_TOKEN }}
           sparse-checkout: |
             "What's-New-in-this-Release.md"
           sparse-checkout-cone-mode: false
+          ref: master
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -35,16 +36,13 @@ jobs:
       - name: Generate Commits and merge with HTML
         run: |
           python buildroot/share/scripts/generate_html.py
-          while [ ! -f buildroot/share/scripts/output_HTML_commits.txt ]; do
-            sleep 1
-          done
           python buildroot/share/scripts/commit_to_wiki.py
 
       - name: Commit and Push Changes
         run: |
           git config user.name "Andrew"
           git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
-          git remote add wiki https://github.com/classicrocker883/Marlin.wiki.git
-          git add "wiki/What's-New-in-this-Release.md"
+          git remote add wiki ${{ github.repository }}.wiki
+          git add "${GITHUB_WORKSPACE}/wiki/What's-New-in-this-Release.md"
           git commit -m "⛙ Merge new commits into wiki"
           git push wiki master
