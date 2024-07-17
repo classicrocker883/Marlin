@@ -54,10 +54,6 @@
   #include "../../../feature/host_actions.h"
 #endif
 
-#if ANY(BABYSTEPPING, HAS_BED_PROBE, HAS_WORKSPACE_OFFSET)
-  #define HAS_ZOFFSET_ITEM 1
-#endif
-
 #if HAS_LEVELING
   #include "../../../feature/bedlevel/bedlevel.h"
 #endif
@@ -101,13 +97,12 @@
 
 #define MAX_XY_OFFSET 100
 
-#if HAS_ZOFFSET_ITEM
-  #define MAX_Z_OFFSET 9.99
-  #if HAS_BED_PROBE
-    #define MIN_Z_OFFSET -9.99
-  #else
-    #define MIN_Z_OFFSET -1
-  #endif
+#if ALL(HAS_ZOFFSET_ITEM, HAS_BED_PROBE)
+  #define MAX_Z_OFFSET  20
+  #define MIN_Z_OFFSET -20
+#else
+  #define MAX_Z_OFFSET  3
+  #define MIN_Z_OFFSET -3
 #endif
 
 #if HAS_HOTEND
@@ -218,7 +213,7 @@ public:
     scrollpos = 0;
   }
 
-  const char* scroll(size_t& pos, Buffer &buf, const char * text, bool *updated = nullptr) {
+  const char* scroll(size_t& pos, Buffer &buf, PGM_P text, bool *updated = nullptr) {
     const size_t len = strlen(text);
     if (len > SIZE) {
       if (updated) *updated = true;
@@ -262,15 +257,15 @@ private:
     uint8_t mesh_x = 0;
     uint8_t mesh_y = 0;
 
+    inline void manualValueUpdate(const bool undefined=false) {
+      gcode.process_subcommands_now(
+        TS("M421 I", mesh_x, "J", mesh_y, "Z", p_float_t(current_position.z, 3), undefined ? "N" : "")
+      );
+      planner.synchronize();
+    }
+
     #if ENABLED(AUTO_BED_LEVELING_UBL)
       uint8_t tilt_grid = 1;
-
-      void manualValueUpdate(bool undefined=false) {
-        gcode.process_subcommands_now(
-          TS(F("M421I"), mesh_x, 'J', mesh_y, 'Z', p_float_t(current_position.z, 3), undefined ? "N" : "")
-        );
-        planner.synchronize();
-      }
 
       bool createPlaneFromMesh() {
         struct linear_fit_data lsf_results;
@@ -308,15 +303,6 @@ private:
           bedlevel.z_values[i][j] = mz - lsf_results.D;
         }
         return false;
-      }
-
-    #else
-
-      void manualValueUpdate() {
-        gcode.process_subcommands_now(
-          TS(F("G29I"), mesh_x, 'J', mesh_y, 'Z', p_float_t(current_position.z, 3))
-        );
-        planner.synchronize();
       }
 
     #endif
@@ -440,8 +426,8 @@ private:
 //
 
 struct JyersDWIN::EEPROM_Settings JyersDWIN::eeprom_settings{0};
-constexpr const char * const JyersDWIN::color_names[11];
-constexpr const char * const JyersDWIN::preheat_modes[3];
+constexpr PGM_P const JyersDWIN::color_names[11];
+constexpr PGM_P const JyersDWIN::preheat_modes[3];
 
 // Clear a part of the screen
 //  4=Entire screen
@@ -460,14 +446,14 @@ void JyersDWIN::drawFloat(const_float_t value, const uint8_t row, const bool sel
   const uint16_t xpos = 240 - (digits * 8);
   dwinDrawRectangle(1, COLOR_BG_BLACK, 194, MBASE(row), 234 - (digits * 8), MBASE(row) + 16);
   if (isnan(value))
-    dwinDrawString(true, DWIN_FONT_MENU, COLOR_WHITE, bColor, xpos - 8, MBASE(row), F(" NaN"));
+    dwinDrawString(true, DWIN_FONT_MENU, COLOR_WHITE, bColor, xpos - MENU_CHR_W, MBASE(row), F(" NaN"));
   else {
     dwinDrawFloatValue(true, true, 0, DWIN_FONT_MENU, COLOR_WHITE, bColor, digits - log10(minunit) + 1, log10(minunit), xpos, MBASE(row), (value < 0 ? -value : value));
-    dwinDrawString(true, DWIN_FONT_MENU, COLOR_WHITE, bColor, xpos - 8, MBASE(row), value < 0 ? F("-") : F(" "));
+    dwinDrawString(true, DWIN_FONT_MENU, COLOR_WHITE, bColor, xpos - MENU_CHR_W, MBASE(row), value < 0 ? F("-") : F(" "));
   }
 }
 
-void JyersDWIN::drawOption(const uint8_t value, const char * const * options, const uint8_t row, const bool selected/*=false*/, const bool color/*=false*/) {
+void JyersDWIN::drawOption(const uint8_t value, PGM_P const * options, const uint8_t row, const bool selected/*=false*/, const bool color/*=false*/) {
   const uint16_t bColor = selected ? COLOR_SELECT : COLOR_BG_BLACK,
                  tColor = color ? getColor(value, COLOR_WHITE, false) : COLOR_WHITE;
   dwinDrawRectangle(1, bColor, 202, MBASE(row) + 14, 258, MBASE(row) - 2);
@@ -491,7 +477,7 @@ uint16_t JyersDWIN::getColor(const uint8_t color, const uint16_t original, const
   return COLOR_WHITE;
 }
 
-void JyersDWIN::drawTitle(const char * const ctitle) {
+void JyersDWIN::drawTitle(PGM_P const ctitle) {
   dwinDrawString(false, DWIN_FONT_HEAD, getColor(eeprom_settings.menu_top_txt, COLOR_WHITE, false), COLOR_BG_BLUE, (DWIN_WIDTH - strlen(ctitle) * STAT_CHR_W) / 2, 5, ctitle);
 }
 void JyersDWIN::drawTitle(FSTR_P const ftitle) {
@@ -504,7 +490,7 @@ void _decorateMenuItem(uint8_t row, uint8_t icon, bool more) {
   dwinDrawLine(jyersDWIN.getColor(jyersDWIN.eeprom_settings.menu_split_line, COLOR_LINE, true), 16, MBASE(row) + 33, 256, MBASE(row) + 33); // Draw Menu Line
 }
 
-void JyersDWIN::drawMenuItem(const uint8_t row, const uint8_t icon/*=0*/, const char * const label1, const char * const label2, const bool more/*=false*/, const bool centered/*=false*/) {
+void JyersDWIN::drawMenuItem(const uint8_t row, const uint8_t icon/*=0*/, PGM_P const label1, PGM_P const label2, const bool more/*=false*/, const bool centered/*=false*/) {
   const uint8_t label_offset_y = label2 ? MENU_CHR_H * 3 / 5 : 0,
                 label1_offset_x = !centered ? LBLX : LBLX * 4/5 + _MAX(LBLX * 1U/5, (DWIN_WIDTH - LBLX - (label1 ? strlen(label1) : 0) * MENU_CHR_W) / 2),
                 label2_offset_x = !centered ? LBLX : LBLX * 4/5 + _MAX(LBLX * 1U/5, (DWIN_WIDTH - LBLX - (label2 ? strlen(label2) : 0) * MENU_CHR_W) / 2);
@@ -708,7 +694,7 @@ void JyersDWIN::drawPrintFilename(const bool reset/*=false*/) {
     size_t outlen = 0;
     const char* outstr = scroller.scroll(outlen, buf, filename);
     dwinDrawRectangle(1, COLOR_BG_BLACK, 8, 50, DWIN_WIDTH - 8, 80);
-    const int8_t npos = (DWIN_WIDTH - outlen * MENU_CHR_W) / 2;
+    const int8_t npos = (DWIN_WIDTH - MENU_CHR_W * outlen) / 2;
     dwinDrawString(false, DWIN_FONT_MENU, COLOR_WHITE, COLOR_BG_BLACK, npos, 60, outstr);
   }
 }
@@ -793,7 +779,7 @@ void JyersDWIN::drawSDList(const bool removed/*=false*/) {
   else {
     drawMenuItem(0, ICON_Back, GET_TEXT_F(MSG_BACK));
     dwinDrawRectangle(1, COLOR_BG_RED, 10, MBASE(3) - 10, DWIN_WIDTH - 10, MBASE(4));
-    dwinDrawString(false, font16x32, COLOR_YELLOW, COLOR_BG_RED, ((DWIN_WIDTH) - 8 * 16) / 2, MBASE(3), GET_TEXT_F(MSG_NO_MEDIA));
+    dwinDrawString(false, font16x32, COLOR_YELLOW, COLOR_BG_RED, (DWIN_WIDTH - 16 * 8) / 2, MBASE(3), GET_TEXT_F(MSG_NO_MEDIA));
   }
   dwinDrawRectangle(1, getColor(eeprom_settings.cursor_color, COLOR_RECTANGLE), 0, MBASE(0) - 18, 14, MBASE(0) + 33);
 }
@@ -935,9 +921,9 @@ void JyersDWIN::drawPopup(FSTR_P const line1, FSTR_P const line2, FSTR_P const l
   dwinDrawRectangle(1, COLOR_BG_WINDOW, 14, 60, 258, 350);
   const uint8_t ypos = (mode == Proc_Popup || mode == Proc_Confirm) ? 150 : 230;
   if (icon > 0) dwinIconShow(ICON, icon, 101, 105);
-  dwinDrawString(true, DWIN_FONT_MENU, COLOR_POPUP_TEXT, COLOR_BG_WINDOW, (272 - 8 * strlen_P(FTOP(line1))) / 2, ypos, line1);
-  dwinDrawString(true, DWIN_FONT_MENU, COLOR_POPUP_TEXT, COLOR_BG_WINDOW, (272 - 8 * strlen_P(FTOP(line2))) / 2, ypos + 30, line2);
-  dwinDrawString(true, DWIN_FONT_MENU, COLOR_POPUP_TEXT, COLOR_BG_WINDOW, (272 - 8 * strlen_P(FTOP(line3))) / 2, ypos + 60, line3);
+  dwinDrawString(true, DWIN_FONT_MENU, COLOR_POPUP_TEXT, COLOR_BG_WINDOW, (DWIN_WIDTH - MENU_CHR_W * strlen_P(FTOP(line1))) / 2, ypos, line1);
+  dwinDrawString(true, DWIN_FONT_MENU, COLOR_POPUP_TEXT, COLOR_BG_WINDOW, (DWIN_WIDTH - MENU_CHR_W * strlen_P(FTOP(line2))) / 2, ypos + 30, line2);
+  dwinDrawString(true, DWIN_FONT_MENU, COLOR_POPUP_TEXT, COLOR_BG_WINDOW, (DWIN_WIDTH - MENU_CHR_W * strlen_P(FTOP(line3))) / 2, ypos + 60, line3);
   if (mode == Proc_Popup) {
     selection = 0;
     dwinDrawRectangle(1, COLOR_CONFIRM, 26, 280, 125, 317);
@@ -982,12 +968,12 @@ void JyersDWIN::updateStatusBar(const bool refresh/*=false*/) {
     new_msg = false;
     if (process == Proc_Print) {
       dwinDrawRectangle(1, COLOR_GREY, 8, 214, DWIN_WIDTH - 8, 238);
-      const int8_t npos = (DWIN_WIDTH - len * MENU_CHR_W) / 2;
+      const int8_t npos = (DWIN_WIDTH - MENU_CHR_W * len) / 2;
       dwinDrawString(false, DWIN_FONT_MENU, getColor(eeprom_settings.status_bar_text, COLOR_WHITE), COLOR_BG_BLACK, npos, 219, dispmsg);
     }
     else {
       dwinDrawRectangle(1, COLOR_BG_BLACK, 8, 352, DWIN_WIDTH - 8, 376);
-      const int8_t npos = (DWIN_WIDTH - len * MENU_CHR_W) / 2;
+      const int8_t npos = (DWIN_WIDTH - MENU_CHR_W * len) / 2;
       dwinDrawString(false, DWIN_FONT_MENU, getColor(eeprom_settings.status_bar_text, COLOR_WHITE), COLOR_BG_BLACK, npos, 357, dispmsg);
     }
   }
@@ -4496,12 +4482,12 @@ void JyersDWIN::optionControl() {
     else if (valuepointer == &preheat_modes)
       preheatmode = tempvalue;
 
-    drawOption(tempvalue, static_cast<const char * const *>(valuepointer), selection - scrollpos, false, (valuepointer == &color_names));
+    drawOption(tempvalue, static_cast<PGM_P const *>(valuepointer), selection - scrollpos, false, (valuepointer == &color_names));
     dwinUpdateLCD();
     return;
   }
   LIMIT(tempvalue, valuemin, valuemax);
-  drawOption(tempvalue, static_cast<const char * const *>(valuepointer), selection - scrollpos, true);
+  drawOption(tempvalue, static_cast<PGM_P const *>(valuepointer), selection - scrollpos, true);
   dwinUpdateLCD();
 }
 
@@ -4852,9 +4838,9 @@ void JyersDWIN::modifyValue(int8_t &value, const_float_t min, const_float_t max,
   setupValue((float)value, min, max, unit, 5);
 }
 
-void JyersDWIN::modifyOption(const uint8_t value, const char * const * options, const uint8_t max) {
+void JyersDWIN::modifyOption(const uint8_t value, PGM_P const * options, const uint8_t max) {
   tempvalue = value;
-  valuepointer = const_cast<const char * *>(options);
+  valuepointer = const_cast<PGM_P *>(options);
   valuemin = 0;
   valuemax = max;
   process = Proc_Option;
@@ -4866,7 +4852,7 @@ void JyersDWIN::modifyOption(const uint8_t value, const char * const * options, 
 // Main Functions
 //
 
-void JyersDWIN::updateStatus(const char * const text) {
+void JyersDWIN::updateStatus(PGM_P const text) {
   if (strncmp_P(text, PSTR("<F>"), 3) == 0) {
     for (uint8_t i = 0; i < _MIN((size_t)LONG_FILENAME_LENGTH, strlen(text)); ++i) filename[i] = text[i + 3];
     filename[_MIN((size_t)LONG_FILENAME_LENGTH - 1, strlen(text))] = '\0';
@@ -4887,7 +4873,7 @@ void JyersDWIN::startPrint(const bool sd) {
       #if ENABLED(POWER_LOSS_RECOVERY)
         if (recovery.valid()) {
           MediaFile *diveDir = nullptr;
-          const char * const fname = card.diveToFile(true, diveDir, recovery.info.sd_filename);
+          PGM_P const fname = card.diveToFile(true, diveDir, recovery.info.sd_filename);
           card.selectFileByName(fname);
         }
       #endif
@@ -5101,7 +5087,7 @@ void JyersDWIN::saveSettings(char * const buff) {
   memcpy(buff, &eeprom_settings, _MIN(sizeof(eeprom_settings), eeprom_data_size));
 }
 
-void JyersDWIN::loadSettings(const char * const buff) {
+void JyersDWIN::loadSettings(PGM_P const buff) {
   memcpy(&eeprom_settings, buff, _MIN(sizeof(eeprom_settings), eeprom_data_size));
   TERN_(AUTO_BED_LEVELING_UBL, mesh_conf.tilt_grid = eeprom_settings.tilt_grid_size + 1);
   if (eeprom_settings.corner_pos == 0) eeprom_settings.corner_pos = 325;

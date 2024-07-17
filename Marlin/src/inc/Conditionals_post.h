@@ -2954,7 +2954,11 @@
 /**
  * Bed Probe dependencies
  */
-#if ANY(MESH_BED_LEVELING, HAS_BED_PROBE)
+#if ANY(BABYSTEPPING, PROBE_SELECTED)
+  #define HAS_ZOFFSET_ITEM 1
+#endif
+
+#if HAS_ZOFFSET_ITEM
   #ifndef PROBE_OFFSET_ZMIN
     #define PROBE_OFFSET_ZMIN -20
   #endif
