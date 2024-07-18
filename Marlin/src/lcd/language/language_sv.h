@@ -503,11 +503,11 @@ namespace LanguageNarrow_sv {
   LSTR MSG_CASE_LIGHT_BRIGHTNESS          = _UxGT("Ljus ljusstyrka");
   LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("INKORREKT SKRIVARE");
 
-  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Utskrift");
-  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Färdig");
-  LSTR MSG_INFO_PRINT_TIME                = _UxGT("Total");
-  LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Längsta");
-  LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Extruderad");
+  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Utskriftsantal");
+  LSTR MSG_INFO_PRINT_TIME                = _UxGT("Total Utskriftstid");
+  LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Längsta Jobbtid");
+  LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Extruderade Totalt");
+  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Utskrift Färdiga");
 
   LSTR MSG_INFO_MIN_TEMP                  = _UxGT("Min Temp");
   LSTR MSG_INFO_MAX_TEMP                  = _UxGT("Max Temp");
@@ -640,11 +640,7 @@ namespace LanguageNarrow_sv {
 namespace LanguageWide_sv {
   using namespace LanguageNarrow_sv;
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Utskriftsantal");
-    LSTR MSG_INFO_COMPLETED_PRINTS        = _UxGT("Färdiga");
-    LSTR MSG_INFO_PRINT_TIME              = _UxGT("Total Utskriftstid");
-    LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Längsta Jobbtid");
-    LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("Extruderade Totalt");
+
   #endif
 }
 

@@ -1012,7 +1012,7 @@ void onDrawFileName(MenuItem* menuitem, int8_t line) {
 void drawPrintFileMenu() {
   checkkey = ID_Menu;
   if (card.isMounted()) {
-    if (SET_MENU(fileMenu, MSG_MEDIA_MENU, nr_sd_menu_items() + 1)) {
+    if (SET_MENU(fileMenu, MSG_SELECT_MEDIA, nr_sd_menu_items() + 1)) {
       menuItemAdd(ICON_Back, GET_TEXT_F(MSG_EXIT_TO_MAIN_MENU), onDrawMenuItem, gotoMainMenu);
       for (uint8_t i = 0; i < nr_sd_menu_items(); ++i)
         menuItemAdd(onDrawFileName, onClickSDItem);
@@ -1021,7 +1021,7 @@ void drawPrintFileMenu() {
     TERN_(DASH_REDRAW, dwinRedrawDash());
   }
   else {
-    if (SET_MENU(fileMenu, MSG_MEDIA_MENU, 1)) BACK_ITEM(gotoMainMenu);
+    if (SET_MENU(fileMenu, MSG_SELECT_MEDIA, 1)) BACK_ITEM(gotoMainMenu);
     updateMenu(fileMenu);
     dwinDrawRectangle(1, hmiData.colorAlertBg, 10, MBASE(3) - 10, DWIN_WIDTH - 10, MBASE(4));
     DWINUI::drawCenteredString(font12x24, hmiData.colorAlertTxt, MBASE(3), GET_TEXT_F(MSG_MEDIA_NOT_INSERTED));
@@ -1715,7 +1715,7 @@ void dwinLevelingDone() {
         break;
       case PID_TUNING_TIMEOUT:
         checkkey = last_checkkey;
-        dwinPopupContinue(ICON_TempTooHigh, GET_TEXT_F(MSG_ERROR), GET_TEXT_F(MSG_PID_TIMEOUT));
+        dwinPopupContinue(ICON_TempTooHigh, GET_TEXT_F(MSG_PID_AUTOTUNE_FAILED), GET_TEXT_F(MSG_TIMEOUT));
         break;
       case PID_TEMP_TOO_HIGH:
         checkkey = last_checkkey;
@@ -1744,7 +1744,7 @@ void dwinLevelingDone() {
         #if PROUI_TUNING_GRAPH
           dwinDrawPIDMPCPopup();
         #else
-          dwinDrawPopup(ICON_TempTooHigh, GET_TEXT_F(MSG_MPC_AUTOTUNE), GET_TEXT_F(MSG_FOR_NOZZLE_RUNNING));
+          dwinDrawPopup(ICON_TempTooHigh, GET_TEXT_F(MSG_MPC_AUTOTUNE), GET_TEXT_F(MSG_PID_FOR_NOZZLE));
         #endif
         break;
       case MPC_TEMP_ERROR:
@@ -2216,7 +2216,7 @@ void setMoveZ() { hmiValue.axis = Z_AXIS; setPFloatOnClick(Z_MIN_POS, Z_MAX_POS,
   }
 #endif
 
-#if ENABLED(POWER_LOSS_RECOVERY)
+#if ENABLED(PROUI_ITEM_PLR)
   void setPwrLossr() {
     toggleCheckboxLine(recovery.enabled);
     recovery.changed();
@@ -2496,8 +2496,8 @@ void setMoveZ() { hmiValue.axis = Z_AXIS; setPFloatOnClick(Z_MIN_POS, Z_MAX_POS,
       DWINUI::clearMainArea();
       static bed_mesh_t zval = {};
       probe.stow();
-      checkkey = ID_NothingToDo;
-      zval[0][0] = tram(0, false);
+      hmiSaveProcessID(ID_NothingToDo); // Before home disable user input
+      zval[0][0] = tram(0, false); // First tram point can do Homing
       meshViewer.drawMeshGrid(2, 2); // Indicate start. Draw the grid
       meshViewer.drawMeshPoint(0, 0, zval[0][0]);
       zval[1][0] = tram(1, false);
@@ -2549,7 +2549,7 @@ void setMoveZ() { hmiValue.axis = Z_AXIS; setPFloatOnClick(Z_MIN_POS, Z_MAX_POS,
         DWINUI::drawCenteredString(120, GET_TEXT_F(MSG_CORNERS_NOT_LEVELED));
         DWINUI::drawCenteredString(140, GET_TEXT_F(MSG_KNOB_ADJUSTMENT_REQUIRED));
         DWINUI::drawCenteredString((s ? COLOR_GREEN : COLOR_ERROR_RED), 160, s ? GET_TEXT_F(MSG_LOWER) : GET_TEXT_F(MSG_RAISE));
-        DWINUI::drawCenteredString(COLOR_GREEN, 180, plabel);
+        DWINUI::drawCenteredString(hmiData.colorStatusTxt, 180, plabel);
       }
       DWINUI::drawButton(BTN_Continue, 86, 305);
       checkkey = ID_Menu;
@@ -3224,7 +3224,7 @@ void drawAdvancedSettingsMenu() {
     #if ENABLED(SOUND_MENU_ITEM)
       EDIT_ITEM(ICON_Sound, MSG_SOUND_ENABLE, onDrawChkbMenu, setEnableSound, &ui.sound_on);
     #endif
-    #if ENABLED(POWER_LOSS_RECOVERY)
+    #if ENABLED(PROUI_ITEM_PLR)
       EDIT_ITEM(ICON_Pwrlossr, MSG_OUTAGE_RECOVERY, onDrawChkbMenu, setPwrLossr, &recovery.enabled);
     #endif
     #if HAS_GCODE_PREVIEW

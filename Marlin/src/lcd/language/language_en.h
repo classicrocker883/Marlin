@@ -138,7 +138,9 @@ namespace LanguageNarrow_en {
   LSTR MSG_PREHEAT_CUSTOM                 = _UxGT("Preheat Custom");
   LSTR MSG_COOLDOWN                       = _UxGT("Cooldown");
 
-  LSTR MSG_CUTTER_FREQUENCY               = _UxGT("Frequency");
+  LSTR MSG_CUTTER                         = _UxGT("Cutter");
+  LSTR MSG_CUTTER_FREQUENCY               = _UxGT("Cutter Frequency");
+  LSTR MSG_LASER                          = _UxGT("Laser");
   LSTR MSG_LASER_MENU                     = _UxGT("Laser Control");
   LSTR MSG_SPINDLE_MENU                   = _UxGT("Spindle Control");
   LSTR MSG_LASER_POWER                    = _UxGT("Laser Power");
@@ -266,8 +268,8 @@ namespace LanguageNarrow_en {
   LSTR MSG_UBL_MANUAL_FILLIN              = _UxGT("Manual Fill-in");
   LSTR MSG_UBL_SMART_FILLIN               = _UxGT("Smart Fill-in");
   LSTR MSG_UBL_FILLIN_MESH                = _UxGT("Fill-in Mesh");
-  LSTR MSG_UBL_MESH_FILLED                = _UxGT("Missing Points Filled");
-  LSTR MSG_UBL_MESH_INVALID               = _UxGT("Invalid Mesh");
+  LSTR MSG_UBL_MESH_FILLED                = _UxGT("Missing Points Filled"); // ProUI
+  LSTR MSG_UBL_MESH_INVALID               = _UxGT("Invalid Mesh");          // ProUI
   LSTR MSG_UBL_INVALIDATE_ALL             = _UxGT("Invalidate All");
   LSTR MSG_UBL_INVALIDATE_CLOSEST         = _UxGT("Invalidate Closest");
   LSTR MSG_UBL_FINE_TUNE_ALL              = _UxGT("Fine Tune All");
@@ -341,8 +343,6 @@ namespace LanguageNarrow_en {
   LSTR MSG_COOLER                         = _UxGT("Laser Coolant");
   LSTR MSG_COOLER_TOGGLE                  = _UxGT("Toggle Cooler");
   LSTR MSG_FLOWMETER_SAFETY               = _UxGT("Flow Safety");
-  LSTR MSG_CUTTER                         = _UxGT("Cutter");
-  LSTR MSG_LASER                          = _UxGT("Laser");
   LSTR MSG_FAN_SPEED                      = _UxGT("Fan Speed");
   LSTR MSG_FAN_SPEED_N                    = _UxGT("Fan Speed ~");
   LSTR MSG_STORED_FAN_N                   = _UxGT("Stored Fan ~");
@@ -369,10 +369,6 @@ namespace LanguageNarrow_en {
   LSTR MSG_PID_CYCLE                      = _UxGT("PID Cycles");
   LSTR MSG_PID_AUTOTUNE_DONE              = _UxGT("PID tuning done");
   LSTR MSG_PID_AUTOTUNE_FAILED            = _UxGT("Autotune failed!");
-
-  LSTR MSG_PID_FOR_NOZZLE                 = _UxGT("for Nozzle is running.");
-  LSTR MSG_PID_FOR_BED                    = _UxGT("for BED is running.");
-  LSTR MSG_PID_FOR_CHAMBER                = _UxGT("for CHAMBER is running.");
 
   LSTR MSG_TEMP_NOZZLE                    = _UxGT("Nozzle Temperature");
   LSTR MSG_TEMP_BED                       = _UxGT("Bed Temperature");
@@ -411,7 +407,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_VN_JERK                        = _UxGT("Max @ Jerk");
   LSTR MSG_VE_JERK                        = _UxGT("Max E Jerk");
   LSTR MSG_JUNCTION_DEVIATION             = _UxGT("Junction Dev");
-  LSTR MSG_STEP_SMOOTHING                 = _UxGT("Step Smoothing");
+  LSTR MSG_STEP_SMOOTHING                 = _UxGT("Step Smoothing"); // ProUI
   LSTR MSG_MAX_SPEED                      = _UxGT("Max Speed (mm/s)");
   LSTR MSG_VMAX_A                         = _UxGT("Max ") STR_A _UxGT(" Speed");
   LSTR MSG_VMAX_B                         = _UxGT("Max ") STR_B _UxGT(" Speed");
@@ -435,12 +431,12 @@ namespace LanguageNarrow_en {
   LSTR MSG_SHAPING_DISABLE                = _UxGT("Disable @ shaping");
   LSTR MSG_SHAPING_FREQ                   = _UxGT("@ frequency");
   LSTR MSG_SHAPING_ZETA                   = _UxGT("@ damping");
-  LSTR MSG_SHAPING_A_FREQ                 = STR_A _UxGT(" frequency");  // ProUI
-  LSTR MSG_SHAPING_B_FREQ                 = STR_B _UxGT(" frequency");  // ProUI
-  LSTR MSG_SHAPING_C_FREQ                 = STR_C _UxGT(" frequency");  // ProUI
-  LSTR MSG_SHAPING_A_ZETA                 = STR_A _UxGT(" damping");    // ProUI
-  LSTR MSG_SHAPING_B_ZETA                 = STR_B _UxGT(" damping");    // ProUI
-  LSTR MSG_SHAPING_C_ZETA                 = STR_C _UxGT(" damping");    // ProUI
+  LSTR MSG_SHAPING_A_FREQ                 = STR_A _UxGT(" frequency"); // ProUI
+  LSTR MSG_SHAPING_B_FREQ                 = STR_B _UxGT(" frequency"); // ProUI
+  LSTR MSG_SHAPING_C_FREQ                 = STR_C _UxGT(" frequency"); // ProUI
+  LSTR MSG_SHAPING_A_ZETA                 = STR_A _UxGT(" damping");   // ProUI
+  LSTR MSG_SHAPING_B_ZETA                 = STR_B _UxGT(" damping");   // ProUI
+  LSTR MSG_SHAPING_C_ZETA                 = STR_C _UxGT(" damping");   // ProUI
   LSTR MSG_XY_FREQUENCY_LIMIT             = _UxGT("XY Freq Limit");
   LSTR MSG_XY_FREQUENCY_FEEDRATE          = _UxGT("Min FR Factor");
   LSTR MSG_STEPS_PER_MM                   = _UxGT("Steps/mm");
@@ -527,13 +523,12 @@ namespace LanguageNarrow_en {
   LSTR MSG_STOP_PRINT                     = _UxGT("Stop Print");
   LSTR MSG_OUTAGE_RECOVERY                = _UxGT("Power Outage");
   LSTR MSG_RESUME_BED_TEMP                = _UxGT("Resume Bed Temp");
-  LSTR MSG_HOST_START_PRINT               = _UxGT("Host Start");
-  LSTR MSG_PRINTING_OBJECT                = _UxGT("Print Obj");
-  LSTR MSG_CANCEL_OBJECT                  = _UxGT("Cancel Obj");
-  LSTR MSG_CANCEL_OBJECT_N                = _UxGT("Cancel Obj {");
-  LSTR MSG_CONTINUE_PRINT_JOB             = _UxGT("Continue Job");
+  LSTR MSG_HOST_START_PRINT               = _UxGT("Start Host Print");
+  LSTR MSG_PRINTING_OBJECT                = _UxGT("Printing Object");
+  LSTR MSG_CANCEL_OBJECT                  = _UxGT("Cancel Object");
+  LSTR MSG_CANCEL_OBJECT_N                = _UxGT("Cancel Object {");
+  LSTR MSG_CONTINUE_PRINT_JOB             = _UxGT("Continue Print Job");
   LSTR MSG_MEDIA_MENU                     = MEDIA_TYPE_EN _UxGT(" Print");
-  LSTR MSG_TURN_OFF                       = _UxGT("Turn off now");
   LSTR MSG_END_LOOPS                      = _UxGT("End Loops");
   LSTR MSG_NO_MEDIA                       = _UxGT("No ") MEDIA_TYPE_EN;
   LSTR MSG_DWELL                          = _UxGT("Sleep...");
@@ -671,7 +666,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_MESH_LEVELING                  = _UxGT("Mesh Leveling");
   LSTR MSG_MESH_DONE                      = _UxGT("Mesh probing done");
   LSTR MSG_INFO_STATS_MENU                = _UxGT("Printer Stats");
-  LSTR MSG_RESET_STATS                    = _UxGT("Reset Print Stats?");
+  LSTR MSG_RESET_STATS                    = _UxGT("Reset Print Stats?"); // ProUI
   LSTR MSG_INFO_BOARD_MENU                = _UxGT("Board Info");
   LSTR MSG_INFO_THERMISTOR_MENU           = _UxGT("Thermistors");
   LSTR MSG_INFO_EXTRUDERS                 = _UxGT("Extruders");
@@ -689,10 +684,10 @@ namespace LanguageNarrow_en {
   LSTR MSG_CASE_LIGHT_BRIGHTNESS          = _UxGT("Light Brightness");
   LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("INCORRECT PRINTER");
 
-  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Prints");
-  LSTR MSG_INFO_PRINT_TIME                = _UxGT("Total");
-  LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Longest");
-  LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Extruded");
+  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Print Count");
+  LSTR MSG_INFO_PRINT_TIME                = _UxGT("Print Time");
+  LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Longest Job Time");
+  LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Extruded Total");
   LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Completed");
   LSTR MSG_INFO_MIN_TEMP                  = _UxGT("Min Temp");
   LSTR MSG_INFO_MAX_TEMP                  = _UxGT("Max Temp");
@@ -709,15 +704,14 @@ namespace LanguageNarrow_en {
   LSTR MSG_FILAMENT_CHANGE_OPTION_HEADER  = _UxGT("RESUME OPTIONS:");
   LSTR MSG_FILAMENT_CHANGE_OPTION_PURGE   = _UxGT("Purge more");
   LSTR MSG_FILAMENT_CHANGE_OPTION_RESUME  = _UxGT("Continue");
-  LSTR MSG_FILAMENT_CHANGE_PURGE_CONTINUE = _UxGT("Purge or Continue?");  // ProUI
+  LSTR MSG_FILAMENT_CHANGE_PURGE_CONTINUE = _UxGT("Purge or Continue?"); // ProUI
   LSTR MSG_FILAMENT_CHANGE_NOZZLE         = _UxGT("  Nozzle: ");
   LSTR MSG_RUNOUT_SENSOR                  = _UxGT("Runout Sensor");
   LSTR MSG_RUNOUT_DISTANCE_MM             = _UxGT("Runout Dist mm");
-  LSTR MSG_EXTRUDER_MIN_TEMP              = _UxGT("Extruder Min Temp.");  // ProUI
+  LSTR MSG_EXTRUDER_MIN_TEMP              = _UxGT("Extruder Min Temp."); // ProUI
   LSTR MSG_FANCHECK                       = _UxGT("Fan Tacho Check");
   LSTR MSG_KILL_HOMING_FAILED             = _UxGT("Homing Failed");
   LSTR MSG_LCD_PROBING_FAILED             = _UxGT("Probing Failed");
-  LSTR MSG_EXIT_TO_MAIN_MENU              = _UxGT("Exit to Main Menu");
 
   LSTR MSG_MMU2_CHOOSE_FILAMENT_HEADER    = _UxGT("CHOOSE FILAMENT");
   LSTR MSG_MMU2_MENU                      = _UxGT("MMU");
@@ -792,6 +786,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_FILAMENT_CHANGE_PURGE          = _UxGT(MSG_1_LINE("Purging..."));
   LSTR MSG_FILAMENT_CHANGE_CONT_PURGE     = _UxGT(MSG_1_LINE("Click to finish"));
   LSTR MSG_FILAMENT_CHANGE_RESUME         = _UxGT(MSG_1_LINE("Resuming..."));
+
   LSTR MSG_TMC_DRIVERS                    = _UxGT("TMC Drivers");
   LSTR MSG_TMC_CURRENT                    = _UxGT("Driver Current");
   LSTR MSG_TMC_ACURRENT                   = STR_A _UxGT("Driver Current");
@@ -903,73 +898,47 @@ namespace LanguageNarrow_en {
 
 namespace LanguageWide_en {
   using namespace LanguageNarrow_en;
-  #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
-  LSTR MSG_COLORS_GET                     = _UxGT("Get Color");               // ProUI
-  LSTR MSG_COLORS_SELECT                  = _UxGT("Select Colors");           // ProUI
-  LSTR MSG_COLORS_APPLIED                 = _UxGT("Colors applied");          // ProUI
-  LSTR MSG_COLORS_RED                     = _UxGT("Red");                     // ProUI / JyersUI
-  LSTR MSG_COLORS_GREEN                   = _UxGT("Green");                   // ProUI / JyersUI
-  LSTR MSG_COLORS_BLUE                    = _UxGT("Blue");                    // ProUI / JyersUI
-  LSTR MSG_COLORS_WHITE                   = _UxGT("White");                   // ProUI
-  LSTR MSG_UI_LANGUAGE                    = _UxGT("UI Language");             // ProUI
-  LSTR MSG_SOUND_ENABLE                   = _UxGT("Enable sound");            // ProUI
-  LSTR MSG_LOCKSCREEN                     = _UxGT("Lock Screen");             // ProUI
-  LSTR MSG_LOCKSCREEN_LOCKED              = _UxGT("Printer is Locked,");      // ProUI
-  LSTR MSG_LOCKSCREEN_UNLOCK              = _UxGT("Scroll to unlock.");       // ProUI
-  LSTR MSG_PLEASE_WAIT_REBOOT             = _UxGT("Please wait for reboot."); // ProUI
-  LSTR MSG_MEDIA_NOT_INSERTED             = _UxGT("No Media");                // ProUI
-  LSTR MSG_PLEASE_PREHEAT                 = _UxGT("Please Preheat");          // ProUI
+  #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2 // ProUI / JyersUI
+    LSTR MSG_COLORS_GET                   = _UxGT("Get Color");
+    LSTR MSG_COLORS_SELECT                = _UxGT("Select Colors");
+    LSTR MSG_COLORS_APPLIED               = _UxGT("Colors applied");
+    LSTR MSG_COLORS_RED                   = _UxGT("Red");
+    LSTR MSG_COLORS_GREEN                 = _UxGT("Green");
+    LSTR MSG_COLORS_BLUE                  = _UxGT("Blue");
+    LSTR MSG_COLORS_WHITE                 = _UxGT("White");
 
-    LSTR MSG_COLORS_GET                   = _UxGT("Get Color");               // ProUI
-    LSTR MSG_COLORS_SELECT                = _UxGT("Select Colors");           // ProUI
-    LSTR MSG_COLORS_APPLIED               = _UxGT("Colors applied");          // ProUI
-    LSTR MSG_COLORS_RED                   = _UxGT("Red");                     // ProUI / JyersUI
-    LSTR MSG_COLORS_GREEN                 = _UxGT("Green");                   // ProUI / JyersUI
-    LSTR MSG_COLORS_BLUE                  = _UxGT("Blue");                    // ProUI / JyersUI
-    LSTR MSG_COLORS_WHITE                 = _UxGT("White");                   // ProUI
+    LSTR MSG_SCREEN_BACKGROUND            = _UxGT("Screen Background");
+    LSTR MSG_CURSOR                       = _UxGT("Cursor");
+    LSTR MSG_TITLE_BACKGROUND             = _UxGT("Title Background");
+    LSTR MSG_TITLE_TEXT                   = _UxGT("Title Text");
+    LSTR MSG_TEXT                         = _UxGT("Text");
+    LSTR MSG_SELECTED                     = _UxGT("Selected");
+    LSTR MSG_SPLIT_LINE                   = _UxGT("Split Line");
+    LSTR MSG_HIGHLIGHT                    = _UxGT("Highlight");
+    LSTR MSG_STATUS_BACKGROUND            = _UxGT("Status Background");
+    LSTR MSG_STATUS_TEXT                  = _UxGT("Status Text");
+    LSTR MSG_POPUP_BACKGROUND             = _UxGT("Popup Background");
+    LSTR MSG_POPUP_TEXT                   = _UxGT("Popup Text");
+    LSTR MSG_ALERT_BACKGROUND             = _UxGT("Alert Background");
+    LSTR MSG_ALERT_TEXT                   = _UxGT("Alert Text");
+    LSTR MSG_PERCENT_TEXT                 = _UxGT("Percent Text");
+    LSTR MSG_BAR_FILL                     = _UxGT("Bar Fill");
+    LSTR MSG_INDICATOR_VALUE              = _UxGT("Indicator value");
+    LSTR MSG_COORDINATE_VALUE             = _UxGT("Coordinate value");
 
-    LSTR MSG_SCREEN_BACKGROUND            = _UxGT("Screen Background");       // ProUI
-    LSTR MSG_CURSOR                       = _UxGT("Cursor");                  // ProUI
-    LSTR MSG_TITLE_BACKGROUND             = _UxGT("Title Background");        // ProUI
-    LSTR MSG_TITLE_TEXT                   = _UxGT("Title Text");              // ProUI
-    LSTR MSG_TEXT                         = _UxGT("Text");                    // ProUI
-    LSTR MSG_SELECTED                     = _UxGT("Selected");                // ProUI
-    LSTR MSG_SPLIT_LINE                   = _UxGT("Split Line");              // ProUI
-    LSTR MSG_HIGHLIGHT                    = _UxGT("Highlight");               // ProUI
-    LSTR MSG_STATUS_BACKGROUND            = _UxGT("Status Background");       // ProUI
-    LSTR MSG_STATUS_TEXT                  = _UxGT("Status Text");             // ProUI
-    LSTR MSG_POPUP_BACKGROUND             = _UxGT("Popup Background");        // ProUI
-    LSTR MSG_POPUP_TEXT                   = _UxGT("Popup Text");              // ProUI
-    LSTR MSG_ALERT_BACKGROUND             = _UxGT("Alert Background");        // ProUI
-    LSTR MSG_ALERT_TEXT                   = _UxGT("Alert Text");              // ProUI
-    LSTR MSG_PERCENT_TEXT                 = _UxGT("Percent Text");            // ProUI
-    LSTR MSG_BAR_FILL                     = _UxGT("Bar Fill");                // ProUI
-    LSTR MSG_INDICATOR_VALUE              = _UxGT("Indicator value");         // ProUI
-    LSTR MSG_COORDINATE_VALUE             = _UxGT("Coordinate value");        // ProUI
+    LSTR MSG_UI_LANGUAGE                  = _UxGT("UI Language");
+    LSTR MSG_SOUND_ENABLE                 = _UxGT("Enable sound");
+    LSTR MSG_LOCKSCREEN                   = _UxGT("Lock Screen");
+    LSTR MSG_LOCKSCREEN_LOCKED            = _UxGT("Printer is Locked,");
+    LSTR MSG_LOCKSCREEN_UNLOCK            = _UxGT("Scroll to unlock.");
+    LSTR MSG_PLEASE_WAIT_REBOOT           = _UxGT("Please wait for reboot.");
+    LSTR MSG_MEDIA_NOT_INSERTED           = _UxGT("Media not inserted");
+    LSTR MSG_PLEASE_PREHEAT               = _UxGT("Please Preheat");
+    LSTR MSG_INFO_PRINT_COUNT_RESET       = _UxGT("Reset Print Count");
+    LSTR MSG_EXIT_TO_MAIN_MENU            = _UxGT("Exit to Main Menu");
 
-    LSTR MSG_UI_LANGUAGE                  = _UxGT("UI Language");             // ProUI
-    LSTR MSG_SOUND_ENABLE                 = _UxGT("Enable sound");            // ProUI
-    LSTR MSG_LOCKSCREEN                   = _UxGT("Lock Screen");             // ProUI
-    LSTR MSG_LOCKSCREEN_LOCKED            = _UxGT("Printer is Locked,");      // ProUI
-    LSTR MSG_LOCKSCREEN_UNLOCK            = _UxGT("Scroll to unlock.");       // ProUI
-    LSTR MSG_PLEASE_WAIT_REBOOT           = _UxGT("Please wait for reboot."); // ProUI
-    LSTR MSG_MEDIA_NOT_INSERTED           = _UxGT("Media not inserted");      // ProUI
-    LSTR MSG_PLEASE_PREHEAT               = _UxGT("Please preheat hot end");  // ProUI
-    LSTR MSG_INFO_PRINT_COUNT_RESET       = _UxGT("Reset Print Count");       // ProUI
-
-    LSTR MSG_LIVE_MOVE                    = _UxGT("Live Movement");
-    LSTR MSG_HOST_START_PRINT             = _UxGT("Start Host Print");
-    LSTR MSG_PRINTING_OBJECT              = _UxGT("Printing Object");
-    LSTR MSG_CANCEL_OBJECT                = _UxGT("Cancel Object");
-    LSTR MSG_CANCEL_OBJECT_N              = _UxGT("Cancel Object {");
-    LSTR MSG_CONTINUE_PRINT_JOB           = _UxGT("Continue Print Job");
-    LSTR MSG_MEDIA_MENU                   = _UxGT("Select from ") MEDIA_TYPE_EN;
+    LSTR MSG_SELECT_MEDIA                 = _UxGT("Select from ") MEDIA_TYPE_EN;
     LSTR MSG_TURN_OFF                     = _UxGT("Turn off printer");
-    LSTR MSG_END_LOOPS                    = _UxGT("End Repeat Loops");
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Print Count");
-    LSTR MSG_INFO_PRINT_TIME              = _UxGT("Print Time");
-    LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Longest Job Time");
-    LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("Extruded Total");
 
     LSTR MSG_OUTAGE_RECOVERY2             = _UxGT("It looks like the last");
     LSTR MSG_OUTAGE_RECOVERY3             = _UxGT("file was interrupted.");
@@ -984,10 +953,10 @@ namespace LanguageWide_en {
 
     LSTR MSG_POSITION_UNKNOWN             = _UxGT("WARNING: Current position unknown. Home axes.");
     LSTR MSG_POSITION_UNKNOWN_Z           = _UxGT("WARNING: Z position unknown, move Z to home");
-  LSTR MSG_FOR_NOZZLE_RUNNING             = _UxGT("for NOZZLE is running.");
-  LSTR MSG_FOR_BED_RUNNING                = _UxGT("for BED is running.");
-  LSTR MSG_NOZZLE_TEMPERATURE             = _UxGT("Nozzle Temperature");
-  LSTR MSG_BED_TEMPERATURE                = _UxGT("Bed Temperature");
+
+    LSTR MSG_PID_FOR_NOZZLE               = _UxGT("for NOZZLE is running.");
+    LSTR MSG_PID_FOR_BED                  = _UxGT("for BED is running.");
+    LSTR MSG_PID_FOR_CHAMBER              = _UxGT("for CHAMBER is running.");
   #endif
 }
 
@@ -1006,6 +975,7 @@ namespace LanguageTall_en {
     LSTR MSG_FILAMENT_CHANGE_PURGE        = _UxGT(MSG_2_LINE("Wait for", "filament purge"));
     LSTR MSG_FILAMENT_CHANGE_CONT_PURGE   = _UxGT(MSG_2_LINE("Click to finish", "filament purge"));
     LSTR MSG_FILAMENT_CHANGE_RESUME       = _UxGT(MSG_2_LINE("Wait for print", "to resume..."));
+    LSTR MSG_BLTOUCH_MODE_CHANGE          = _UxGT(MSG_3_LINE("ALERT: Bad settings", "can cause damage!", "Proceed anyway?"));
   #endif
 }
 

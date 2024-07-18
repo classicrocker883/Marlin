@@ -501,7 +501,6 @@ namespace LanguageNarrow_tr {
   LSTR MSG_CANCEL_OBJECT_N                = _UxGT("Nesneyi İptal Et {");
   LSTR MSG_CONTINUE_PRINT_JOB             = _UxGT("İşe Devam Et");
   LSTR MSG_MEDIA_MENU                     = _UxGT("Medyayı Yazdır");
-  LSTR MSG_TURN_OFF                       = _UxGT("Şimdi kapat");
   LSTR MSG_END_LOOPS                      = _UxGT("Son Döngüler");
   LSTR MSG_NO_MEDIA                       = _UxGT("SD Kart Yok!");
   LSTR MSG_DWELL                          = _UxGT("Uyku...");
@@ -673,11 +672,11 @@ namespace LanguageNarrow_tr {
   LSTR MSG_MEDIA_NOT_INSERTED             = _UxGT("Medya Yok");             // ProUI
   LSTR MSG_PLEASE_PREHEAT                 = _UxGT("Ön Isıtma Lütfen");      // ProUI
 
-  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Baskı");
-  LSTR MSG_INFO_PRINT_TIME                = _UxGT("Süre");
-  LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("En Uzun");
-  LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Filaman");
-  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Tamamlanan");
+  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Baskı Sayısı");
+  LSTR MSG_INFO_PRINT_TIME                = _UxGT("Toplam Baskı Süre");
+  LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Uzun Baskı Süresi");
+  LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Toplam Filaman");
+  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Baskı Tamamlanan");
   LSTR MSG_INFO_MIN_TEMP                  = _UxGT("Min Sıc.");
   LSTR MSG_INFO_MAX_TEMP                  = _UxGT("Max Sıc.");
   LSTR MSG_INFO_PSU                       = _UxGT("Güç Kaynağı");
@@ -890,19 +889,12 @@ namespace LanguageWide_tr {
     LSTR MSG_LIVE_MOVE                    = _UxGT("Canlı Hareket");
     LSTR MSG_HOST_START_PRINT             = _UxGT("Host Baskıyı başlat");
     LSTR MSG_PRINTING_OBJECT              = _UxGT("Yazdırma Nesnesi");
-    LSTR MSG_CANCEL_OBJECT                = _UxGT("Nesneyi İptal Et");
-    LSTR MSG_CANCEL_OBJECT_N              = _UxGT("Nesneyi İptal Et {");
     LSTR MSG_CONTINUE_PRINT_JOB           = _UxGT("Yazdırmaya Devam Et");
-    LSTR MSG_MEDIA_MENU                   = _UxGT("SD Karttan Yazdır");
+    LSTR MSG_SELECT_MEDIA                 = _UxGT("SD Karttan Yazdır");
     LSTR MSG_TURN_OFF                     = _UxGT("Yazıcıyı kapat");
-    LSTR MSG_END_LOOPS                    = _UxGT("Tekrr Döngüler Bitir");
     LSTR MSG_MEDIA_NOT_INSERTED           = _UxGT("Ortam yerleştirilmedi.");        // ProUI
     LSTR MSG_PLEASE_PREHEAT               = _UxGT("Lütfen önce hotend'i ısıtın.");  // ProUI
     LSTR MSG_INFO_PRINT_COUNT_RESET       = _UxGT("Baskı Sayısını Sıfırla");        // ProUI
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Baskı Sayısı");
-    LSTR MSG_INFO_PRINT_TIME              = _UxGT("Toplam Baskı Süresi");
-    LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("En Uzun Baskı Süresi");
-    LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("Toplam Filaman");
   #endif
 }
 

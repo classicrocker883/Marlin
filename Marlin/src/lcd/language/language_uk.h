@@ -396,7 +396,7 @@ namespace LanguageNarrow_uk {
   LSTR MSG_RESUME_PRINT                     = _UxGT("Відновити друк");
   LSTR MSG_HOST_START_PRINT                 = _UxGT("Старт з хосту");
   LSTR MSG_STOP_PRINT                       = _UxGT("Скасувати друк");
-  LSTR MSG_END_LOOPS                        = _UxGT("End Repeat Loops"); // needs translation
+  LSTR MSG_END_LOOPS                        = _UxGT("Кінець циклу");
   LSTR MSG_PRINTING_OBJECT                  = _UxGT("Друк об'єкта");
   LSTR MSG_CANCEL_OBJECT                    = _UxGT("Завершити об'єкт");
   LSTR MSG_CANCEL_OBJECT_N                  = _UxGT("Завершити об'єкт {");

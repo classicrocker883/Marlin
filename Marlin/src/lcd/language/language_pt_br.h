@@ -387,11 +387,11 @@ namespace LanguageNarrow_pt_br {
   LSTR MSG_CASE_LIGHT_BRIGHTNESS          = _UxGT("Intensidade Brilho");
   LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("Impressora Incorreta");
 
-  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Qtd de Impressões");
-  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Realizadas");
+  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Total de Impressões");
+  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Impressão Realizadas");
   LSTR MSG_INFO_PRINT_TIME                = _UxGT("Tempo de Impressão");
-  LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Maior trabalho");
-  LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("T. Extrusão");
+  LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Trabalho Mais longo");
+  LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Total de Extrusão");
 
   LSTR MSG_INFO_MIN_TEMP                  = _UxGT("Temp Mín");
   LSTR MSG_INFO_MAX_TEMP                  = _UxGT("Temp Máx");
@@ -458,11 +458,6 @@ namespace LanguageNarrow_pt_br {
 namespace LanguageWide_pt_br {
   using namespace LanguageNarrow_pt_br;
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Total de Impressões");
-    LSTR MSG_INFO_COMPLETED_PRINTS        = _UxGT("Realizadas");
-    LSTR MSG_INFO_PRINT_TIME              = _UxGT("Tempo de Impressão");
-    LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Trabalho Mais longo");
-    LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("Total de Extrusão");
   #endif
 }
 

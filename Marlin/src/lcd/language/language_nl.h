@@ -178,11 +178,11 @@ namespace LanguageNarrow_nl {
 
   LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("Onjuiste printer");
 
-  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Aantal");
-  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Voltooid");
-  LSTR MSG_INFO_PRINT_TIME                = _UxGT("Printtijd ");
-  LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Langste");
-  LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Extrud.");
+  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Printed Aantal");
+  LSTR MSG_INFO_PRINT_TIME                = _UxGT("Totale Printtijd");
+  LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Langste Printtijd");
+  LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Totaal Extrudeert");
+  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Totaal Voltooid");
 
   LSTR MSG_INFO_MIN_TEMP                  = _UxGT("Min Temp");
   LSTR MSG_INFO_MAX_TEMP                  = _UxGT("Max Temp");
@@ -208,11 +208,6 @@ namespace LanguageNarrow_nl {
 namespace LanguageWide_nl {
   using namespace LanguageNarrow_nl;
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Printed Aantal");
-    LSTR MSG_INFO_COMPLETED_PRINTS        = _UxGT("Totaal Voltooid");
-    LSTR MSG_INFO_PRINT_TIME              = _UxGT("Totale Printtijd");
-    LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Langste Printtijd");
-    LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("Totaal Extrudeert");
   #endif
 }
 

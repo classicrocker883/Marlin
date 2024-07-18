@@ -497,7 +497,7 @@ namespace LanguageNarrow_it {
   LSTR MSG_END_LOOPS                      = _UxGT("Fine cicli di rip.");
   LSTR MSG_PRINTING_OBJECT                = _UxGT("Stampa oggetto");
   LSTR MSG_CANCEL_OBJECT                  = _UxGT("Cancella oggetto");
-  LSTR MSG_CANCEL_OBJECT_N                = _UxGT("Canc. oggetto {");
+  LSTR MSG_CANCEL_OBJECT_N                = _UxGT("Cancella oggetto {");
   LSTR MSG_OUTAGE_RECOVERY                = _UxGT("Ripresa da interruz.");
   LSTR MSG_RESUME_BED_TEMP                = _UxGT("Riprendi temp.piatto");
   LSTR MSG_CONTINUE_PRINT_JOB             = _UxGT("Cont.proc.stampa");
@@ -512,7 +512,6 @@ namespace LanguageNarrow_it {
   LSTR MSG_PRINT_ABORTED                  = _UxGT("Stampa annullata");
   LSTR MSG_PRINT_DONE                     = _UxGT("Stampa eseguita");
   LSTR MSG_PRINTER_KILLED                 = _UxGT("Stampante uccisa!");
-  LSTR MSG_TURN_OFF                       = _UxGT("Spegni stampante");
   LSTR MSG_NO_MOVE                        = _UxGT("Nessun movimento");
   LSTR MSG_KILLED                         = _UxGT("UCCISO. ");
   LSTR MSG_STOPPED                        = _UxGT("ARRESTATO. ");
@@ -677,7 +676,7 @@ namespace LanguageNarrow_it {
   LSTR MSG_INFO_PRINT_TIME                = _UxGT("Durata");
   LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Più lungo");
   LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Estruso");
-  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Completate");
+  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Stampa Completate");
   LSTR MSG_INFO_MIN_TEMP                  = _UxGT("Temp min");
   LSTR MSG_INFO_MAX_TEMP                  = _UxGT("Temp max");
   LSTR MSG_INFO_PSU                       = _UxGT("Alimentatore");
@@ -872,15 +871,12 @@ namespace LanguageWide_it {
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
     LSTR MSG_HOST_START_PRINT             = _UxGT("Avvio stampa host");
     LSTR MSG_PRINTING_OBJECT              = _UxGT("Sto stampando l'oggetto");
-    LSTR MSG_CANCEL_OBJECT                = _UxGT("Cancella l'oggetto");
-    LSTR MSG_CANCEL_OBJECT_N              = _UxGT("Cancella l'oggetto {");
     LSTR MSG_CONTINUE_PRINT_JOB           = _UxGT("Continua il job di stampa");
-    LSTR MSG_MEDIA_MENU                   = _UxGT("Selez.da supporto");
+    LSTR MSG_SELECT_MEDIA                 = _UxGT("Seleziona da ") MEDIA_TYPE_IT;
     LSTR MSG_TURN_OFF                     = _UxGT("Spegni la stampante");
-    LSTR MSG_END_LOOPS                    = _UxGT("Termina i cicli di ripetizione");
-    LSTR MSG_MEDIA_NOT_INSERTED           = _UxGT("Nessun supporto inserito.");           // ProUI
-    LSTR MSG_PLEASE_PREHEAT               = _UxGT("Si prega di preriscaldare l'ugello."); // ProUI
-    LSTR MSG_INFO_PRINT_COUNT_RESET       = _UxGT("Azzera i contatori di stampa");        // ProUI
+    LSTR MSG_MEDIA_NOT_INSERTED           = _UxGT("Nessun supporto inserito.");
+    LSTR MSG_PLEASE_PREHEAT               = _UxGT("Si prega di preriscaldare l'ugello.");
+    LSTR MSG_INFO_PRINT_COUNT_RESET       = _UxGT("Azzera i contatori di stampa");
     LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Contatori di stampa");
     LSTR MSG_INFO_PRINT_TIME              = _UxGT("Tempo totale");
     LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Lavoro più lungo");

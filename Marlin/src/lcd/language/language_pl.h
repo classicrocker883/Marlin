@@ -416,10 +416,10 @@ namespace LanguageNarrow_pl {
   LSTR MSG_KILL_EXPECTED_PRINTER          = _UxGT("Niepoprawna drukarka");
 
   LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Wydrukowano");
-  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Ukończono");
-  LSTR MSG_INFO_PRINT_TIME                = _UxGT("Razem");
+  LSTR MSG_INFO_PRINT_TIME                = _UxGT("Czas druku");
   LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Najdł. druk");
   LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Użyty fil.");
+  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Druk Ukończono");
 
   LSTR MSG_INFO_PSU                       = _UxGT("Zasilacz");
   LSTR MSG_DRIVE_STRENGTH                 = _UxGT("Siła silnika");
@@ -512,11 +512,6 @@ namespace LanguageNarrow_pl {
 namespace LanguageWide_pl {
   using namespace LanguageNarrow_pl;
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Wydrukowano");
-    LSTR MSG_INFO_COMPLETED_PRINTS        = _UxGT("Ukończono");
-    LSTR MSG_INFO_PRINT_TIME              = _UxGT("Czas druku");
-    LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Najdł. druk");
-    LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("Użyty fil.");
   #endif
 }
 

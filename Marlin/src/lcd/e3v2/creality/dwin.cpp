@@ -115,9 +115,6 @@ constexpr uint16_t MROWS = TROWS - 1,   // Last Row Index
 
 #define BABY_Z_VAR TERN(HAS_BED_PROBE, probe.offset.z, dwin_zoffset)
 
-#define DWIN_BOTTOM (DWIN_HEIGHT - 1)
-#define DWIN_RIGHT (DWIN_WIDTH - 1)
-
 // Value Init
 hmi_value_t hmiValues;
 hmi_flag_t hmiFlag{0};
@@ -1972,7 +1969,7 @@ void hmiSDCardUpdate() {
 //
 void drawStatusArea(const bool with_update) {
 
-  dwinDrawRectangle(1, COLOR_BG_BLACK, 0, STATUS_Y, DWIN_WIDTH, DWIN_BOTTOM);
+  dwinDrawRectangle(1, COLOR_BG_BLACK, 0, STATUS_Y, DWIN_WIDTH, DWIN_HEIGHT - 1);
 
   #if HAS_HOTEND
     dwinIconShow(ICON, ICON_HotendTemp, 10, 383);
@@ -4108,7 +4105,7 @@ void eachMomentUpdate() {
       drawPrintProgressBar();
 
       // show print done confirm
-      dwinDrawRectangle(1, COLOR_BG_BLACK, 0, 250, DWIN_RIGHT, STATUS_Y);
+      dwinDrawRectangle(1, COLOR_BG_BLACK, 0, 250, DWIN_WIDTH - 1, STATUS_Y);
       dwinIconShow(ICON, hmiIsChinese() ? ICON_Confirm_C : ICON_Confirm_E, 86, 283);
     }
     else if (hmiFlag.pause_flag != printingIsPaused()) {

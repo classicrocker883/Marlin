@@ -523,11 +523,11 @@ namespace LanguageNarrow_ru {
   LSTR MSG_CASE_LIGHT_BRIGHTNESS            = _UxGT("Яркость подсветки");
   LSTR MSG_KILL_EXPECTED_PRINTER            = _UxGT("НЕВЕРНЫЙ ПРИНТЕР");
 
-  LSTR MSG_INFO_PRINT_COUNT                 = _UxGT("Напечатано");
-  LSTR MSG_INFO_PRINT_TIME                  = _UxGT("Общее время");
-  LSTR MSG_INFO_PRINT_LONGEST               = _UxGT("Наидольшее");
-  LSTR MSG_INFO_PRINT_FILAMENT              = _UxGT("Выдавлено");
-  LSTR MSG_INFO_COMPLETED_PRINTS            = _UxGT("Завершено");
+  LSTR MSG_INFO_PRINT_COUNT                 = _UxGT("Счётчик печати");
+  LSTR MSG_INFO_PRINT_TIME                  = _UxGT("Общее время печати");
+  LSTR MSG_INFO_PRINT_LONGEST               = _UxGT("Наидольшее задание");
+  LSTR MSG_INFO_PRINT_FILAMENT              = _UxGT("Длина филамента");
+  LSTR MSG_INFO_COMPLETED_PRINTS            = _UxGT("Печать Завершено");
 
   LSTR MSG_INFO_MIN_TEMP                    = _UxGT("Мин.  ") LCD_STR_THERMOMETER;
   LSTR MSG_INFO_MAX_TEMP                    = _UxGT("Макс. ") LCD_STR_THERMOMETER;
@@ -569,6 +569,7 @@ namespace LanguageNarrow_ru {
   LSTR MSG_MMU2_RESET                       = _UxGT("Перезапуск MMU");
   LSTR MSG_MMU2_RESETTING                   = _UxGT("Перезапуск MMU...");
   LSTR MSG_MMU2_EJECT_RECOVER               = _UxGT("Удалите и нажмите");
+  LSTR MSG_MMU2_REMOVE_AND_CLICK            = _UxGT("Уберите и кликните...");
 
   LSTR MSG_MIX                              = _UxGT("Смешив.");
   LSTR MSG_MIX_COMPONENT_N                  = _UxGT("Компонент {");
@@ -775,28 +776,7 @@ namespace LanguageNarrow_ru {
   LSTR MSG_DELTA_CALIBRATION_IN_PROGRESS    = _UxGT("Делаю дельта-калибровку");
   LSTR MSG_RESET_STATS                      = _UxGT("Сбросить статистику печати?");
   LSTR MSG_FAN_SPEED_FAULT                  = _UxGT("Сбой скорости кулера");
-
-  LSTR MSG_COLORS_GET                       = _UxGT("Получить цвет");               // ProUI
-  LSTR MSG_COLORS_SELECT                    = _UxGT("Выбрать цвета");               // ProUI
-  LSTR MSG_COLORS_APPLIED                   = _UxGT("Цвета применены");             // ProUI
-  LSTR MSG_COLORS_RED                       = _UxGT("Красный");                     // ProUI / JyersUI
-  LSTR MSG_COLORS_GREEN                     = _UxGT("Зелёный");                     // ProUI / JyersUI
-  LSTR MSG_COLORS_BLUE                      = _UxGT("Синий");                       // ProUI / JyersUI
-  LSTR MSG_COLORS_WHITE                     = _UxGT("Белый");                       // ProUI
-  LSTR MSG_UI_LANGUAGE                      = _UxGT("UI Language");                 // ProUI
-  LSTR MSG_SOUND_ENABLE                     = _UxGT("Включить звук");               // ProUI
-  LSTR MSG_LOCKSCREEN                       = _UxGT("Блокировать экран");           // ProUI
-  LSTR MSG_LOCKSCREEN_LOCKED                = _UxGT("Принтер заблокирован,");       // ProUI
-  LSTR MSG_LOCKSCREEN_UNLOCK                = _UxGT("Крутить для разблокировки.");  // ProUI
-  LSTR MSG_PLEASE_WAIT_REBOOT               = _UxGT("Ждите перезагрузки.");         // ProUI
-  LSTR MSG_MEDIA_NOT_INSERTED               = _UxGT("Нет носителя.");               // ProUI
-  LSTR MSG_PLEASE_PREHEAT                   = _UxGT("Нагрейте сопло.");             // ProUI
-  LSTR MSG_INFO_PRINT_COUNT_RESET           = _UxGT("Сбросить счетчик");            // ProUI
-  LSTR MSG_FILAMENT_CHANGE_PURGE_CONTINUE   = _UxGT("Прочистить или продолжить?");  // ProUI
-  LSTR MSG_EXTRUDER_MIN_TEMP                = _UxGT("Миню темп. экструдера.");      // ProUI
-
   LSTR MSG_FANCHECK                         = _UxGT("Пров.тахометра кулера");
-  LSTR MSG_MMU2_REMOVE_AND_CLICK            = _UxGT("Уберите и кликните...");
   LSTR MSG_REHEATDONE                       = _UxGT("Нагрето");
 
   LSTR MSG_XATC                             = _UxGT("Помощник перекоса X");
@@ -825,6 +805,25 @@ namespace LanguageNarrow_ru {
 namespace LanguageWide_ru {
   using namespace LanguageNarrow_ru;
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
+    LSTR MSG_COLORS_GET                     = _UxGT("Получить цвет");               // ProUI
+    LSTR MSG_COLORS_SELECT                  = _UxGT("Выбрать цвета");               // ProUI
+    LSTR MSG_COLORS_APPLIED                 = _UxGT("Цвета применены");             // ProUI
+    LSTR MSG_COLORS_RED                     = _UxGT("Красный");                     // ProUI / JyersUI
+    LSTR MSG_COLORS_GREEN                   = _UxGT("Зелёный");                     // ProUI / JyersUI
+    LSTR MSG_COLORS_BLUE                    = _UxGT("Синий");                       // ProUI / JyersUI
+    LSTR MSG_COLORS_WHITE                   = _UxGT("Белый");                       // ProUI
+    LSTR MSG_UI_LANGUAGE                    = _UxGT("UI Language");                 // ProUI
+    LSTR MSG_SOUND_ENABLE                   = _UxGT("Включить звук");               // ProUI
+    LSTR MSG_LOCKSCREEN                     = _UxGT("Блокировать экран");           // ProUI
+    LSTR MSG_LOCKSCREEN_LOCKED              = _UxGT("Принтер заблокирован,");       // ProUI
+    LSTR MSG_LOCKSCREEN_UNLOCK              = _UxGT("Крутить для разблокировки.");  // ProUI
+    LSTR MSG_PLEASE_WAIT_REBOOT             = _UxGT("Ждите перезагрузки.");         // ProUI
+    LSTR MSG_MEDIA_NOT_INSERTED             = _UxGT("Нет носителя.");               // ProUI
+    LSTR MSG_PLEASE_PREHEAT                 = _UxGT("Нагрейте сопло.");             // ProUI
+    LSTR MSG_INFO_PRINT_COUNT_RESET         = _UxGT("Сбросить счетчик");            // ProUI
+    LSTR MSG_FILAMENT_CHANGE_PURGE_CONTINUE = _UxGT("Прочистить или продолжить?");  // ProUI
+    LSTR MSG_EXTRUDER_MIN_TEMP              = _UxGT("Миню темп. экструдера.");      // ProUI
+
     LSTR MSG_MEDIA_INIT_FAIL                = _UxGT("Сбой инициализации SD");
     LSTR MSG_ADVANCED_SETTINGS              = _UxGT("Расширенные настройки");
     LSTR MSG_KILL_SUBCALL_OVERFLOW          = _UxGT("Переполнение вызова");
@@ -887,10 +886,6 @@ namespace LanguageWide_ru {
     LSTR MSG_INFO_RUNAWAY_OFF               = _UxGT("Контроль утечки Т: Выкл");
     LSTR MSG_INFO_RUNAWAY_ON                = _UxGT("Контроль утечки Т: Вкл");
     LSTR MSG_HOTEND_IDLE_TIMEOUT            = _UxGT("Время простоя хотенда");
-    LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Счётчик печати");
-    LSTR MSG_INFO_PRINT_TIME                = _UxGT("Общее время печати");
-    LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Наидольшее задание");
-    LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Длина филамента");
     LSTR MSG_RUNOUT_SENSOR                  = _UxGT("Датчик оконч. филамента");
     LSTR MSG_KILL_MMU2_FIRMWARE             = _UxGT("Обновить прошивку MMU!");
     LSTR MSG_MMU2_EJECTING_FILAMENT         = _UxGT("Извлечение филамента...");

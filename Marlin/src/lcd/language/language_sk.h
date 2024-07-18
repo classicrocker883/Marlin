@@ -479,12 +479,11 @@ namespace LanguageNarrow_sk {
   LSTR MSG_STOP_PRINT                     = _UxGT("Zastaviť tlač");
   LSTR MSG_OUTAGE_RECOVERY                = _UxGT("Obnova po výp. nap.");
   LSTR MSG_HOST_START_PRINT               = _UxGT("Spustiť z hosta");
-  LSTR MSG_PRINTING_OBJECT                = _UxGT("Tlačím obj.");
-  LSTR MSG_CANCEL_OBJECT                  = _UxGT("Zrušiť obj.");
-  LSTR MSG_CANCEL_OBJECT_N                = _UxGT("Zrušiť obj. {");
+  LSTR MSG_PRINTING_OBJECT                = _UxGT("Tlačím objekt");
+  LSTR MSG_CANCEL_OBJECT                  = _UxGT("Zrušiť objekt");
+  LSTR MSG_CANCEL_OBJECT_N                = _UxGT("Zrušiť objekt {");
   LSTR MSG_CONTINUE_PRINT_JOB             = _UxGT("Pokrač. v úlohe");
   LSTR MSG_MEDIA_MENU                     = _UxGT("Tlač z karty");
-  LSTR MSG_TURN_OFF                       = _UxGT("Vypnit. teraz");
   LSTR MSG_END_LOOPS                      = _UxGT("Ukončiť sluč.");
   LSTR MSG_NO_MEDIA                       = _UxGT("Žiadna karta");
   LSTR MSG_DWELL                          = _UxGT("Spím...");
@@ -649,11 +648,11 @@ namespace LanguageNarrow_sk {
   LSTR MSG_MEDIA_NOT_INSERTED             = _UxGT("Žiadna karta");                // ProUI
   LSTR MSG_PLEASE_PREHEAT                 = _UxGT("Prosím zahrejte");             // ProUI
 
-  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Tlače");
-  LSTR MSG_INFO_PRINT_TIME                = _UxGT("Čas");
-  LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Najdlhšia");
-  LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Vytlačené");
-  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Dokončené");
+  LSTR MSG_INFO_PRINT_COUNT               = _UxGT("Počet tlačí");
+  LSTR MSG_INFO_PRINT_TIME                = _UxGT("Celkový čas");
+  LSTR MSG_INFO_PRINT_LONGEST             = _UxGT("Najdlhšia tlač");
+  LSTR MSG_INFO_PRINT_FILAMENT            = _UxGT("Celkom vytlačené");
+  LSTR MSG_INFO_COMPLETED_PRINTS          = _UxGT("Tlač Dokončené");
   LSTR MSG_INFO_MIN_TEMP                  = _UxGT("Teplota min");
   LSTR MSG_INFO_MAX_TEMP                  = _UxGT("Teplota max");
   LSTR MSG_INFO_PSU                       = _UxGT("Nap. zdroj");
@@ -801,21 +800,13 @@ namespace LanguageNarrow_sk {
 namespace LanguageWide_sk {
   using namespace LanguageNarrow_sk;
   #if LCD_WIDTH >= 20 || HAS_DWIN_E3V2
-    LSTR MSG_HOST_START_PRINT             = _UxGT("Spustiť z hosta");
-    LSTR MSG_PRINTING_OBJECT              = _UxGT("Tlačím objekt");
-    LSTR MSG_CANCEL_OBJECT                = _UxGT("Zrušiť objekt");
-    LSTR MSG_CANCEL_OBJECT_N              = _UxGT("Zrušiť objekt {");
     LSTR MSG_CONTINUE_PRINT_JOB           = _UxGT("Pokračovať v úlohe");
-    LSTR MSG_MEDIA_MENU                   = _UxGT("Vytlačiť z karty");
+    LSTR MSG_SELECT_MEDIA                 = _UxGT("Vyberte z karty");
     LSTR MSG_TURN_OFF                     = _UxGT("Vypnite tlačiareň");
-    LSTR MSG_END_LOOPS                    = _UxGT("Ukončiť opak. sluč.");
     LSTR MSG_MEDIA_NOT_INSERTED           = _UxGT("Nie je vložená karta.");   // ProUI
     LSTR MSG_PLEASE_PREHEAT               = _UxGT("Prosím zahrejte hotend."); // ProUI
     LSTR MSG_INFO_PRINT_COUNT_RESET       = _UxGT("Vynulovať počítadlo");     // ProUI
-    LSTR MSG_INFO_PRINT_COUNT             = _UxGT("Počet tlačí");
-    LSTR MSG_INFO_PRINT_TIME              = _UxGT("Celkový čas");
-    LSTR MSG_INFO_PRINT_LONGEST           = _UxGT("Najdlhšia tlač");
-    LSTR MSG_INFO_PRINT_FILAMENT          = _UxGT("Celkom vytlačené");
+
   #endif
 }
 
