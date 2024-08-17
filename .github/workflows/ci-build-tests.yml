@@ -1,9 +1,9 @@
 #
-# test-builds.yml
+# ci-build-tests.yml
 # Do test builds to catch compile errors
 #
 
-name: CI
+name: CI - Build Tests
 
 on:
   pull_request:
@@ -14,6 +14,8 @@ on:
     - config/**
     - data/**
     - docs/**
+    - test/**
+    - Marlin/tests/**
     - '**/*.md'
   push:
     branches:
@@ -23,21 +25,25 @@ on:
     - config/**
     - data/**
     - docs/**
+    - test/**
+    - Marlin/tests/**
     - '**/*.md'
 
 jobs:
   test_builds:
-    name: Run All Tests
+    name: Build Test
     if: github.repository == 'MarlinFirmware/Marlin'
 
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: true
       matrix:
         test-platform:
 
         # Native
         - linux_native
+        - simulator_linux_release
 
         # AVR
         - mega2560
@@ -100,9 +106,9 @@ jobs:
 
         # STM32F4
         - ARMED
-        - BIGTREE_BTT002
-        - BIGTREE_GTR_V1_0
-        - BIGTREE_SKR_PRO
+        - BTT_BTT002
+        - BTT_GTR_V1_0
+        - BTT_SKR_PRO
         - FLYF407ZG
         - FYSETC_S6
         - LERDGEK
@@ -176,6 +182,13 @@ jobs:
         pip install -U platformio
         pio upgrade --dev
         pio pkg update --global
+
+    - name: Install Simulator dependencies
+      run: |
+        sudo apt-get install build-essential
+        sudo apt-get install libsdl2-dev
+        sudo apt-get install libsdl2-net-dev
+        sudo apt-get install libglm-dev
 
     - name: Run ${{ matrix.test-platform }} Tests
       run: |

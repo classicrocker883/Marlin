@@ -22,7 +22,8 @@
 
 /**
  * DWIN Enhanced implementation for PRO UI
- * Author: Miguel A. Risco-Castillo (MRISCOC)
+ * Based on the original work of: Miguel Risco-Castillo (MRISCOC)
+ * https://github.com/mriscoc/Ender3V2S1
  * Version: 3.25.3
  * Date: 2023/05/18
  */
@@ -37,6 +38,7 @@
 
 #include "../../utf8.h"
 #include "../../marlinui.h"
+#include "../../extui/ui_api.h"
 #include "../../../MarlinCore.h"
 #include "../../../core/serial.h"
 #include "../../../core/macros.h"
@@ -1311,7 +1313,7 @@ void eachMomentUpdate() {
           TERN_(PIDTEMP, if (hmiValue.tempControl == PIDTEMP_START) { plot.update(thermalManager.wholeDegHotend(0)); })
           TERN_(PIDTEMPBED, if (hmiValue.tempControl == PIDTEMPBED_START) { plot.update(thermalManager.wholeDegBed()); })
           TERN_(PIDTEMPCHAMBER, if (hmiValue.tempControl == PIDTEMPCHAMBER_START) { plot.update(thermalManager.wholeDegChamber()); })
-          TERN_(MPCTEMP, if (hmiValue.tempControl == MPCTEMP_START) { plot.update(thermalManager.wholeDegHotend(0)); })
+          TERN_(MPCTEMP, if (hmiValue.tempControl == MPC_STARTED) { plot.update(thermalManager.wholeDegHotend(0)); })
           if (hmiFlag.abort_flag || hmiFlag.pause_flag || print_job_timer.isPaused()) {
             hmiReturnScreen();
           }
@@ -1334,7 +1336,7 @@ void eachMomentUpdate() {
     #endif
   }
 
-  if (!PENDING(ms, next_rts_update_ms)) {
+  if (ELAPSED(ms, next_rts_update_ms)) {
     next_rts_update_ms = ms + DWIN_UPDATE_INTERVAL;
 
     if ((isPrinting() != hmiFlag.printing_flag) && !hmiFlag.home_flag) {
@@ -1566,7 +1568,7 @@ void dwinLevelingDone() {
     switch (hmiValue.tempControl) {
       default: return;
       #if ENABLED(MPC_AUTOTUNE)
-        case MPCTEMP_START:
+        case MPC_STARTED:
           DWINUI::drawCenteredString(hmiData.colorPopupTxt, 70, GET_TEXT_F(MSG_MPC_AUTOTUNE));
           DWINUI::drawString(hmiData.colorPopupTxt, gfrm.x, gfrm.y - DWINUI::fontHeight() - 4, F("MPC target:     Celsius"));
           DWINUI::drawCenteredString(hmiData.colorPopupTxt, 92, GET_TEXT_F(MSG_PID_FOR_NOZZLE));
@@ -1619,7 +1621,7 @@ void dwinLevelingDone() {
 
       switch (result) {
         #if ENABLED(MPCTEMP)
-          case MPCTEMP_START:
+          case MPC_STARTED:
         #elif ENABLED(PIDTEMP)
           case PIDTEMP_START:
         #endif
@@ -1655,7 +1657,7 @@ void dwinLevelingDone() {
 
     void drawHPlot() {
       TERN_(PIDTEMP, dwinDrawPlot(PIDTEMP_START));
-      TERN_(MPCTEMP, dwinDrawPlot(MPCTEMP_START));
+      TERN_(MPCTEMP, dwinDrawPlot(MPC_STARTED));
     }
     void drawBPlot() {
       TERN_(PIDTEMPBED, dwinDrawPlot(PIDTEMPBED_START));
@@ -1741,7 +1743,7 @@ void dwinLevelingDone() {
   void dwinMPCTuning(tempcontrol_t result) {
     hmiValue.tempControl = result;
     switch (result) {
-      case MPCTEMP_START:
+      case MPC_STARTED:
         hmiSaveProcessID(ID_MPCProcess);
         #if PROUI_TUNING_GRAPH
           dwinDrawPIDMPCPopup();
@@ -1909,8 +1911,9 @@ void MarlinUI::init_lcd() {
   const bool hs = dwinHandshake(); UNUSED(hs);
   dwinFrameSetDir(1);
   dwinJPGCacheTo1(Language_English);
-  encoderConfiguration();
 }
+
+void MarlinUI::clear_lcd() {}
 
 void dwinInitScreen() {
   dwinSetColorDefaults();
@@ -2436,16 +2439,16 @@ void setFlow() { setPIntOnClick(FLOW_EDIT_MIN, FLOW_EDIT_MAX, []{ planner.refres
       else {
         // AUTO_BED_LEVELING_BILINEAR does not define MESH_INSET
         #ifndef MESH_MIN_X
-          #define MESH_MIN_X (_MAX(X_MIN_BED + PROBING_MARGIN, X_MIN_POS))
+          #define MESH_MIN_X (_MAX(X_MIN_BED + (PROBING_MARGIN_LEFT), X_MIN_POS))
         #endif
         #ifndef MESH_MIN_Y
-          #define MESH_MIN_Y (_MAX(Y_MIN_BED + PROBING_MARGIN, Y_MIN_POS))
+          #define MESH_MIN_Y (_MAX(Y_MIN_BED + (PROBING_MARGIN_FRONT), Y_MIN_POS))
         #endif
         #ifndef MESH_MAX_X
-          #define MESH_MAX_X (_MIN(X_MAX_BED - (PROBING_MARGIN), X_MAX_POS))
+          #define MESH_MAX_X (_MIN(X_MAX_BED - (PROBING_MARGIN_RIGHT), X_MAX_POS))
         #endif
         #ifndef MESH_MAX_Y
-          #define MESH_MAX_Y (_MIN(Y_MAX_BED - (PROBING_MARGIN), Y_MAX_POS))
+          #define MESH_MAX_Y (_MIN(Y_MAX_BED - (PROBING_MARGIN_BACK), Y_MAX_POS))
         #endif
 
         LIMIT(xpos, MESH_MIN_X, MESH_MAX_X);
@@ -3145,7 +3148,7 @@ void drawControlMenu() {
         enableLiveCaseLightBrightness = true;  // Allow live update of brightness in control menu
         MENU_ITEM(ICON_CaseLight, MSG_CASE_LIGHT, onDrawSubMenu, drawCaseLightMenu);
       #else
-        MENU_ITEM(ICON_CaseLight, MSG_CASE_LIGHT, onDrawChkbMenu, setCaseLight, &caselight.on);
+        EDIT_ITEM(ICON_CaseLight, MSG_CASE_LIGHT, onDrawChkbMenu, setCaseLight, &caselight.on);
       #endif
     #endif
     #if ENABLED(LED_CONTROL_MENU)
@@ -3315,7 +3318,7 @@ void drawFilSetMenu() {
   if (SET_MENU(filSetMenu, MSG_FILAMENT_SET, 9)) {
     BACK_ITEM(drawAdvancedSettingsMenu);
     #if HAS_FILAMENT_SENSOR
-      EDIT_ITEM(ICON_Runout, MSG_RUNOUT_ENABLE, onDrawChkbMenu, setRunoutEnable, &runout.enabled);
+      EDIT_ITEM(ICON_Runout, MSG_RUNOUT_SENSOR, onDrawChkbMenu, setRunoutEnable, &runout.enabled);
     #endif
     #if HAS_FILAMENT_RUNOUT_DISTANCE
       EDIT_ITEM(ICON_Runout, MSG_RUNOUT_DISTANCE_MM, onDrawPFloatMenu, setRunoutDistance, &runout.runout_distance());
@@ -3406,7 +3409,7 @@ void drawTuneMenu() {
       MENU_ITEM(ICON_FilMan, MSG_FILAMENTCHANGE, onDrawMenuItem, changeFilament);
     #endif
     #if HAS_FILAMENT_SENSOR
-      EDIT_ITEM(ICON_Runout, MSG_RUNOUT_ENABLE, onDrawChkbMenu, setRunoutEnable, &runout.enabled);
+      EDIT_ITEM(ICON_Runout, MSG_RUNOUT_SENSOR, onDrawChkbMenu, setRunoutEnable, &runout.enabled);
     #endif
     #if ENABLED(PROUI_ITEM_PLR)
       EDIT_ITEM(ICON_Pwrlossr, MSG_OUTAGE_RECOVERY, onDrawChkbMenu, setPwrLossr, &recovery.enabled);
@@ -3477,9 +3480,16 @@ void drawTuneMenu() {
     void setShapingYZeta() { hmiValue.axis = Y_AXIS; setFloatOnClick(0, 1, 2, stepper.get_shaping_damping_ratio(Y_AXIS), applyShapingZeta); }
   #endif
 
+  #if ENABLED(INPUT_SHAPING_Z)
+    void onDrawShapingZFreq(MenuItem* menuitem, int8_t line) { onDrawFloatMenu(menuitem, line, 2, stepper.get_shaping_frequency(Z_AXIS)); }
+    void onDrawShapingZZeta(MenuItem* menuitem, int8_t line) { onDrawFloatMenu(menuitem, line, 2, stepper.get_shaping_damping_ratio(Z_AXIS)); }
+    void setShapingZFreq() { hmiValue.axis = Z_AXIS; setFloatOnClick(0, 200, 2, stepper.get_shaping_frequency(Z_AXIS), applyShapingFreq); }
+    void setShapingZZeta() { hmiValue.axis = Z_AXIS; setFloatOnClick(0, 1, 2, stepper.get_shaping_damping_ratio(Z_AXIS), applyShapingZeta); }
+  #endif
+
   void drawInputShaping_menu() {
     checkkey = ID_Menu;
-    if (SET_MENU(inputShapingMenu, MSG_INPUT_SHAPING, 5)) {
+    if (SET_MENU(inputShapingMenu, MSG_INPUT_SHAPING, 1 PLUS_TERN0(INPUT_SHAPING_X, 2) PLUS_TERN0(INPUT_SHAPING_Y, 2) PLUS_TERN0(INPUT_SHAPING_Z, 2))) {
       BACK_ITEM(drawMotionMenu);
       #if ENABLED(INPUT_SHAPING_X)
         MENU_ITEM(ICON_ShapingX, MSG_SHAPING_A_FREQ, onDrawShapingXFreq, setShapingXFreq);
@@ -3488,6 +3498,10 @@ void drawTuneMenu() {
       #if ENABLED(INPUT_SHAPING_Y)
         MENU_ITEM(ICON_ShapingY, MSG_SHAPING_B_FREQ, onDrawShapingYFreq, setShapingYFreq);
         MENU_ITEM(ICON_ShapingY, MSG_SHAPING_B_ZETA, onDrawShapingYZeta, setShapingYZeta);
+      #endif
+      #if ENABLED(INPUT_SHAPING_Z)
+        MENU_ITEM(ICON_ShapingZ, MSG_SHAPING_C_FREQ, onDrawShapingZFreq, setShapingZFreq);
+        MENU_ITEM(ICON_ShapingZ, MSG_SHAPING_C_ZETA, onDrawShapingZZeta, setShapingZZeta);
       #endif
     }
     updateMenu(inputShapingMenu);
