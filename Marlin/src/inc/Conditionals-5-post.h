@@ -2515,7 +2515,7 @@
 #endif
 
 // Unused ADC pins can be omitted
-#if ANY(KEEP_ADC_PINS_AROUND, PINS_DEBUGGING, MARLIN_DEV_MODE)
+#if ANY(OMIT_ADC_PINS, PINS_DEBUGGING, MARLIN_DEV_MODE)
   #if !HAS_TEMP_HOTEND
     #undef TEMP_0_PIN
   #endif

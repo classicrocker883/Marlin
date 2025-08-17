@@ -4691,6 +4691,9 @@
 //
 //#define PINS_DEBUGGING
 
+// Omit unused ADC pins
+//#define OMIT_ADC_PINS
+
 // Enable Tests that will run at startup and produce a report
 //#define MARLIN_TEST_BUILD
 
