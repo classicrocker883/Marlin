@@ -23,12 +23,13 @@
 
 #include <stdint.h>
 
-//
-// Define unsorted and arrays of pins which may have duplicstes,
-// but don't allocate any runtime memory for these arrays.
-// We'll use constexpr functions to get the Nth distinct value,
-// and return -1 if we go past the end of the array.
-//
+/**
+ * Define unsorted and arrays of pins which may have duplicstes,
+ * but don't allocate any runtime memory for these arrays.
+ * We'll use constexpr functions to get the Nth distinct value,
+ * and return -1 if we go past the end of the array.
+ */
+
 constexpr pin_t sensitive_dio[] PROGMEM = {
 
   #if HAS_X_AXIS

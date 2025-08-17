@@ -22,9 +22,7 @@
 #pragma once
 
 /**
- * File: pins/pins.h
- *
- * Include pins definitions
+ * pins.h - Include pins definitions
  *
  * Pins numbering schemes:
  *
