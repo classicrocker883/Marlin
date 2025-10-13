@@ -18,8 +18,8 @@ from languageUtil import namebyid
 LANGHOME = "Marlin/src/lcd/language"
 
 # Write multiple sheets if true, otherwise write one giant sheet
-MULTISHEET = "--single" not in argv[1:]
-OUTDIR = "out-csv"
+MULTISHEET = '--single' not in argv[1:]
+OUTDIR = Path('out-csv')
 
 # Check for the path to the language files
 if not Path(LANGHOME).is_dir():
@@ -124,11 +124,13 @@ def write_csv_lang(f, strings, name):
     if name in strings['tall']: f.write('"%s"' % strings['tall'][name])
 
 if MULTISHEET:
-    """Export a separate sheet for each language"""
-    Path.mkdir(Path(OUTDIR), exist_ok=True)
+    #
+    # Export a separate sheet for each language
+    #
+    OUTDIR.mkdir(exist_ok=True)
 
     for lang in langcodes:
-        with open('%s/language_%s.csv' % (OUTDIR, lang), 'w', encoding='utf-8') as f:
+        with open(OUTDIR / f"language_{lang}.csv", 'w', encoding='utf-8') as f:
             lname = lang + ' ' + namebyid(lang)
             header = ['name', lname, lname + ' (wide)', lname + ' (tall)']
             f.write('"' + '","'.join(header) + '"\n')

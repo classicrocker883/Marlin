@@ -297,7 +297,7 @@
  * protect against a broken or disconnected thermistor wire.
  *
  * The issue: If a thermistor falls out, it will report the much lower
- * temperature of the air in the room, and the the firmware will keep
+ * temperature of the air in the room, and the firmware will keep
  * the heater on.
  *
  * The solution: Once the temperature reaches the target, start observing.
@@ -778,7 +778,7 @@
 
 // @section endstops
 
-// If you want endstops to stay on (by default) even when not homing
+// If you want endstops to stay on (by default) even when not homing,
 // enable this option. Override at any time with M120, M121.
 //#define ENDSTOPS_ALWAYS_ON_DEFAULT
 
@@ -1150,6 +1150,7 @@
 #if ENABLED(FT_MOTION)
   //#define FTM_IS_DEFAULT_MOTION               // Use FT Motion as the factory default?
   //#define FT_MOTION_MENU                      // Provide a MarlinUI menu to set M493 and M494 parameters
+  //#define FTM_HOME_AND_PROBE                  // Use FT Motion for homing / probing. Disable if FT Motion breaks these functions.
 
   #define FTM_DEFAULT_DYNFREQ_MODE dynFreqMode_DISABLED // Default mode of dynamic frequency calculation. (DISABLED, Z_BASED, MASS_BASED)
 
@@ -1173,7 +1174,7 @@
   #define FTM_SHAPING_V_TOL_Z           0.05f   // Vibration tolerance used by EI input shapers for Z axis
 
   //#define FTM_SHAPER_E                        // Include E shaping support
-                                                // Required to synchronise extruder with XYZ (better quality)
+                                                // Required to synchronize extruder with XYZ (better quality)
   #define FTM_DEFAULT_SHAPER_E      ftMotionShaper_NONE // Default shaper mode on Extruder axis
   #define FTM_SHAPING_DEFAULT_FREQ_E   21.0f    // (Hz) Default peak frequency used by input shapers
   #define FTM_SHAPING_ZETA_E            0.03f   // Zeta used by input shapers for E axis
@@ -1190,6 +1191,15 @@
     #define FTM_SMOOTHING_TIME_E        0.02f   // (s) Smoothing time for E axis. Prevents noise/skipping from LA by
                                                 //     smoothing acceleration peaks, which may also smooth curved surfaces.
   #endif
+
+  #define FTM_TRAJECTORY_TYPE   TRAPEZOIDAL // Block acceleration profile (TRAPEZOIDAL, POLY5, POLY6)
+                                            // TRAPEZOIDAL: Continuous Velocity. Max acceleration is respected.
+                                            // POLY5:       Like POLY6 with 1.5x but cpu cheaper.
+                                            // POLY6:       Continuous Acceleration (aka S_CURVE).
+                                            // POLY trajectories not only reduce resonances without rounding corners, but also
+                                            // reduce extruder strain due to linear advance.
+
+  #define FTM_POLY6_ACCELERATION_OVERSHOOT 1.875f // Max acceleration overshoot factor for POLY6 (1.25 to 1.875)
 
   /**
    * Advanced configuration
@@ -4275,7 +4285,7 @@
   //#define I2CPE_ENC_1_TICKS_REV     (16 * 200)            // Only needed for rotary encoders; number of stepper
                                                             // steps per full revolution (motor steps/rev * microstepping)
   //#define I2CPE_ENC_1_INVERT                              // Invert the direction of axis travel.
-  #define I2CPE_ENC_1_EC_METHOD     I2CPE_ECM_MICROSTEP     // Type of error error correction.
+  #define I2CPE_ENC_1_EC_METHOD     I2CPE_ECM_MICROSTEP     // Type of error correction.
   #define I2CPE_ENC_1_EC_THRESH     0.10                    // Threshold size for error (in mm) above which the
                                                             // printer will attempt to correct the error; errors
                                                             // smaller than this are ignored to minimize effects of

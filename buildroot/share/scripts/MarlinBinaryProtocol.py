@@ -58,7 +58,7 @@ class Protocol(object):
     simulate_errors = 0
     sync = 0
     connected = False
-    syncronised = False
+    syncronized = False
     worker_thread = None
 
     response_timeout = 1000
@@ -268,7 +268,7 @@ class Protocol(object):
 
     def disconnect(self):
         self.send(0, 2)
-        self.syncronised = False
+        self.syncronized = False
 
     def response_ok(self, data):
         try:
@@ -283,8 +283,8 @@ class Protocol(object):
     def response_resend(self, data):
         packet_id = int(data)
         self.errors += 1
-        if not self.syncronised:
-            print("Retrying syncronisation")
+        if not self.syncronized:
+            print("Retrying synchronization")
         elif packet_id != self.sync:
             raise SynchronizationError()
 
@@ -295,7 +295,7 @@ class Protocol(object):
         self.block_size = self.max_block_size if self.max_block_size < self.block_size else self.block_size
         self.protocol_version = protocol_version
         self.packet_status = 1
-        self.syncronised = True
+        self.syncronized = True
         print("Connection synced [{0}], binary protocol version {1}, {2} byte payload buffer".format(self.sync, self.protocol_version, self.max_block_size))
 
     def response_fatal_error(self, data):
