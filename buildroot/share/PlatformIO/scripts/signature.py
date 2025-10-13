@@ -35,7 +35,7 @@ def enabled_defines(filepath):
     """
     outdict = {}
     section = "user"
-    spatt = re.compile(r".*@section +([-a-zA-Z0-9_\s]+)$") # @section ...
+    spatt = re.compile(r".*@section +([-a-zA-Z0-9_\s]+)$")  # @section ...
 
     f = open(filepath, encoding="utf8").read().split("\n")
 

@@ -8,7 +8,6 @@ import pioutil
 if pioutil.is_pio_build():
     # Get the environment thus far for the build
     env = pioutil.env
-
     #print(env.Dump())
 
     # Give the binary a distinctive name
@@ -22,8 +21,8 @@ if pioutil.is_pio_build():
 
         import shutil
         gcc = shutil.which('gcc')
-        if gcc == '' or gcc == '/usr/bin/gcc':
-            if gcc == '':
+        if not gcc or gcc == '/usr/bin/gcc':
+            if not gcc:
                 emsg = "\u001b[31mNo GCC found in your configured shell PATH."
             elif gcc == '/usr/bin/gcc':
                 emsg = "\u001b[31mCan't build Marlin Native on macOS using the included version of GCC (clang)."
@@ -40,19 +39,13 @@ if pioutil.is_pio_build():
             mesa_path = "/opt/local/include/GL/gl.h"
 
             import os.path
-
             if os.path.exists(xcode_path):
-
                 env['BUILD_FLAGS'] += ["-F" + xcode_path]
                 emsg = "\u001b[33mUsing OpenGL framework headers from Xcode.app"
-
             elif os.path.exists(mesa_path):
-
                 env['BUILD_FLAGS'] += ["-D__MESA__"]
                 emsg = f"\u001b[33mUsing OpenGL header from {mesa_path}"
-
             else:
-
                 emsg = "\u001b[31mNo OpenGL headers found. Install Xcode for matching headers, or use 'sudo port install mesa' to get a GL/gl.h."
                 fatal = 1
 

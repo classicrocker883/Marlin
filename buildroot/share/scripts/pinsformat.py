@@ -75,7 +75,7 @@ def format_pins(argv):
     file_text = ''
 
     if src_file == 'stdin':
-        # If no source file specified read from STDIN
+        # If no source file specified, read from STDIN
         file_text = sys.stdin.read()
     else:
         # Open and read the file src_file

@@ -51,12 +51,12 @@ if download:
     exit(0)
 
 lines = csvdata.splitlines()
-reader = csv.reader(lines, delimiter=',')
-header = next(reader)
+rows = list(csv.reader(lines, delimiter=','))
+header = rows[0]
 languages = header[1:]
 
 # Process each row
-for row in reader:
+for row in rows[1:]:
     name = row[0]
     print(f"--- {name} ---")
     for i, translation in enumerate(row[1:]):
@@ -70,7 +70,7 @@ gothead = False
 columns = []
 numcols = 0
 strings_per_lang = {}
-for row in reader:
+for row in rows:
     if not gothead:
         gothead = True
         numcols = len(row)
@@ -194,7 +194,7 @@ for i in range(1, numcols):
         else:
             bars = 0
         # Escape backslashes, substitute quotes, and wrap in _UxGT("...")
-        val = '_UxGT("%s")' % val.replace('\\', '\\\\').replace('"', '$$$')
+        val = '_UxGT("%s")' % val.replace('\\', '\\\\').replace('"', '\\"')
         # Move named references outside of the macro
         val = re.sub(r'\(([A-Z0-9]+_[A-Z0-9_]+)\)', r'") \1 _UxGT("', val)
         # Remove all empty _UxGT("") that result from the above
@@ -206,8 +206,6 @@ for i in range(1, numcols):
             # Wrap the string in MSG_#_LINE(...) and split on bars
             val = re.sub(r'^_UxGT\((.+)\)', r'_UxGT(MSG_%s_LINE(\1))' % bars, val)
             val = val.replace('|', '", "')
-        # Restore quotes inside the string
-        val = val.replace('$$$', '\\"')
         # Add a comment with the English string for reference
         comm = ''
         if lang != 'en' and 'en' in strings_per_lang:
