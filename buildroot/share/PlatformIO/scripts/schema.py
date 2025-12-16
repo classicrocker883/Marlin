@@ -96,40 +96,40 @@ def load_boards():
             return "['" + "','".join(boards) + "']"
     return ''
 
-#
-# Extract the specified configuration files in the form of a structured schema.
-# Contains the full schema for the configuration files, not just the enabled options,
-# Contains the current values of the options, not just data structure, so "schema" is a slight misnomer.
-#
-# The returned object is a nested dictionary with the following indexing:
-#
-#  - schema[filekey][section][define_name] = define_info
-#
-# Where the define_info contains the following keyed fields:
-#    - section  = The @section the define is in
-#    - name     = The name of the define
-#    - enabled  = True if the define is enabled (not commented out)
-#    - line     = The line number of the define
-#    - sid      = A serial ID for the define
-#    - value    = The value of the define, if it has one
-#    - type     = The type of the define, if it has one
-#    - requires = The conditions that must be met for the define to be enabled
-#    - comment  = The comment for the define, if it has one
-#    - units    = The units for the define, if it has one
-#    - options  = The options for the define, if it has any
-#
+"""
+Extract the specified configuration files in the form of a structured schema.
+Contains the full schema for the configuration files, not just the enabled options,
+Contains the current values of the options, not just data structure, so "schema" is a slight misnomer.
+
+The returned object is a nested dictionary with the following indexing:
+
+ - schema[filekey][section][define_name] = define_info
+
+Where the define_info contains the following keyed fields:
+   - section  = The @section the define is in
+   - name     = The name of the define
+   - enabled  = True if the define is enabled (not commented out)
+   - line     = The line number of the define
+   - sid      = A serial ID for the define
+   - value    = The value of the define, if it has one
+   - type     = The type of the define, if it has one
+   - requires = The conditions that must be met for the define to be enabled
+   - comment  = The comment for the define, if it has one
+   - units    = The units for the define, if it has one
+   - options  = The options for the define, if it has any
+"""
 def extract_files(filekey):
     # Load board names from boards.h
     boards = load_boards()
 
     # Parsing states
     class Parse:
-        NORMAL          = 0 # No condition yet
-        BLOCK_COMMENT   = 1 # Looking for the end of the block comment
-        EOL_COMMENT     = 2 # EOL comment started, maybe add the next comment?
-        SLASH_COMMENT   = 3 # Block-like comment, starting with aligned //
-        GET_SENSORS     = 4 # Gathering temperature sensor options
-        ERROR           = 9 # Syntax error
+        NORMAL          = 0  # No condition yet
+        BLOCK_COMMENT   = 1  # Looking for the end of the block comment
+        EOL_COMMENT     = 2  # EOL comment started, maybe add the next comment?
+        SLASH_COMMENT   = 3  # Block-like comment, starting with aligned //
+        GET_SENSORS     = 4  # Gathering temperature sensor options
+        ERROR           = 9  # Syntax error
 
     # A JSON object to store the data
     sch_out = { key:{} for key in filekey.values() }
@@ -195,19 +195,19 @@ def extract_files(filekey):
                             cfield = 'notes' if 'comment' in last_added_ref else 'comment'
                             last_added_ref[cfield] = cline
 
-                #
-                # Add the given comment line to the comment buffer, unless:
-                # - The line starts with ':' and JSON values to assign to 'opt'.
-                # - The line starts with '@section' so a new section needs to be returned.
-                # - The line starts with '======' so just skip it.
-                #
+                """
+                Add the given comment line to the comment buffer, unless:
+                - The line starts with ':' and JSON values to assign to 'opt'.
+                - The line starts with '@section' so a new section needs to be returned.
+                - The line starts with '======' so just skip it.
+                """
                 def use_comment(c, opt, sec, bufref):
-                    '''
+                    """
                     c       - The comment line to parse
                     opt     - Options JSON string to return (if not updated)
                     sec     - Section to return (if not updated)
                     bufref  - The comment buffer to add to
-                    '''
+                    """
                     sc = c.strip()                      # Strip for special patterns
                     if sc.startswith(':'):              # If the comment starts with : then it has magic JSON
                         d = sc[1:].strip()              # Strip the leading : and spaces
@@ -219,7 +219,7 @@ def extract_files(filekey):
                         else:
                             opt = sc[1:].strip()        # Some literal value not in a JSON container?
                     else:
-                        m = re.match(r'@section\s*(.+)', sc) # Start a new section?
+                        m = re.match(r'@section\s*(.+)', sc)  # Start a new section?
                         if m:
                             sec = m[1]
                         elif not sc.startswith('========'):
@@ -271,8 +271,8 @@ def extract_files(filekey):
                 elif state == Parse.NORMAL:
                     # Skip a commented define when evaluating comment opening
                     st = 2 if re.match(r'^//\s*#define', line) else 0
-                    cpos1 = line.find('/*')     # Start a block comment on the line?
-                    cpos2 = line.find('//', st) # Start an end of line comment on the line?
+                    cpos1 = line.find('/*')      # Start a block comment on the line?
+                    cpos2 = line.find('//', st)  # Start an end of line comment on the line?
 
                     # Only the first comment starter gets evaluated
                     cpos = -1
@@ -323,15 +323,15 @@ def extract_files(filekey):
                             return s
                         return f'({s})'
 
-                    #
-                    # The conditions stack is an array containing condition-arrays.
-                    # Each condition-array lists the conditions for the current block.
-                    # IF/N/DEF adds a new condition-array to the stack.
-                    # ELSE/ELIF/ENDIF pop the condition-array.
-                    # ELSE/ELIF negate the last item in the popped condition-array.
-                    # ELIF adds a new condition to the end of the array.
-                    # ELSE/ELIF re-push the condition-array.
-                    #
+                    """
+                    The conditions stack is an array containing condition-arrays.
+                    Each condition-array lists the conditions for the current block.
+                    IF/N/DEF adds a new condition-array to the stack.
+                    ELSE/ELIF/ENDIF pop the condition-array.
+                    ELSE/ELIF negate the last item in the popped condition-array.
+                    ELIF adds a new condition to the end of the array.
+                    ELSE/ELIF re-push the condition-array.
+                    """
                     cparts = line.split()
                     iselif, iselse = cparts[0] == '#elif', cparts[0] == '#else'
                     if iselif or iselse or cparts[0] == '#endif':
@@ -342,7 +342,7 @@ def extract_files(filekey):
                         prev = conditions.pop()
 
                         if iselif or iselse:
-                            prev[-1] = '!' + prev[-1] # Invert the last condition
+                            prev[-1] = '!' + prev[-1]  # Invert the last condition
                             if iselif: prev.append(atomize(line[5:].strip()))
                             conditions.append(prev)
 
