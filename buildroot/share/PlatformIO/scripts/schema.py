@@ -163,9 +163,9 @@ def extract_files(filekey):
                 # Clean the line for easier parsing
                 the_line = the_line.strip()
 
-                if join_line:   # A previous line is being made longer
+                if join_line:  # A previous line is being made longer
                     line += (' ' if line else '') + the_line
-                else:           # Otherwise, start the line anew
+                else:          # Otherwise, start the line anew
                     line, line_start = the_line, line_number
 
                 # If the resulting line ends with a \, don't process now.
