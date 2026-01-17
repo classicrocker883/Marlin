@@ -100,26 +100,26 @@ def main():
         sys.exit(1)
 
     if mbranch.startswith("bugfix-"):
-        cbranch = mbranch
+        cref = mbranch
     elif mbranch.startswith("lts-"):
-        cbranch = mbranch.replace("lts-", "latest-")
+        cref = mbranch.replace("lts-", "latest-")
     elif mbranch.endswith("-2.1.x") or mbranch == "2.1.x":
-        cbranch = "latest-2.1.x"
+        cref = "latest-2.1.x"
     elif mbranch.endswith("-2.0.x") or mbranch == "2.0.x":
-        cbranch = "latest-2.0.x"
+        cref = "latest-2.0.x"
     elif mbranch.endswith("-1.1.x") or mbranch == "1.1.x":
-        cbranch = "latest-1.1.x"
+        cref = "latest-1.1.x"
     elif mbranch == "1.0.x":
-        cbranch = "latest-1.0.x"
+        cref = "latest-1.0.x"
     else:
-        cbranch = "bugfix-2.1.x"
+        cref = "bugfix-2.1.x"
 
     if len(sys.argv) > 1:
         arg = sys.argv[1]
         if ':' in arg:
             part1, part2 = arg.split(':', 1)
             config_path = part2
-            cbranch = part1
+            cref = part1
         else:
             config_path = arg
         config_path = 'examples/'+config_path
@@ -134,7 +134,7 @@ def main():
         except FileNotFoundError:
             print("restore_configs not found, skipping.")
 
-    fetch_configs(cbranch, config_path)
+    fetch_configs(cref, config_path)
 
 if __name__ == "__main__":
     main()
