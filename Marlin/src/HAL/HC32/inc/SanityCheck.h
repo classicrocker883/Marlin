@@ -20,6 +20,20 @@
  *
  */
 #pragma once
+#include <core_util.h>
+
+#if !defined(ARDUINO_CORE_VERSION_INT) || !defined(GET_VERSION_INT)
+  // version macros were introduced in arduino core version 1.1.0
+  // below that version, we polyfill them
+  #define GET_VERSION_INT(major, minor, patch) ((major * 100000) + (minor * 1000) + patch)
+  #define ARDUINO_CORE_VERSION_INT GET_VERSION_INT(1, 0, 0)
+#endif
+
+#if ARDUINO_CORE_VERSION_INT < GET_VERSION_INT(1, 1, 0)
+  // because we use app_config.h introduced in arduino core version 1.1.0, the
+  // HAL is not compatible with older versions
+  #error "The HC32 HAL is not compatible with Arduino Core versions < 1.1.0. Consider updating the Arduino Core."
+#endif
 
 #ifndef BOARD_XTAL_FREQUENCY
   #error "BOARD_XTAL_FREQUENCY is required for HC32F460."
@@ -29,8 +43,11 @@
   #error "FAST_PWM_FAN is not yet implemented for this platform."
 #endif
 
-#if !defined(HAVE_SW_SERIAL) && HAS_TMC_SW_SERIAL
-  #error "Missing SoftwareSerial implementation."
+// SoftwareSerial introduced in arduino core version 1.3.1
+#if ARDUINO_CORE_VERSION_INT < GET_VERSION_INT(1, 3, 1)
+  #if !defined(HAVE_SW_SERIAL) && HAS_TMC_SW_SERIAL
+    #error "Missing SoftwareSerial implementation."
+  #endif
 #endif
 
 #if ENABLED(SDCARD_EEPROM_EMULATION) && !HAS_MEDIA
@@ -58,11 +75,9 @@
 #endif
 
 #if TEMP_SENSOR_SOC
-  #if !defined(TEMP_SOC_PIN)
+  #ifndef TEMP_SOC_PIN
     #error "TEMP_SOC_PIN must be defined to use TEMP_SENSOR_SOC."
-  #endif
-
-  #if defined(TEMP_SOC_PIN) && IS_GPIO_PIN(TEMP_SOC_PIN)
+  #elif IS_GPIO_PIN(TEMP_SOC_PIN)
     #error "TEMP_SOC_PIN must not be a valid GPIO pin to avoid conflicts."
   #endif
 #endif
@@ -71,8 +86,25 @@
   #error "POSTMORTEM_DEBUGGING requires CORE_DISABLE_FAULT_HANDLER to be set."
 #endif
 
-#if defined(PANIC_ENABLE)
+#ifdef PANIC_ENABLE
   #if defined(PANIC_USART1_TX_PIN) || defined(PANIC_USART2_TX_PIN) || defined(PANIC_USART3_TX_PIN) || defined(PANIC_USART3_TX_PIN)
     #error "HC32 HAL uses a custom panic handler. Do not define PANIC_USARTx_TX_PIN."
+  #endif
+#endif
+
+#if ENABLED(SERIAL_DMA)
+  #if !defined(USART_RX_DMA_SUPPORT)
+    #error "SERIAL_DMA requires USART_RX_DMA_SUPPORT to be enabled in the arduino core."
+  #endif
+
+  // Before arduino core version 1.2.0, USART_RX_DMA_SUPPORT did not implement
+  // core_hook_usart_rx_irq, which is required for the emergency parser.
+  // With 1.2.0, this was fixed (see https://github.com/shadow578/framework-arduino-hc32f46x/pull/25).
+  #if ENABLED(EMERGENCY_PARSER) && ARDUINO_CORE_VERSION_INT < GET_VERSION_INT(1, 2, 0)
+    #error "EMERGENCY_PARSER is not supported with SERIAL_DMA. Please disable either SERIAL_DMA or EMERGENCY_PARSER."
+  #endif
+
+  #if ARDUINO_CORE_VERSION_INT < GET_VERSION_INT(1, 1, 0)
+    #error "SERIAL_DMA is not supported with arduino core version < 1.1.0."
   #endif
 #endif

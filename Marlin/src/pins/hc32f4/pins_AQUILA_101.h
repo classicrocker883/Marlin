@@ -37,6 +37,8 @@
   #define DEFAULT_MACHINE_NAME "Aquila"
 #endif
 
+#define BOARD_LCD_SERIAL_PORT 1
+
 //
 // Onboard crystal oscillator
 //
@@ -45,10 +47,13 @@
 #endif
 
 //
-// Release PB4 (Y_ENABLE_PIN) from JTAG NRST role
+// Release JTAG pins but keep SWD enabled
+// - PA15 (JTDI / USART2 RX)
+// - PB3 (JTDO / E0_DIR)
+// - PB4 (NJTRST / E0_STEP)
 //
 //#define DISABLE_DEBUG
-//#define DISABLE_JTAG
+#define DISABLE_JTAG
 
 //
 // EEPROM
@@ -62,9 +67,9 @@
 #if ENABLED(IIC_BL24CXX_EEPROM)
   #define IIC_EEPROM_SDA                    PA11
   #define IIC_EEPROM_SCL                    PA12
-  #define MARLIN_EEPROM_SIZE               0x800 // 2K (24C16)
+  #define MARLIN_EEPROM_SIZE              0x800U // 2K (24C16)
 #elif ENABLED(SDCARD_EEPROM_EMULATION)
-  #define MARLIN_EEPROM_SIZE               0x800 // 2K
+  #define MARLIN_EEPROM_SIZE              0x800U // 2K
 #endif
 
 //
@@ -153,22 +158,21 @@
 #define EXP1_08_PIN                         PB15  // EN1
 
 #if ENABLED(CR10_STOCKDISPLAY)                    // LCD used for C2
-#undef LCD_SERIAL_PORT
-#define LCD_SERIAL_PORT                        1
-
-  #define LCD_PINS_RS                EXP1_07_PIN
-  #define LCD_PINS_EN                EXP1_08_PIN
-  #define LCD_PINS_D4                EXP1_06_PIN
-
-  #define BTN_ENC                    EXP1_02_PIN
-  #define BTN_EN1                    EXP1_03_PIN
-  #define BTN_EN2                    EXP1_05_PIN
 
   #ifndef HAS_PIN_27_BOARD
     #define BEEPER_PIN               EXP1_01_PIN
   #endif
 
+  #define BTN_ENC                    EXP1_02_PIN
+  #define BTN_EN1                    EXP1_03_PIN
+  #define BTN_EN2                    EXP1_05_PIN
+
+  #define LCD_PINS_RS                EXP1_07_PIN
+  #define LCD_PINS_EN                EXP1_08_PIN
+  #define LCD_PINS_D4                EXP1_06_PIN
+
 #elif ANY(HAS_DWIN_E3V2, IS_DWIN_MARLINUI)        // LCD used for X2
+
   /**
    * Display pinout (display side, so RX/TX are swapped)
    *
@@ -217,10 +221,6 @@
 // Host
 #define BOARD_USART2_TX_PIN                 PA9
 #define BOARD_USART2_RX_PIN                 PA15
-
-// Unused / Debug
-#define BOARD_USART3_TX_PIN                 PE5
-#define BOARD_USART3_RX_PIN                 PE4
 
 // Onboard LED (HIGH = off, LOW = on)
 #ifndef LED_BUILTIN

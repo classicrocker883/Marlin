@@ -23,8 +23,7 @@
 
 /**
  * BigTreeTech SKR 1.3 pin assignments
- * Schematic: https://green-candy.osdn.jp/external/MarlinFW/board_schematics/BTT%20SKR%20V1.3/SKR-V1.3-SCH.pdf
- * Origin: https://github.com/bigtreetech/BIGTREETECH-SKR-V1.3/blob/master/BTT%20SKR%20V1.3/hardware/SKR-V1.3-SCH.pdf
+ * Schematic: https://github.com/bigtreetech/BIGTREETECH-SKR-V1.3/blob/master/BTT%20SKR%20V1.3/hardware/SKR-V1.3-SCH.pdf
  */
 
 #define BOARD_INFO_NAME "BTT SKR V1.3"
@@ -44,41 +43,18 @@
 //
 // Limit Switches
 //
-#ifdef X_STALL_SENSITIVITY
+#ifndef X_STOP_PIN
   #define X_STOP_PIN                  X_DIAG_PIN
-  #if X_HOME_TO_MIN
-    #define X_MAX_PIN                      P1_28  // X+
-  #else
-    #define X_MIN_PIN                      P1_28  // X+
-  #endif
-#else
-  #define X_MIN_PIN                        P1_29  // X-
-  #define X_MAX_PIN                        P1_28  // X+
 #endif
-
-#ifdef Y_STALL_SENSITIVITY
+#define X_OTHR_PIN                         P1_28  // X+
+#ifndef Y_STOP_PIN
   #define Y_STOP_PIN                  Y_DIAG_PIN
-  #if Y_HOME_TO_MIN
-    #define Y_MAX_PIN                      P1_26  // Y+
-  #else
-    #define Y_MIN_PIN                      P1_26  // Y+
-  #endif
-#else
-  #define Y_MIN_PIN                        P1_27  // Y-
-  #define Y_MAX_PIN                        P1_26  // Y+
 #endif
-
-#ifdef Z_STALL_SENSITIVITY
+#define Y_OTHR_PIN                         P1_26  // Y+
+#ifndef Z_STOP_PIN
   #define Z_STOP_PIN                  Z_DIAG_PIN
-  #if Z_HOME_TO_MIN
-    #define Z_MAX_PIN                      P1_24  // Z+
-  #else
-    #define Z_MIN_PIN                      P1_24  // Z+
-  #endif
-#else
-  #define Z_MIN_PIN                        P1_25  // Z-
-  #define Z_MAX_PIN                        P1_24  // Z+
 #endif
+#define Z_OTHR_PIN                         P1_24  // Z+
 
 #define ONBOARD_ENDSTOPPULLUPS                    // Board has built-in pullups
 
@@ -94,6 +70,13 @@
 //
 #ifndef Z_MIN_PROBE_PIN
   #define Z_MIN_PROBE_PIN                  P1_24
+#endif
+
+//
+// Probe enable
+//
+#if ENABLED(PROBE_ENABLE_DISABLE) && !defined(PROBE_ENABLE_PIN)
+  #define PROBE_ENABLE_PIN            SERVO0_PIN
 #endif
 
 //
@@ -221,14 +204,12 @@
 #define EXP2_08_PIN                        -1
 
 #if HAS_WIRED_LCD
-  #if ENABLED(ANET_FULL_GRAPHICS_LCD_ALT_WIRING)
-    #error "ANET_FULL_GRAPHICS_LCD_ALT_WIRING only applies to the ANET 1.0 board."
+  #if ENABLED(CTC_A10S_A13)
+    #error "CTC_A10S_A13 only applies to the ANET 1.0 board."
 
   #elif ENABLED(ANET_FULL_GRAPHICS_LCD)
 
-    #ifndef NO_CONTROLLER_CUSTOM_WIRING_WARNING
-      #error "CAUTION! ANET_FULL_GRAPHICS_LCD requires wiring modifications. See 'pins_BTT_SKR_V1_3.h' for details. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this warning.)"
-    #endif
+    CONTROLLER_WARNING("BTT_SKR_V1_3", "ANET_FULL_GRAPHICS_LCD")
 
    /**
     * 1. Cut the tab off the LCD connector so it can be plugged into the "EXP1" connector the other way.
@@ -262,9 +243,7 @@
 
   #elif ENABLED(WYH_L12864)
 
-    #ifndef NO_CONTROLLER_CUSTOM_WIRING_WARNING
-      #error "CAUTION! WYH_L12864 requires wiring modifications. See 'pins_BTT_SKR_V1_3.h' for details. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this warning.)"
-    #endif
+    CONTROLLER_WARNING("BTT_SKR_V1_3", "WYH_L12864")
 
     /**
      * 1. Cut the tab off the LCD connector so it can be plugged into the "EXP1" connector the other way.
@@ -285,9 +264,10 @@
      *                  ------                     ------
      *                   LCD                        LCD
      */
+    #define BTN_ENC                  EXP1_03_PIN
     #define BTN_EN1                  EXP1_05_PIN
     #define BTN_EN2                  EXP1_07_PIN
-    #define BTN_ENC                  EXP1_03_PIN
+
     #define DOGLCD_CS                EXP1_08_PIN
     #define DOGLCD_A0                EXP1_06_PIN
     #define DOGLCD_SCK               EXP1_04_PIN
@@ -359,9 +339,7 @@
 
     #elif ENABLED(MKS_TS35_V2_0)
 
-      #ifndef NO_CONTROLLER_CUSTOM_WIRING_WARNING
-        #error "CAUTION! MKS_TS35_V2_0 requires wiring modifications. The SKR 1.3 EXP ports are rotated 180° from what the MKS_TS35_V2_0 expects. (Define NO_CONTROLLER_CUSTOM_WIRING_WARNING to suppress this error.)"
-      #endif
+      CONTROLLER_WARNING("BTT_SKR_V1_3", "MKS_TS35_V2_0", " The SKR 1.3 EXP ports are rotated 180°.")
 
       /**                      ------                                   ------
        *               BEEPER | 1  2 | BTN_ENC               SPI1_MISO | 1  2 | SPI1_SCK
@@ -430,7 +408,7 @@
 
     #define SD_DETECT_PIN            EXP2_07_PIN
 
-  #else // !CR10_STOCKDISPLAY
+  #else
 
     #define LCD_PINS_RS              EXP1_04_PIN
 
@@ -441,7 +419,7 @@
     #define LCD_PINS_EN              EXP1_03_PIN
     #define LCD_PINS_D4              EXP1_05_PIN
 
-    #define LCD_SDSS                 EXP2_04_PIN  // (16) J3-7 & AUX-4
+    #define LCD_SDSS_PIN             EXP2_04_PIN  // (16) J3-7 & AUX-4
     #define SD_DETECT_PIN            EXP2_07_PIN  // (49) (NOT 5V tolerant)
 
     #if ENABLED(FYSETC_MINI_12864)
@@ -449,8 +427,6 @@
       #define DOGLCD_A0              EXP1_04_PIN
       #define DOGLCD_SCK             EXP2_02_PIN
       #define DOGLCD_MOSI            EXP2_06_PIN
-
-      #define LCD_BACKLIGHT_PIN            -1
 
       #define FORCE_SOFT_SPI                      // Use this if default of hardware SPI causes display problems
                                                   //   results in LCD soft SPI mode 3, SD soft SPI mode 0
@@ -519,7 +495,7 @@
 
     #endif // !FYSETC_MINI_12864
 
-  #endif // !CR10_STOCKDISPLAY
+  #endif
 
 #endif // HAS_WIRED_LCD
 

@@ -323,6 +323,11 @@ FORCE_INLINE void _draw_centered_temp(const celsius_t temp, const uint8_t tx, co
 
       } // PAGE_CONTAINS
 
+      #if HAS_MULTI_EXTRUDER && NONE(SLIM_LCD_MENUS, STATUS_HOTEND_NUMBERLESS, SINGLENOZZLE)
+        if (active_extruder == heater_id)
+          u8g.drawBitmapP(_MAX(0, STATUS_HOTEND_X(heater_id) - 6), STATUS_HEATERS_Y + 3, 1, 5, status_active_extruder_indicator_bmp);
+      #endif
+
     #endif // !STATUS_COMBINE_HEATERS
 
     if (PAGE_UNDER(7)) {
@@ -370,7 +375,6 @@ FORCE_INLINE void _draw_centered_temp(const celsius_t temp, const uint8_t tx, co
     if (PAGE_CONTAINS(STATUS_HEATERS_Y, STATUS_HEATERS_BOT)) {
 
       #define BAR_TALL (STATUS_HEATERS_HEIGHT - 2)
-
 
       // Draw a heating progress bar, if specified
       #if ANY(STATUS_HEAT_PERCENT, STATUS_HEAT_POWER)
@@ -479,16 +483,16 @@ FORCE_INLINE void _draw_axis_value(const AxisEnum axis, const char *value, const
 // Prepare strings for progress display
 #if ANY(HAS_EXTRA_PROGRESS, HAS_PRINT_PROGRESS)
   static MarlinUI::progress_t progress = 0;
-  static MString<12> progressString;
+  static MString<13> progressString;
 #endif
 
 #if HAS_EXTRA_PROGRESS
 
   #if HAS_TIME_DISPLAY
     static void prepare_time_string(const duration_t &time, char prefix) {
-      char str[10];
+      char str[13];
       const uint8_t time_len = time.toDigital(str, time.value >= 60*60*24L);  // 5 to 8 chars
-      progressString.set(prefix, ':', spaces_t(10 - time_len), str);                 // 2 to 5 spaces
+      progressString.set(prefix, ':', spaces_t(10 - time_len), str);          // 2 to 5 spaces
     }
   #endif
   #if ENABLED(SHOW_PROGRESS_PERCENT)
@@ -502,19 +506,19 @@ FORCE_INLINE void _draw_axis_value(const AxisEnum axis, const char *value, const
   #endif
   #if ENABLED(SHOW_REMAINING_TIME)
     void MarlinUI::drawRemain() {
-      if (printJobOngoing() && get_remaining_time() != 0)
+      if (marlin.printJobOngoing() && get_remaining_time() != 0)
         prepare_time_string(get_remaining_time(), 'R');
     }
   #endif
   #if ENABLED(SHOW_INTERACTION_TIME)
     void MarlinUI::drawInter() {
-      if (printingIsActive() && interaction_time)
+      if (marlin.printingIsActive() && interaction_time)
         prepare_time_string(interaction_time, 'C');
     }
   #endif
   #if ENABLED(SHOW_ELAPSED_TIME)
     void MarlinUI::drawElapsed() {
-      if (printJobOngoing())
+      if (marlin.printJobOngoing())
         prepare_time_string(print_job_timer.duration(), 'E');
     }
   #endif
@@ -545,7 +549,7 @@ void MarlinUI::draw_status_screen() {
     static char wstring[5], mstring[4];
   #endif
 
-  const bool show_e_total = TERN1(HAS_X_AXIS, TERN0(LCD_SHOW_E_TOTAL, printingIsActive()));
+  const bool show_e_total = TERN1(HAS_X_AXIS, TERN0(LCD_SHOW_E_TOTAL, marlin.printingIsActive()));
 
   #if HAS_PRINT_PROGRESS
     static u8g_uint_t progress_bar_solid_width = 0;
@@ -580,8 +584,10 @@ void MarlinUI::draw_status_screen() {
       #endif
     }
     else {
-      TERN_(HAS_X_AXIS, strcpy(xstring, is_inch ? ftostr53_63(LINEAR_UNIT(lpos.x)) : ftostr4sign(lpos.x)));
-      TERN_(HAS_Y_AXIS, strcpy(ystring, is_inch ? ftostr53_63(LINEAR_UNIT(lpos.y)) : ftostr4sign(lpos.y)));
+      XY_CODE(
+        strcpy(xstring, is_inch ? ftostr53_63(LINEAR_UNIT(lpos.x)) : ftostr4sign(lpos.x)),
+        strcpy(ystring, is_inch ? ftostr53_63(LINEAR_UNIT(lpos.y)) : ftostr4sign(lpos.y))
+      );
     }
 
     TERN_(HAS_Z_AXIS, strcpy(zstring, is_inch ? ftostr42_52(LINEAR_UNIT(lpos.z)) : ftostr52sp(lpos.z)));
@@ -864,8 +870,10 @@ void MarlinUI::draw_status_screen() {
           #endif
         }
         else {
-          TERN_(HAS_X_AXIS, _draw_axis_value(X_AXIS, xstring, blink));
-          TERN_(HAS_Y_AXIS, _draw_axis_value(Y_AXIS, ystring, blink));
+          XY_CODE(
+            _draw_axis_value(X_AXIS, xstring, blink),
+            _draw_axis_value(Y_AXIS, ystring, blink)
+          );
         }
 
       #endif
@@ -888,7 +896,12 @@ void MarlinUI::draw_status_screen() {
     lcd_put_lchar(3, EXTRAS_2_BASELINE, LCD_STR_FEEDRATE[0]);
 
     set_font(FONT_STATUSMENU);
-    lcd_put_u8str(12, EXTRAS_2_BASELINE, i16tostr3rj(feedrate_percentage));
+
+    #if ENABLED(ULTIPANEL_FLOWPERCENT)
+      lcd_put_u8str(12, EXTRAS_2_BASELINE, i16tostr3rj(planner.flow_percentage[active_extruder]));
+    #else
+      lcd_put_u8str(12, EXTRAS_2_BASELINE, i16tostr3rj(feedrate_percentage));
+    #endif
     lcd_put_u8str(F("%"));
 
     //
